@@ -92,19 +92,6 @@ h1 {
 }
 .themeBtn:hover { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
 
-/* ⚡ GitHub Actions Trigger Button & Toast Alert */
-.btn-gh-trigger {
-  background: var(--accent-bg); border: 1px solid var(--accent); color: var(--accent);
-  font-family: var(--sans); font-size: 13px; font-weight: 700; padding: 8px 14px;
-  border-radius: var(--r-sm); cursor: pointer; transition: all 0.15s ease;
-  display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(79,214,193,0.15);
-}
-.btn-gh-trigger:hover {
-  background: var(--accent); color: #080C13; transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(79,214,193,0.35);
-}
-.btn-gh-trigger .icon { font-size: 14px; }
-
 /* 🧮 MAIN CALCULATION SUBMIT BUTTON */
 .btn-calculate {
   background: linear-gradient(135deg, var(--accent) 0%, #30A894 100%);
