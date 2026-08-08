@@ -138,7 +138,9 @@ function applyDateWeather(targetDate) {
       APP = dayObj.data.app;
       BASE = dayObj.data.wbgt;
     }
-    if (dayObj.env) S.envData = dayObj.env;
+    if (dayObj.env) {
+      S.envData = dayObj.env;
+    }
   }
 }
 
@@ -353,6 +355,7 @@ function drawDay(D) {
 
 function renderDay() {
   const D = computeDay();
+  renderEnvCards();
   drawDay(D);
   renderComparison(D);
   renderTimelineGrid(D);
@@ -520,7 +523,6 @@ async function fetchKmaLiveWeather() {
     console.log('Local fallback climo mode');
   }
 
-  renderEnvCards();
   recomputeAll();
 }
 
@@ -533,7 +535,7 @@ function renderEnvCards() {
     <div class="env-chip">
       <div class="tag">기온 (TA)</div>
       <div class="val" style="color:var(--ink)">${e.ta || 33.2}°C</div>
-      <div class="sub">선택일 피크 예보</div>
+      <div class="sub">선택일(${S.planDate}) 피크 예보</div>
     </div>
     <div class="env-chip">
       <div class="tag">상대습도 (RH)</div>
