@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -39,16 +39,16 @@
         <button class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
         <!-- ⚡ HEADER TOP BUTTON 1: GITHUB ACTIONS WEATHER FETCH (+30 DAYS) -->
         <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
-          <span class="icon">⚡</span> 날씨 수집 (+30일치 데이터)
+          <span class="icon">⚡</span> 1단계: GitHub Actions 날씨 수집 (+30일치 데이터)
         </button>
       </div>
     </header>
 
-    <!-- ⚡ GITHUB ACTIONS PIPELINE ALERT TOAST (HIDDEN BY DEFAULT) -->
+    <!-- ⚡ GITHUB ACTIONS PIPELINE ALERT TOAST -->
     <div class="gh-toast glass" id="ghToast" hidden>
       <div class="spinner"></div>
       <div>
-        <b style="color:var(--accent)">🚀 GitHub Actions 파이프라인 (fetch_weather.yml) 실행 중...</b>
+        <b style="color:var(--accent)" id="ghToastTitle">🚀 GitHub Actions 파이프라인 (fetch_weather.yml) 실행 중...</b>
         <p style="margin:2px 0 0;font-size:12px;color:var(--dim)" id="ghToastText">오늘 기준 +한달간의 날씨 예보 데이터를 수집 및 저장하고 있습니다.</p>
       </div>
     </div>
@@ -101,7 +101,7 @@
           <!-- BUTTON 2: CALCULATE RISK BASED ON PRE-FETCHED JSON -->
           <div class="action-btn-group-vertical" style="margin-top:20px">
             <button type="button" class="btn-step-2" id="btnCalculateRisk" onclick="calculateActivityRisk()">
-              <span class="icon">🧮</span> 위험도 계산
+              <span class="icon">🧮</span> 2단계: 선택 일자 위험도 & 식수 산출
             </button>
           </div>
         </div>
@@ -256,6 +256,6 @@
 
   </div>
 
-  <script src="app.js?v=14"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>

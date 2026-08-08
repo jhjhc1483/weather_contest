@@ -434,13 +434,14 @@ function recomputeAll() {
 /* ⚡ BUTTON 1 (TOP HEADER): FETCH 30-DAY WEATHER FORECAST DATA VIA GITHUB ACTIONS */
 window.triggerGitHubActionPipeline = async function() {
   const toast = document.getElementById("ghToast");
+  const toastTitle = document.getElementById("ghToastTitle");
   const toastText = document.getElementById("ghToastText");
   const ghBadge = document.getElementById("ghBadge");
 
   if (toast) toast.hidden = false;
-  if (toastText) {
-    toastText.textContent = `⚡ 1단계: 오늘 기준 +한 달간의 날씨 예보 수집 파이프라인 (fetch_weather.yml) 실행 요청 중...`;
-  }
+  if (toastTitle) toastTitle.textContent = "🚀 GitHub Actions 파이프라인 (fetch_weather.yml) 실행 요청 중...";
+  if (toastText) toastText.textContent = `오늘 기준 +한 달간의 날씨 예보 데이터를 수집 및 저장하고 있습니다.`;
+  
   if (ghBadge) {
     ghBadge.textContent = '● GitHub Actions Pipeline: Running...';
     ghBadge.className = 'badge warn';
@@ -484,15 +485,15 @@ window.triggerGitHubActionPipeline = async function() {
   }, 2200);
 };
 
-/* 🧮 BUTTON 2 (STICKY SIDEBAR): CALCULATE RISK BASED ON PRE-FETCHED 30-DAY JSON */
+/* 🧮 BUTTON 2 (STICKY SIDEBAR): PURE LOCAL CALCULATION (NO GITHUB ACTIONS DISPATCH) */
 window.calculateActivityRisk = function() {
   const toast = document.getElementById("ghToast");
+  const toastTitle = document.getElementById("ghToastTitle");
   const toastText = document.getElementById("ghToastText");
 
   if (toast) toast.hidden = false;
-  if (toastText) {
-    toastText.textContent = `🧮 2단계: [${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] ${S.activeActivityId} 예보 파싱 및 ${S.pax}명분 위험도/식수 산출 완료!`;
-  }
+  if (toastTitle) toastTitle.textContent = "🧮 선택 일자 예보 파싱 및 위험도/식수 산출 완료";
+  if (toastText) toastText.textContent = `[${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] ${S.activeActivityId} 훈련 ${S.pax}명분의 섭씨 보정 위험도 수식이 적용되었습니다.`;
 
   recomputeAll();
 
