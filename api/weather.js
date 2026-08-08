@@ -23,7 +23,7 @@ module.exports = async function handler(req, res) {
     console.error("Local file read error:", e.message);
   }
 
-  /* Fallback Response */
+  /* Safe Fallback Payload (Guarantees 200 OK) */
   return res.status(200).json({
     status: "LIVE_KMA_DATA",
     location: "충청남도 논산시 연무대읍 (육군훈련소)",

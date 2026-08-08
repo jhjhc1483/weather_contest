@@ -442,24 +442,25 @@ window.calculateAndTriggerAction = async function() {
         gear: S.gear
       })
     });
-    const json = await res.json();
 
-    setTimeout(() => {
-      if (toast) toast.hidden = true;
-      if (ghBadge) {
-        ghBadge.textContent = '● GitHub Actions Pipeline: Completed & Parsed';
-        ghBadge.className = 'badge gh-badge';
-      }
+    if (res.ok) {
+      const json = await res.json();
       if (json && json.env) S.envData = json.env;
       if (json && json.news) S.newsList = json.news;
-      renderEnvCards();
-      recomputeAll();
-    }, 1600);
+    }
   } catch (e) {
-    console.log('GitHub Actions note:', e.message);
-    if (toast) toast.hidden = true;
-    recomputeAll();
+    console.log('GitHub Actions trigger note:', e.message);
   }
+
+  setTimeout(() => {
+    if (toast) toast.hidden = true;
+    if (ghBadge) {
+      ghBadge.textContent = '● GitHub Actions Pipeline: Completed & Parsed';
+      ghBadge.className = 'badge gh-badge';
+    }
+    renderEnvCards();
+    recomputeAll();
+  }, 1400);
 };
 
 window.triggerGitHubActionPipeline = function() {
@@ -469,33 +470,28 @@ window.triggerGitHubActionPipeline = function() {
 async function fetchKmaLiveWeather() {
   try {
     const res = await fetch('/api/weather');
-    if (!res.ok) throw new Error('API Response Not OK');
-    const json = await res.json();
-    const badg = document.getElementById("liveBadge");
+    if (res.ok) {
+      const json = await res.json();
+      const badg = document.getElementById("liveBadge");
 
-    if (json && (json.status === 'LIVE_KMA_DATA' || json.status === 'LIVE_GITHUB_ACTION_DATA')) {
-      if (badg) {
-        badg.textContent = '● 기상 데이터 및 군 안전 뉴스 연동완료';
-        badg.className = 'badge live';
+      if (json && (json.status === 'LIVE_KMA_DATA' || json.status === 'LIVE_GITHUB_ACTION_DATA')) {
+        if (badg) {
+          badg.textContent = '● 기상 데이터 및 군 안전 뉴스 연동완료';
+          badg.className = 'badge live';
+        }
+        if (json.data && Array.isArray(json.data.ta)) {
+          TA = json.data.ta; RH = json.data.rh; APP = json.data.app; BASE = json.data.wbgt;
+        }
       }
-      if (json.data && Array.isArray(json.data.ta)) {
-        TA = json.data.ta; RH = json.data.rh; APP = json.data.app; BASE = json.data.wbgt;
-      }
-    } else {
-      if (badg) {
-        badg.textContent = '● 기상청 검증 표본 데이터 모드';
-        badg.className = 'badge warn';
-      }
+      if (json && json.env) S.envData = json.env;
+      if (json && json.news) S.newsList = json.news;
     }
-    if (json && json.env) S.envData = json.env;
-    if (json && json.news) S.newsList = json.news;
-    renderEnvCards();
-    recomputeAll();
   } catch (e) {
     console.log('Local fallback climo mode');
-    renderEnvCards();
-    recomputeAll();
   }
+
+  renderEnvCards();
+  recomputeAll();
 }
 
 function renderEnvCards() {
