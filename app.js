@@ -276,22 +276,48 @@ window.highlightHour = function(hour) {
   }
 };
 
-/* Render Seasonal Weather News (Summer: Heatwave, Winter: Coldwave, Spring/Autumn: Wildfire/Dust) */
+/* Render 8-Factor Severe Weather Disaster News with Smart Condition Matching */
 function renderSafetyNews() {
   const container = document.getElementById("newsBox");
   if (!container) return;
 
-  // Determine season from selected planDate (YYYY-MM-DD)
   const dParts = (S.planDate || "").split("-");
   const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
+  const env = S.envData || {};
 
-  let seasonCat = "summer";
-  if (month >= 6 && month <= 8) seasonCat = "summer";
-  else if (month === 12 || month === 1 || month === 2) seasonCat = "winter";
-  else seasonCat = "spring_autumn";
+  let preferredCategories = [];
 
-  let matchedNews = (S.newsList || []).filter(n => n.category === seasonCat);
-  if (!matchedNews.length) matchedNews = S.newsList || [];
+  // Smart Weather Condition Priority Matcher across 8 Hazard Categories
+  if (env.ta && env.ta >= 31.0) preferredCategories.push("heatwave");
+  if (env.ta && env.ta <= 0.0) preferredCategories.push("coldwave");
+  if (env.pop && env.pop >= 50) preferredCategories.push("typhoon_heavyrain", "lightning");
+  if (env.pm10 && env.pm10 >= 80) preferredCategories.push("dust_ozon");
+  if (env.ws && env.ws >= 5.0) preferredCategories.push("strongwind");
+
+  // Fallback to month seasonal categories
+  if (month >= 6 && month <= 8) preferredCategories.push("heatwave", "foodpoison", "lightning", "typhoon_heavyrain");
+  else if (month === 12 || month === 1 || month === 2) preferredCategories.push("coldwave", "strongwind");
+  else preferredCategories.push("wildfire_dry", "dust_ozon", "strongwind");
+
+  let matchedNews = [];
+  const newsList = S.newsList || [];
+
+  for (const cat of preferredCategories) {
+    const items = newsList.filter(n => n.category === cat);
+    for (const item of items) {
+      if (!matchedNews.some(m => m.id === item.id)) {
+        matchedNews.push(item);
+      }
+    }
+  }
+
+  if (matchedNews.length < 3) {
+    for (const item of newsList) {
+      if (!matchedNews.some(m => m.id === item.id)) {
+        matchedNews.push(item);
+      }
+    }
+  }
 
   container.innerHTML = matchedNews.slice(0, 3).map(n => `
     <div class="news-card">
@@ -300,7 +326,7 @@ function renderSafetyNews() {
         <span class="news-tag">${n.source}</span>
       </div>
       <p class="news-snippet">${n.snippet}</p>
-      <div class="news-meta">보도 일자: ${n.date} · [실시간 기상 특보 연동]</div>
+      <div class="news-meta">보도 일자: ${n.date} · [8대 실시간 기상재난특보 연동]</div>
     </div>
   `).join("");
 }
