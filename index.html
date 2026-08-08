@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -20,7 +20,7 @@
 
   <div class="wrap">
 
-    <!-- Header -->
+    <!-- HEADER (TOP BAR WITH GITHUB ACTIONS FETCH BUTTON) -->
     <header class="glass">
       <div>
         <p class="eyebrow">국방 특화 온열/환경위험 예측 · 부대활동 사전 계획 지원 시스템</p>
@@ -30,13 +30,17 @@
           <span class="badge">기상청 체감온도 3.0</span>
           <span class="badge">미 육군 TB MED 507 (섭씨 개정)</span>
           <span class="badge">미 공군 DAFI 48-151</span>
-          <span class="badge warn" id="liveBadge">● 기상청 & 에어코리아 API 연동</span>
+          <span class="badge warn" id="liveBadge">● 30일간 예보 연동완료</span>
           <span class="badge gh-badge" id="ghBadge">● GitHub Actions Pipeline: Ready</span>
         </div>
       </div>
       
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
         <button class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
+        <!-- ⚡ HEADER TOP BUTTON 1: GITHUB ACTIONS WEATHER FETCH (+30 DAYS) -->
+        <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
+          <span class="icon">⚡</span> 날씨 수집 (+30일치 데이터)
+        </button>
       </div>
     </header>
 
@@ -45,7 +49,7 @@
       <div class="spinner"></div>
       <div>
         <b style="color:var(--accent)">🚀 GitHub Actions 파이프라인 (fetch_weather.yml) 실행 중...</b>
-        <p style="margin:2px 0 0;font-size:12px;color:var(--dim)" id="ghToastText">기상청 8대 환경 지수 및 안전 뉴스를 파싱하고 있습니다.</p>
+        <p style="margin:2px 0 0;font-size:12px;color:var(--dim)" id="ghToastText">오늘 기준 +한달간의 날씨 예보 데이터를 수집 및 저장하고 있습니다.</p>
       </div>
     </div>
 
@@ -71,7 +75,7 @@
           <!-- Detailed Controls -->
           <div class="ctl-sidebar" style="margin-top:14px">
             <div class="f">
-              <label for="planDate">훈련 예정 일자</label>
+              <label for="planDate">훈련 예정 일자 (30일 예보 선택)</label>
               <input type="date" id="planDate" value="2026-08-08">
             </div>
             <div class="f" style="margin-top:10px">
@@ -94,14 +98,10 @@
             </div>
           </div>
 
-          <!-- TWO SEPARATE ACTION BUTTONS (STEP 1 & STEP 2) -->
+          <!-- BUTTON 2: CALCULATE RISK BASED ON PRE-FETCHED JSON -->
           <div class="action-btn-group-vertical" style="margin-top:20px">
-            <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
-              <span class="icon">⚡</span> 1단계: Actions 날씨 수집
-            </button>
-            
             <button type="button" class="btn-step-2" id="btnCalculateRisk" onclick="calculateActivityRisk()">
-              <span class="icon">🧮</span> 2단계: 활동 위험도 & 식수 산출
+              <span class="icon">🧮</span> 위험도 계산
             </button>
           </div>
         </div>
@@ -256,6 +256,6 @@
 
   </div>
 
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>

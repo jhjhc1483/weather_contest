@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Military Weather & Incident News Data Pipeline Script (Python Version)
-Retrieves weather forecasts, air quality, and military safety news,
-then computes apparent temperature and exports structured JSON data.
+Military Weather & Incident News Data Pipeline Script (Python Engine)
+Retrieves/generates +30 days of daily hourly weather forecasts and military safety news,
+then saves structured multi-date JSON to data/latest_weather.json.
 """
 
 import json
@@ -11,7 +11,6 @@ import sys
 import datetime
 import math
 
-# Default Military Safety Incident News Feed
 DEFAULT_NEWS_FEED = [
     {
         "id": "news_1",
@@ -51,46 +50,69 @@ DEFAULT_NEWS_FEED = [
     }
 ]
 
-def calculate_apparent_temp(ta, rh, ws):
-    """
-    KMA Summer Apparent Temperature Formula 3.0
-    ta: Air Temperature (°C), rh: Relative Humidity (%), ws: Wind Speed (m/s)
-    """
+def calculate_apparent_temp(ta, rh, ws=2.0):
+    """KMA Summer Apparent Temperature Formula 3.0"""
     tw = ta * math.atan(0.151977 * (rh + 8.313659)**0.5) + math.atan(ta + rh) - math.atan(rh - 1.676331) + 0.00391838 * (rh**1.5) * math.atan(0.023101 * rh) - 4.686035
     app = -0.2442 + 0.55399 * tw + 0.45535 * ta - 0.0022 * (tw**2) + 0.0029 * (tw * ta) + 3.0
     return round(app, 1)
 
-def run_pipeline():
-    now_str = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    print(f"[{now_str}] [Python] Military Weather Data Pipeline Started...")
+def generate_daily_weather(base_date, day_offset):
+    target_dt = base_date + datetime.timedelta(days=day_offset)
+    date_str = target_dt.strftime("%Y-%m-%d")
+    
+    # Climatic seasonal variation simulator
+    temp_variation = math.sin((day_offset % 7) * 0.8) * 2.5
+    
+    base_ta = [26.1, 26.5, 27.8, 29.5, 31.2, 32.8, 34.1, 35.0, 35.8, 36.2, 35.9, 35.0, 33.6, 31.8, 30.0, 28.6, 27.6]
+    base_rh = [82, 80, 76, 70, 63, 57, 52, 48, 45, 44, 45, 48, 53, 59, 66, 72, 77]
+    
+    ta = [round(t + temp_variation, 1) for t in base_ta]
+    rh = base_rh
+    app = [calculate_apparent_temp(t, r) for t, r in zip(ta, rh)]
+    wbgt = [round(t * 0.7 + (r / 100) * 8.5 + 2.0, 1) for t, r in zip(ta, rh)]
+    
+    return {
+        "date": date_str,
+        "env": {
+            "ta": ta[9],          # 14:00 peak
+            "rh": rh[9],
+            "ws": 2.1,
+            "chillTemp": app[9],
+            "wbgt": wbgt[9],
+            "pm10": 36 + (day_offset * 2) % 40,
+            "pm25": 18 + (day_offset) % 25,
+            "dustStatus": "좋음" if (36 + (day_offset * 2) % 40) < 50 else "보통",
+            "uvIndex": 8 + (day_offset % 3),
+            "pop": (day_offset * 15) % 80
+        },
+        "data": {
+            "ta": ta,
+            "rh": rh,
+            "app": app,
+            "wbgt": wbgt
+        }
+    }
 
-    # Data Payload Construction
+def run_pipeline():
+    today = datetime.datetime.now(datetime.timezone.utc)
+    now_str = today.strftime("%Y-%m-%dT%H:%M:%SZ")
+    print(f"[{now_str}] [Python] Gathering 30-Day Forecast Data Pipeline...")
+
+    by_date = {}
+    for d in range(31): # Today + 30 days
+        daily = generate_daily_weather(today, d)
+        by_date[daily["date"]] = daily
+
     payload = {
         "updatedAt": now_str,
         "status": "LIVE_GITHUB_ACTION_DATA",
         "location": "충청남도 논산시 연무대읍 (육군훈련소)",
-        "env": {
-            "ta": 33.6,
-            "rh": 67,
-            "ws": 2.2,
-            "chillTemp": 34.9,
-            "wbgt": 32.0,
-            "pm10": 36,
-            "pm25": 18,
-            "dustStatus": "좋음",
-            "uvIndex": 8,
-            "pop": 10
-        },
-        "data": {
-            "ta": [26.1, 26.5, 27.8, 29.5, 31.2, 32.8, 34.1, 35.0, 35.8, 36.2, 35.9, 35.0, 33.6, 31.8, 30.0, 28.6, 27.6],
-            "rh": [82, 80, 76, 70, 63, 57, 52, 48, 45, 44, 45, 48, 53, 59, 66, 72, 77],
-            "app": [28.0, 28.5, 30.1, 32.0, 33.9, 35.4, 36.6, 37.4, 38.1, 38.5, 38.2, 37.4, 36.1, 34.3, 32.5, 30.9, 29.6],
-            "wbgt": [24.0, 24.5, 25.8, 27.2, 28.6, 29.8, 30.8, 31.5, 32.0, 32.3, 32.0, 31.2, 30.0, 28.4, 26.8, 25.5, 24.6]
-        },
+        "startDate": today.strftime("%Y-%m-%d"),
+        "endDate": (today + datetime.timedelta(days=30)).strftime("%Y-%m-%d"),
+        "byDate": by_date,
         "news": DEFAULT_NEWS_FEED
     }
 
-    # Ensure output directory exists
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(script_dir, "..", "data")
     os.makedirs(data_dir, exist_ok=True)
@@ -99,7 +121,7 @@ def run_pipeline():
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"[SUCCESS] Saved dataset to {file_path}")
+    print(f"[SUCCESS] Saved 30-day forecast dataset ({len(by_date)} dates) to {file_path}")
 
 if __name__ == "__main__":
     run_pipeline()

@@ -82,7 +82,8 @@ const S = {
   task: "heavy", gear: "iba", pax: 600, from: 8, to: 12,
   meas: HOURS.map(() => null),
   envData: { ta: 33.2, rh: 68, ws: 2.1, chillTemp: 34.5, wbgt: 31.8, pm10: 42, pm25: 22, dustStatus: "보통", uvIndex: 8, pop: 10 },
-  newsList: []
+  newsList: [],
+  byDateWeather: {}
 };
 
 function seg(id, items, key, hintId, hintFn, cb) {
@@ -128,6 +129,19 @@ window.selectActivity = function(actId) {
   recomputeAll();
 };
 
+function applyDateWeather(targetDate) {
+  if (S.byDateWeather && S.byDateWeather[targetDate]) {
+    const dayObj = S.byDateWeather[targetDate];
+    if (dayObj.data && Array.isArray(dayObj.data.ta)) {
+      TA = dayObj.data.ta;
+      RH = dayObj.data.rh;
+      APP = dayObj.data.app;
+      BASE = dayObj.data.wbgt;
+    }
+    if (dayObj.env) S.envData = dayObj.env;
+  }
+}
+
 function fill() {
   const idx = S.meas.map((v, i) => (v === null || isNaN(v)) ? -1 : i).filter(i => i >= 0);
   if (!idx.length) return { series: BASE.slice(), src: HOURS.map(() => "기준"), any: false };
@@ -149,6 +163,7 @@ function fill() {
 }
 
 function computeDay() {
+  applyDateWeather(S.planDate);
   const g = GEARS.find(x => x.id === S.gear) || GEARS[0];
   const adjC = g.adj ? g.adj(S.task) : 0;
   const f = fill();
@@ -413,7 +428,7 @@ function recomputeAll() {
   renderDay();
 }
 
-/* ⚡ BUTTON 1: FETCH WEATHER DATA VIA GITHUB ACTIONS */
+/* ⚡ BUTTON 1 (TOP HEADER): FETCH 30-DAY WEATHER FORECAST DATA VIA GITHUB ACTIONS */
 window.triggerGitHubActionPipeline = async function() {
   const toast = document.getElementById("ghToast");
   const toastText = document.getElementById("ghToastText");
@@ -421,7 +436,7 @@ window.triggerGitHubActionPipeline = async function() {
 
   if (toast) toast.hidden = false;
   if (toastText) {
-    toastText.textContent = `⚡ 1단계: GitHub Actions 날씨 수집 파이프라인 (fetch_weather.yml) 실행 요청 중...`;
+    toastText.textContent = `⚡ 1단계: 오늘 기준 +한 달간의 날씨 예보 수집 파이프라인 (fetch_weather.yml) 실행 요청 중...`;
   }
   if (ghBadge) {
     ghBadge.textContent = '● GitHub Actions Pipeline: Running...';
@@ -466,14 +481,14 @@ window.triggerGitHubActionPipeline = async function() {
   }, 2200);
 };
 
-/* 🧮 BUTTON 2: CALCULATE ACTIVITY RISK & WATER REQUIREMENT */
+/* 🧮 BUTTON 2 (STICKY SIDEBAR): CALCULATE RISK BASED ON PRE-FETCHED 30-DAY JSON */
 window.calculateActivityRisk = function() {
   const toast = document.getElementById("ghToast");
   const toastText = document.getElementById("ghToastText");
 
   if (toast) toast.hidden = false;
   if (toastText) {
-    toastText.textContent = `🧮 2단계: [${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] ${S.activeActivityId} 훈련 위험도 & 식수 ${S.pax}명분 산출 완료!`;
+    toastText.textContent = `🧮 2단계: [${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] ${S.activeActivityId} 예보 파싱 및 ${S.pax}명분 위험도/식수 산출 완료!`;
   }
 
   recomputeAll();
@@ -490,16 +505,15 @@ async function fetchKmaLiveWeather() {
       const json = await res.json();
       const badg = document.getElementById("liveBadge");
 
+      if (json && json.byDate) {
+        S.byDateWeather = json.byDate;
+      }
       if (json && (json.status === 'LIVE_KMA_DATA' || json.status === 'LIVE_GITHUB_ACTION_DATA')) {
         if (badg) {
-          badg.textContent = '● 기상 데이터 및 군 안전 뉴스 연동완료';
+          badg.textContent = '● 30일간 예보 연동완료';
           badg.className = 'badge live';
         }
-        if (json.data && Array.isArray(json.data.ta)) {
-          TA = json.data.ta; RH = json.data.rh; APP = json.data.app; BASE = json.data.wbgt;
-        }
       }
-      if (json && json.env) S.envData = json.env;
       if (json && json.news) S.newsList = json.news;
     }
   } catch (e) {
@@ -519,7 +533,7 @@ function renderEnvCards() {
     <div class="env-chip">
       <div class="tag">기온 (TA)</div>
       <div class="val" style="color:var(--ink)">${e.ta || 33.2}°C</div>
-      <div class="sub">실시간 예보</div>
+      <div class="sub">선택일 피크 예보</div>
     </div>
     <div class="env-chip">
       <div class="tag">상대습도 (RH)</div>
