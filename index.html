@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>군 훈련 온열/환경위험 예측 및 부대활동 사전 계획 지원 시스템</title>
-  <meta name="description" content="미군 TB MED 507 교리, DAFI 48-151 및 기상청/에어코리아 API 연동 8대 환경 지수 & 과거 사건·사고 경보 통합 대시보드">
+  <title>부대활동 기상 위험성평가 지원체계 · ARAS 실시간 공백 보완 및 FSB 지휘결정 지원</title>
+  <meta name="description" content="육군 ARAS의 실시간 기상 반영 공백을 보완하고 실행 직전 FSB(Final Safety Briefing) Go/No-Go 판단을 지원하는 체계. 육군규정·기상청·TB MED 507/508 근거. 기상 민감 활동 한정.">
   
   <!-- Premium Web Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=28">
+  <link rel="stylesheet" href="styles.css?v=29">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -23,12 +23,14 @@
     <!-- HEADER (TOP BAR WITH DATA FETCH BUTTON & JSON DB VIEW BUTTON) -->
     <header class="glass">
       <div>
-        <p class="eyebrow">육군 특화 온열/환경위험 예측 · 부대활동 사전 계획 지원 시스템</p>
-        <h1>부대활동 온열·환경위험 지휘 통제 대시보드</h1>
+        <p class="eyebrow">ARAS 실시간 공백 보완 · FSB 지휘결정 지원 · 기상 민감 활동 한정</p>
+        <h1>부대활동 기상 위험성평가 지원체계</h1>
         <p class="sub">육군훈련소(논산 연무대) 신병 및 부대 훈련 사전 위험도 자동 예측 · <span id="currentDateStr">2026-08-08</span></p>
         <div class="badges">
+          <span class="badge">육군규정 온도지수·체감온도</span>
+          <span class="badge">ARAS 척도 변환 (가능성×중대성)</span>
           <span class="badge">기상청 체감온도 3.0</span>
-          <span class="badge">미 육군 TB MED 507 (섭씨 개정)</span>
+          <span class="badge">미 육군 TB MED 507 / 508</span>
           <span class="badge">미 공군 DAFI 48-151</span>
           <span class="badge warn" id="liveBadge" title="D+10일 이내: 기상청 API 연동 | D+11일 이후: 지난 1년 기후 실측 데이터 기반 추정">
             ● D+10일 기상청 API / D+11~30일 1년 기후 추정
@@ -124,8 +126,8 @@
         <!-- SECTION 2: SIDE-BY-SIDE COMPARISON & DECISION CARD -->
         <section class="panel glass">
           <div class="phd">
-            <h2>현 규정 vs 본 시스템 섭씨 보정 모델 1:1 비교 & 지휘관 결정 가이드</h2>
-            <span class="note">단순 WBGT 32°C 한계 극복 · 과업 대사량 및 방탄복/화생방 보호의 착의 보정 반영</span>
+            <h2>규정 기준 판정 및 과업·복장 보정 결과</h2>
+            <span class="note">육군규정 온도지수 단일 축에 과업 대사량·착의 보정을 추가 반영 · 규정 기준은 하향 없이 유지</span>
           </div>
           <div class="pbd" style="padding-top:14px">
             <!-- SIDE-BY-SIDE COMPARISON BOX -->
@@ -155,6 +157,22 @@
                 <div class="slots" id="slots"></div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- SECTION: FSB 실행 직전 안전브리핑 (Go/No-Go 지원) -->
+        <section class="panel glass">
+          <div class="phd">
+            <h2>🎙️ FSB 실행 직전 안전브리핑 · Go/No-Go 판단 지원</h2>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="note">임무 수행 직전 5단계 절차 · 최종 결정은 지휘관 권한</span>
+              <button type="button" class="btn-sub-sm" onclick="copyFsb()" aria-label="브리핑 전문 복사">
+                <span class="icon">📋</span> 브리핑 복사
+              </button>
+            </div>
+          </div>
+          <div class="pbd" style="padding-top:14px">
+            <div id="fsbPanel"></div>
           </div>
         </section>
 
@@ -357,6 +375,6 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=28"></script>
+  <script src="app.js?v=29"></script>
 </body>
 </html>

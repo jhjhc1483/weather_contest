@@ -649,7 +649,7 @@ function arasMeasures(peak, safeWindowLabel) {
     ? "갈증 여부와 무관하게 2시간 주기 강제 급수 · 온수 제공"
     : "급수 주기 고정 및 개인별 음수량 확인 (과다 섭취 상한 준수)");
   add(5, "개인보호구", "Man", isCold
-    ? `방한 피복 착용 상태 점검 (요구 ${cold.reqClo || "-"} clo / 착용 ${cold.wornClo || "-"} clo)`
+    ? `방한 피복 착용 상태 점검 (요구 ${cold.reqClo != null ? cold.reqClo.toFixed(2) : "-"} clo / 착용 ${cold.wornClo != null ? cold.wornClo.toFixed(2) : "-"} clo)`
     : isDust ? "미세먼지 마스크 불출 및 야외활동 시 착용 강제"
     : "방탄복·완전군장 착용 시간 최소화, 통풍 조치");
 
@@ -1131,7 +1131,9 @@ function renderDay() {
   if (swEl) swEl.textContent = safeWinLabel;
 
   renderColdPanel(n, isCold);
-  renderAras(computeAras(D, n, safeWinLabel), safeWinLabel);
+  const aras = computeAras(D, n, safeWinLabel);
+  renderAras(aras, safeWinLabel);
+  renderFsb(buildFsb(D, n, aras, safeWinLabel));
   const slotsEl = document.getElementById("slots");
   if (slotsEl) slotsEl.innerHTML = D.map(d => `<span class="slot ${d.lv<=3?"ok":"no"}">${pad(d.h)} ${d.lv<=3?"가":"불가"}</span>`).join("");
   
@@ -1199,6 +1201,193 @@ function renderColdPanel(n, isCold) {
     ${c.afterDrop ? `<p class="cold-warn">⚠️ <b>발한 후 정지 시점 급냉(after-drop) 주의</b> — 고강도 과업은 활동 중에는 안전하나, 젖은 상태로 휴식에 들어가면 급격히 냉각됩니다. 정지 직전 겉옷 추가·환복을 준비하십시오.</p>` : ""}
     ${c.isStatic ? `<p class="cold-warn">🥶 <b>정적 과업 경고</b> — 대사열 생산이 없어 한랭손상 위험이 가장 높은 과업군입니다. 교대 주기 단축과 재가온 시설 운용이 필수입니다.</p>` : ""}
     <p class="cold-src">근거: TB MED 508 표 3-1(과업별 MET) · 표 3-2(복장 clo) · 그림 3-2(요구 단열값) · 그림 3-5(동상 발생시간) · 표 3-4(버디체크 주기)</p>
+  `;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FSB (Final Safety Briefing) — 실행 직전 5단계 안전브리핑
+   ──────────────────────────────────────────────────────────────
+   ARAS는 계획단계 평가에 머물러 실행단계 행동 통제로 이어지지 않는 구조적 단절이 있다.
+   FSB는 임무 수행 직전 지휘자가 실시하는 5단계 절차로 이 단절을 메운다.
+   본 시스템은 1단계(위험요소 공유)와 5단계(Go/No-Go)에 필요한 정량 근거를 제공한다.
+   ※ 임무 개시 여부 결정은 전적으로 지휘관 권한이며, 본 시스템은 판단 근거만 제시한다.
+   ══════════════════════════════════════════════════════════════ */
+let _fsbText = "";
+
+function buildFsb(D, peak, aras, safeWin) {
+  const s = peak.seasonal || {};
+  const cold = peak.cold || {};
+  const isCold = s.activeSeason === "WINTER";
+  const isDust = s.activeSeason === "DUST";
+  const r = REGIONS[S.region] || {};
+  const act = UNIT_ACTIVITIES.find(a => a.id === S.activeActivityId) || {};
+  const taskObj = TASKS.find(t => t.id === S.task) || {};
+  const gearObj = GEARS.find(g => g.id === S.gear) || {};
+
+  /* 규정상 절대 중지 기준 — 본 시스템 판단이 아니라 육군규정에 의한 강제 조항 */
+  const hardStop =
+    (!isCold && peak.wRaw >= 32.0) ? { on: true, why: `온도지수 ${peak.wRaw.toFixed(1)} — 육군규정 32.0 이상 '중지'` }
+    : (isCold && s.chillTemp <= -24.1) ? { on: true, why: `체감온도 ${s.chillTemp}℃ — 육군규정 -24.1℃ 이하 '중지'` }
+    : { on: false, why: "" };
+
+  let go, goCls, goWhy;
+  if (hardStop.on) {
+    go = "No-Go 권고"; goCls = "p-high";
+    goWhy = `${hardStop.why}. 경계작전 등 필수 활동만 시행하고 야외훈련은 중지 대상입니다.`;
+  } else if (aras.score >= 15) {
+    go = "No-Go 권고"; goCls = "p-high";
+    goWhy = `ARAS 위험성 ${aras.score}점(매우 높음) — 즉시 활동 중지 및 감소대책이 필수인 구간입니다.`;
+  } else if (aras.score >= 8) {
+    go = "조건부 Go"; goCls = "p-mid";
+    goWhy = `ARAS 위험성 ${aras.score}점(높음) — 감소대책 시행으로 8점 미만 저감 후 시행 가능합니다.` +
+            (aras.residual !== null && aras.residual < 8 ? ` 아래 대책 적용 시 ${aras.residual}점으로 저감됩니다.` : "");
+  } else {
+    go = "Go 가능"; goCls = "p-low";
+    goWhy = `ARAS 위험성 ${aras.score}점(${aras.level.name}) — 계획된 감소대책 유지 하에 시행 가능합니다.`;
+  }
+
+  const hazards = [];
+  if (isCold) {
+    hazards.push(`피크 시각 ${pad(peak.h)}:00 체감온도 <b>${s.chillTemp}℃</b> (${s.activeStatus})`);
+    if (cold.frostbiteMin < 999) hazards.push(`노출 피부 동상 발생까지 <b>${cold.frostbiteMin}분</b> — 위험 ${cold.frostbiteRisk.name}`);
+    if (cold.deficit > 0) hazards.push(`방한 단열 <b>${cold.deficit.toFixed(2)} clo 부족</b> (요구 ${cold.reqClo.toFixed(2)} / 착용 ${cold.wornClo.toFixed(2)})`);
+    if (cold.isStatic) hazards.push(`<b>정적 과업</b> — 대사열 생산이 없어 한랭손상 위험 최고`);
+    if (cold.afterDrop) hazards.push(`발한 후 정지 시점 <b>급냉(after-drop)</b> 위험`);
+  } else if (isDust) {
+    hazards.push(`미세먼지 ${s.activeStatus} — PM10 ${S.envData.pm10} · PM2.5 ${S.envData.pm25} ㎍/㎥`);
+  } else {
+    hazards.push(`피크 시각 ${pad(peak.h)}:00 온도지수 <b>${peak.wC.toFixed(1)}℃</b> (${s.activeStatus})`);
+    hazards.push(`착의 보정 포함 — ${gearObj.name} 적용 시 유효 온도지수 <b>${peak.wC.toFixed(1)}℃</b>`);
+    hazards.push(`작업/휴식 <b>${peak.wr}</b> · 1인 시간당 급수 <b>${(peak.qt * QT).toFixed(2)} L</b>`);
+  }
+
+  const asks = isCold
+    ? ["손·발·귀에 감각 저하나 저림이 있는 사람?", "어제 잠을 못 잤거나 몸 상태가 좋지 않은 사람?", "방한 장구 미수령·젖은 상태인 사람?"]
+    : ["최근 감기·발열·설사 증상이 있는 사람?", "어제 잠을 못 잤거나 아침 식사를 거른 사람?", "이전에 온열손상 병력이 있는 사람?"];
+
+  const declares = isCold
+    ? ["나는 손발 감각이 둔해지면 즉시 보고한다.", "나는 목이 마르지 않아도 정해진 주기에 급수한다.",
+       "나는 땀이 나면 겉옷을 열어 조절하고, 정지 전에 겉옷을 추가한다.", "나는 2인 1조를 유지하고 동료의 안면 상태를 확인한다."]
+    : ["나는 어지럼·두통·오심이 오면 즉시 보고한다.", "나는 정해진 급수 주기를 지키고 과다 섭취하지 않는다.",
+       "나는 휴식 시 그늘·냉각 구역으로 이동한다.", "나는 동료의 이상 징후를 관찰하고 즉시 보고한다."];
+
+  const checks = isCold
+    ? ["방한 피복 착용 상태 (머리·손·발·안면 노출 차단)", "수통 동결 여부 및 온수 확보 상태",
+       "재가온 시설(난방 천막·온풍기) 가동 상태", "젖은 피복 교체용 예비 내피·양말 휴대", "통신장비 배터리 저온 성능 저하 점검"]
+    : ["개인 수통 충수 상태 및 급수 지점 확인", "그늘 휴식지·냉각 구역 개설 상태",
+       "얼음·제빙 장비 및 응급 냉각(냉수 침수) 준비", "구급낭 및 후송 차량 대기 상태", "통신장비 작동 확인"];
+
+  const fsb = {
+    go, goCls, goWhy, hardStop,
+    header: {
+      region: r.location || "-",
+      date: S.planDate,
+      window: `${pad(S.from)}:00 – ${pad(S.to)}:00`,
+      // 프리셋 선택 후 과업·복장을 수동 변경했다면 라벨이 실제 설정과 어긋나므로 표시
+      act: (act.name || "-") + ((act.task && (act.task !== S.task || act.gear !== S.gear)) ? " (조정됨)" : ""),
+      task: taskObj.name || "-",
+      gear: gearObj.name || "-",
+      pax: S.pax,
+      safeWin
+    },
+    hazards, asks, declares, checks, aras
+  };
+
+  _fsbText = fsbToText(fsb);
+  return fsb;
+}
+
+function fsbToText(f) {
+  const h = f.header;
+  const strip = t => String(t).replace(/<[^>]+>/g, "");
+  return [
+    `[FSB 실행 직전 안전브리핑]`,
+    `일자 ${h.date} · 시간대 ${h.window} · ${h.region}`,
+    `활동 ${h.act} / 과업 ${h.task} / 복장 ${h.gear} / 인원 ${h.pax}명`,
+    ``,
+    `1단계. 핵심 위험요소 공유`,
+    ...f.hazards.map((x, i) => `  ${i + 1}) ${strip(x)}`),
+    `  ARAS 위험성 ${f.aras.likelihood} × ${f.aras.severity} = ${f.aras.score}점 (${f.aras.level.name})`,
+    `  안전 훈련 가능 시간창: ${h.safeWin}`,
+    ``,
+    `2단계. 병력 참여 위험확인 (거수 확인)`,
+    ...f.asks.map((x, i) => `  ${i + 1}) ${x}`),
+    ``,
+    `3단계. 행동 선언 (복창)`,
+    ...f.declares.map((x, i) => `  ${i + 1}) ${x}`),
+    ``,
+    `4단계. 장비·무기·통신체계 점검`,
+    ...f.checks.map((x, i) => `  □ ${x}`),
+    ``,
+    `5단계. 지휘관 최종승인`,
+    `  판단 근거: ${f.go} — ${strip(f.goWhy)}`,
+    `  ※ 임무 개시 여부는 지휘관이 결정합니다.`,
+    ``,
+    `[감소대책 — 우선순위순]`,
+    ...f.aras.measures.map(m => `  ${m.pri}.${m.priName} (${m.m4}) ${strip(m.text)}`)
+  ].join("\n");
+}
+
+window.copyFsb = function () {
+  if (!_fsbText) return;
+  const done = () => {
+    const b = document.getElementById("fsbCopied");
+    if (b) { b.hidden = false; setTimeout(() => { b.hidden = true; }, 2200); }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(_fsbText).then(done).catch(() => fallbackCopy(_fsbText, done));
+  } else fallbackCopy(_fsbText, done);
+};
+
+function fallbackCopy(text, cb) {
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); cb(); } catch (e) { /* noop */ }
+  document.body.removeChild(ta);
+}
+
+function renderFsb(f) {
+  const box = document.getElementById("fsbPanel");
+  if (!box) return;
+  const h = f.header;
+  const step = (n, title, body) => `
+    <div class="fsb-step">
+      <div class="fsb-no">${n}</div>
+      <div class="fsb-body"><h4>${title}</h4>${body}</div>
+    </div>`;
+
+  box.innerHTML = `
+    <div class="fsb-head">
+      <div><label>일자 · 시간대</label><b>${h.date} · ${h.window}</b></div>
+      <div><label>지역</label><b>${h.region}</b></div>
+      <div><label>활동 · 과업</label><b>${h.act} / ${h.task}</b></div>
+      <div><label>복장 · 인원</label><b>${h.gear} / ${h.pax}명</b></div>
+    </div>
+
+    ${step(1, "핵심 위험요소 공유 <small>(계획단계 평가 결과를 행동 기준으로 전환)</small>",
+      `<ul class="fsb-ul">${f.hazards.map(x => `<li>${x}</li>`).join("")}</ul>
+       <p class="fsb-kv">ARAS 위험성 <b>${f.aras.likelihood} × ${f.aras.severity} = ${f.aras.score}점 (${f.aras.level.name})</b>
+        · 안전 훈련 가능 시간창 <b>${h.safeWin}</b></p>`)}
+
+    ${step(2, "병력 참여 위험확인 <small>(거수 확인 — 위험 인식의 행동 전환 준비)</small>",
+      `<ul class="fsb-ul ask">${f.asks.map(x => `<li>${x}</li>`).join("")}</ul>`)}
+
+    ${step(3, "행동 선언 <small>(복창 — 위험 인식을 개인별 행동 기준으로 고정)</small>",
+      `<ul class="fsb-ul say">${f.declares.map(x => `<li>“${x}”</li>`).join("")}</ul>`)}
+
+    ${step(4, "장비·무기·통신체계 점검 <small>(돌발 사고 가능성 사전 차단)</small>",
+      `<ul class="fsb-ul chk">${f.checks.map(x => `<li>${x}</li>`).join("")}</ul>`)}
+
+    ${step(5, "지휘관 최종승인 <small>(Go / No-Go)</small>",
+      `<div class="fsb-go ${f.goCls}">
+         <b>${f.go}</b>
+         <p>${f.goWhy}</p>
+       </div>
+       ${f.hardStop.on ? `<p class="fsb-hard">⛔ 육군규정상 <b>중지</b> 기준에 해당합니다. 본 항목은 시스템 판단이 아니라 규정에 의한 강제 조항으로, 하향 조정할 수 없습니다.</p>` : ""}
+       <p class="fsb-auth">※ 임무 개시 여부는 <b>전적으로 지휘관의 권한</b>입니다. 본 체계는 판단에 필요한 정량 근거를 제공하는 지원 도구입니다.</p>`)}
+
+    <span class="fsb-copied" id="fsbCopied" hidden>✔ 브리핑 전문이 복사되었습니다</span>
   `;
 }
 
