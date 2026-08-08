@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-Military Weather & Comprehensive 8-Factor Disaster/Weather News Data Pipeline Script (Python Engine)
-Retrieves +30 days of daily hourly weather forecasts (with authentic seasonal temperature variations for Winter/Spring/Summer/Autumn)
-and live Naver News API for 8 Major Severe Weather Hazards:
-1. Heatwave (폭염/열사병)
-2. Coldwave/Frostbite (한파/동상/대설)
-3. Typhoon & Heavy Rain (태풍/집중호우/침수)
-4. Lightning & Thunderstorm (낙뢰/벼락)
-5. Strong Wind (강풍/시설물)
-6. Wildfire & Dry Air (산불/건조특보)
-7. Dust & Ozone (황사/미세먼지/자외선)
-8. Food Poisoning & Hygiene (식중독/위생)
+Military Weather & Severe Weather Accident News Pipeline Script (Python Engine)
+Retrieves +30 days of daily hourly weather forecasts and live Naver News API for Military Severe Weather Incident & Safety Cases:
+1. Heatwave & Heat Casualties in Military (군대 폭염/열사병/온열질환 사고사례)
+2. Coldwave & Frostbite in Military (군대 한파/동상/한랭질환 사고사례)
+3. Typhoon & Heavy Rain Incidents (군대 태풍/집중호우/침수 사고)
+4. Lightning & Thunderstorm Hazards (군대 낙뢰/벼락 안전사고)
+5. Strong Wind Structural Accidents (군대 강풍/시설물 피해 사고)
+6. Wildfire & Dry Air Hazards (군 훈련 산불/건조 사고)
+7. Dust & Ozone Training Hazards (군대 황사/미세먼지/자외선)
+8. Food Poisoning & Hygiene Incidents (군대 식중독/급식 위생 사고)
 
 Saves structured multi-date JSON to data/latest_weather.json.
 """
@@ -42,49 +41,44 @@ load_dotenv()
 
 DEFAULT_NEWS_FEED = [
     {
-        "id": "news_heatwave_1",
+        "id": "mili_heat_1",
         "category": "heatwave",
-        "title": "[폭염 특보] 낮 최고 36도 폭염경보 발효… 온열질환 주의 수칙",
-        "source": "기상청 재난보도",
-        "snippet": "전국 대부분 지역에 폭염특보가 발효된 가운데, 한낮 야외 활동 시 15분 단위 정기 휴식과 정량 급수가 필수적입니다.",
+        "isMilitary": True,
+        "title": "[군 안전경보] 혹서기 행군 중 열탈진 장병 발생 사고사례 및 지휘 조치사항",
+        "source": "국방일보 / 안전보도",
+        "snippet": "체감온도 34도 이상의 혹서기 완전군장 훈련 중 열탈진 장병 발생 사례가 보고됨에 따라, 15분 단위 강제 휴식과 급수가 지시되었습니다.",
         "url": "https://korea.kr",
         "date": "2025-07-20"
     },
     {
-        "id": "news_coldwave_1",
+        "id": "mili_cold_1",
         "category": "coldwave",
-        "title": "[한파 특보] 영하 15도 한파경보 및 도로 빙판길 결빙 주의",
-        "source": "기상청 겨울 특보",
-        "snippet": "급격한 기온 강하로 한랭질환(동상·저체온증) 발생 위험이 높아지므로 방한 3대 용품 착용과 차량 미끄럼 사고 방지가 시급합니다.",
+        "isMilitary": True,
+        "title": "[군 한랭경보] 영하 12도 야외 훈련 중 한랭질환(동상) 발생 사례 및 방한 수칙",
+        "source": "육군본부 의무실",
+        "snippet": "야간 야영 및 경계 작전 노출 장병의 동상 사고 예방을 위해 방한 용품 불출과 체감온도 -15도 이하 시 야외 훈련 전환이 강제됩니다.",
         "url": "https://korea.kr",
-        "date": "2025-01-10"
+        "date": "2025-01-15"
     },
     {
-        "id": "news_rain_1",
+        "id": "mili_rain_1",
         "category": "typhoon_heavyrain",
-        "title": "[호우 특보] 시간당 50mm 강한 비 집중호우… 산사태 및 침수 위험 주의",
-        "source": "중앙재난안전대책본부",
-        "snippet": "급격한 기습 호우로 인한 계곡물 범람 및 저지대 침수, 옹벽/축대 붕괴 위험지역 이동 금지를 당부합니다.",
+        "isMilitary": True,
+        "title": "[군 재난대응] 집중호우 기습 침수 및 진지 붕괴 위험 안전 조치 지침",
+        "source": "합참 안전원",
+        "snippet": "시간당 40mm 이상의 기습 집중호우로 인한 진지 붕괴 및 저지대 침수 사고를 방지하기 위해 야외 노지 훈련이 긴급 중지되었습니다.",
         "url": "https://korea.kr",
-        "date": "2025-07-15"
+        "date": "2025-07-16"
     },
     {
-        "id": "news_lightning_1",
-        "category": "lightning",
-        "title": "[낙뢰 경보] 대기 불안정으로 강한 뇌우 및 낙뢰 주의… 야외 노출 중단",
-        "source": "기상청 뇌우 특보",
-        "snippet": "야외 탁 트인 연병장, 유격장 및 철제 구조물 주변 낙뢰 위험이 고조되므로 실내 안전 구역 이동이 즉시 요구됩니다.",
-        "url": "https://korea.kr",
-        "date": "2025-06-28"
-    },
-    {
-        "id": "news_wildfire_1",
+        "id": "mili_wildfire_1",
         "category": "wildfire_dry",
-        "title": "[산불 주의보] 건조경보 및 실효습도 30% 이하 대형 산불 위험 주의",
-        "source": "산림청 / 소방청",
-        "snippet": "건조한 대기와 강풍으로 인해 야외 화기 취급 금지 및 각급 부대 소화 장비 점검이 강제됩니다.",
+        "isMilitary": True,
+        "title": "[군 사격장 안전] 봄철 건조특보 속 사격 훈련 중 산불 연소 사고 예방",
+        "source": "국방안전원",
+        "snippet": "실탄 및 수류탄 사격 훈련 중 대형 산불로 번지는 전력 손실을 막기 위해 훈련장 등짐펌프 및 잔불 감시조 배치가 필수적입니다.",
         "url": "https://korea.kr",
-        "date": "2025-04-05"
+        "date": "2025-04-10"
     }
 ]
 
@@ -101,31 +95,34 @@ def parse_pub_date(pub_date_str):
     except Exception:
         return datetime.datetime.now().strftime("%Y-%m-%d")
 
-def fetch_naver_weather_disaster_news():
+def fetch_naver_military_disaster_news():
     client_id = os.environ.get("NAVER_CLIENT_ID")
     client_secret = os.environ.get("NAVER_CLIENT_SECRET")
 
     if not client_id or not client_secret:
-        print("[INFO] Naver News API keys missing. Using default 8-factor weather hazard feed.")
+        print("[INFO] Naver News API keys missing. Using default Military Severe Weather Incident feed.")
         return DEFAULT_NEWS_FEED
 
-    hazard_queries = [
-        ("heatwave", "폭염 경보 열사병 온열질환 체감온도"),
-        ("coldwave", "한파 특보 동상 대설 빙판길 한랭질환"),
-        ("typhoon_heavyrain", "태풍 경보 호우 특보 집중호우 침수"),
-        ("lightning", "낙뢰 경보 벼락 뇌우 주의보"),
-        ("strongwind", "강풍 주의보 순간풍속 시설물"),
-        ("wildfire_dry", "산불 주의보 건조 경보"),
-        ("dust_ozon", "황사 미세먼지 주의보 자외선 최고"),
-        ("foodpoison", "식중독 경보 세균성 장염 위생")
+    # Military First + Severe Weather Incident Queries
+    military_queries = [
+        ("heatwave", "군대 폭염 열사병 온열질환 사고"),
+        ("heatwave", "군 부대 훈련 열탈진 사고사례"),
+        ("coldwave", "군대 한파 동상 한랭질환 사고"),
+        ("coldwave", "군 부대 혹한기 훈련 동상 사고사례"),
+        ("typhoon_heavyrain", "군대 집중호우 침수 산사태 사고"),
+        ("lightning", "군대 낙뢰 벼락 안전사고"),
+        ("strongwind", "군대 강풍 시설물 피해 사고"),
+        ("wildfire_dry", "군 사격장 산불 건조 사고"),
+        ("dust_ozon", "군대 미세먼지 황사 훈련 지침"),
+        ("foodpoison", "군대 식중독 사고 급식 위생")
     ]
 
     fetched_news = []
     news_id_counter = 1
 
-    for category, query in hazard_queries:
+    for category, query in military_queries:
         try:
-            url = f"https://openapi.naver.com/v1/search/news.json?query={urllib.parse.quote(query)}&display=3&sort=sim"
+            url = f"https://openapi.naver.com/v1/search/news.json?query={urllib.parse.quote(query)}&display=4&sort=sim"
             req = urllib.request.Request(url)
             req.add_header("X-Naver-Client-Id", client_id)
             req.add_header("X-Naver-Client-Secret", client_secret)
@@ -141,15 +138,20 @@ def fetch_naver_weather_disaster_news():
                         origin_url = item.get("originallink") or item.get("link") or "https://naver.com"
                         pub_date = parse_pub_date(item.get("pubDate", ""))
                         
-                        source_name = "기상청/재난안전보도"
+                        # Check if news explicitly concerns military
+                        is_mil = any(kw in (title + snippet) for kw in ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군", "해병대", "논산"])
+
+                        source_name = "국방/기상 재난보도"
                         if "korea.kr" in origin_url: source_name = "대한민국 정책브리핑"
-                        elif "yna.co.kr" in origin_url: source_name = "연합뉴스 기상"
+                        elif "dema.mil.kr" in origin_url: source_name = "국방일보"
+                        elif "yna.co.kr" in origin_url: source_name = "연합뉴스 국방"
                         elif "news1.kr" in origin_url: source_name = "뉴스1"
                         elif "newsis.com" in origin_url: source_name = "뉴시스"
 
                         fetched_news.append({
-                            "id": f"disaster_news_{news_id_counter}",
+                            "id": f"mil_news_{news_id_counter}",
                             "category": category,
+                            "isMilitary": is_mil,
                             "title": title,
                             "source": source_name,
                             "snippet": snippet,
@@ -161,7 +163,7 @@ def fetch_naver_weather_disaster_news():
             print(f"[WARN] Failed fetching Naver News for query '{query}': {e}")
 
     if fetched_news:
-        print(f"[SUCCESS] Fetched {len(fetched_news)} live items across 8 Weather Hazard categories via Naver API.")
+        print(f"[SUCCESS] Fetched {len(fetched_news)} live Military Weather Incident news items via Naver API.")
         return fetched_news
     else:
         print("[WARN] No news fetched. Falling back to default feed.")
@@ -231,14 +233,14 @@ def generate_daily_weather(base_date, day_offset):
 def run_pipeline():
     today = datetime.datetime.now(datetime.timezone.utc)
     now_str = today.strftime("%Y-%m-%dT%H:%M:%SZ")
-    print(f"[{now_str}] [Python] Gathering Authentic Seasonal 30-Day Forecast & 8-Factor Hazard News Pipeline...")
+    print(f"[{now_str}] [Python] Gathering Military Weather Incident & Severe Hazard News Pipeline...")
 
     by_date = {}
     for d in range(31): # Today + 30 days
         daily = generate_daily_weather(today, d)
         by_date[daily["date"]] = daily
 
-    live_news = fetch_naver_weather_disaster_news()
+    live_news = fetch_naver_military_disaster_news()
 
     payload = {
         "updatedAt": now_str,
@@ -258,7 +260,7 @@ def run_pipeline():
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"[SUCCESS] Saved 30-day authentic seasonal forecast dataset ({len(by_date)} dates) & {len(live_news)} 8-Factor Hazard news items to {file_path}")
+    print(f"[SUCCESS] Saved 30-day forecast dataset ({len(by_date)} dates) & {len(live_news)} Military Weather Incident news items to {file_path}")
 
 if __name__ == "__main__":
     run_pipeline()

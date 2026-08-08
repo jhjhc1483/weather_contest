@@ -347,7 +347,7 @@ function getDateHashSeed(dateStr) {
   return Math.abs(hash);
 }
 
-/* Render 8-Factor Severe Weather Disaster News with STRICT Seasonal Exclusion Rules */
+/* Render Severe Weather Incident News with Military First Priority & Authentic News Published Date */
 function renderSafetyNews(forceShuffle = false) {
   const container = document.getElementById("newsBox");
   if (!container) return;
@@ -359,54 +359,64 @@ function renderSafetyNews(forceShuffle = false) {
 
   const newsList = Array.isArray(S.newsList) ? S.newsList.slice() : [];
   if (!newsList.length) {
-    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">수집된 기상 특보 뉴스가 없습니다.</p>`;
+    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">수집된 기상 특보 사고 기사가 없습니다.</p>`;
     return;
   }
 
   const dateSeed = forceShuffle ? Math.floor(Math.random() * 10000) : getDateHashSeed(dateStr);
 
+  function anyKw(str, kws) {
+    return kws.some(kw => str.includes(kw));
+  }
+
   const scoredNews = newsList.map((item, idx) => {
     let score = 0;
     const cat = item.category;
+    const isMilitary = item.isMilitary || anyKw(item.title + item.snippet, ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군"]);
 
-    // STRICT HARD EXCLUSION: Prevent Heatwave in Winter, Prevent Coldwave in Summer
+    // 1. MILITARY PRIORITY FIRST: Massive score boost for military incident news (+500 points)
+    if (isMilitary) {
+      score += 500;
+    }
+
+    // 2. STRICT HARD EXCLUSION: Physical impossibility rules
     if ((month === 12 || month === 1 || month === 2) && (cat === "heatwave" || cat === "foodpoison")) {
-      return { item, finalScore: -99999 }; // NEVER SHOW HEATWAVE IN WINTER
+      return { item, finalScore: -99999 }; // Never show heatwave in winter
     }
     if ((month >= 6 && month <= 8) && (cat === "coldwave")) {
-      return { item, finalScore: -99999 }; // NEVER SHOW COLDWAVE IN SUMMER
+      return { item, finalScore: -99999 }; // Never show coldwave in summer
     }
 
-    // Condition matching weights
-    if (env.ta >= 31.0 && cat === "heatwave") score += 100;
-    if (env.ta <= 5.0 && cat === "coldwave") score += 100;
-    if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 80;
-    if (env.pm10 >= 80 && cat === "dust_ozon") score += 70;
-    if (env.ws >= 4.0 && cat === "strongwind") score += 60;
-
-    // Strict Month Seasonal Matches
+    // 3. DATE WEATHER HAZARD MATCHING WEIGHTS (+150 ~ +300 points)
     if ((month === 12 || month === 1 || month === 2) && (cat === "coldwave" || cat === "strongwind")) {
-      score += 150;
+      score += 300;
     } else if ((month >= 6 && month <= 8) && (cat === "heatwave" || cat === "foodpoison" || cat === "lightning" || cat === "typhoon_heavyrain")) {
-      score += 150;
-    } else if ((month >= 3 && month <= 5 || month >= 9 && month <= 11) && (cat === "wildfire_dry" || cat === "dust_ozon" || cat === "lightning")) {
-      score += 150;
+      score += 300;
+    } else if ((month >= 3 && month <= 5 || month >= 9 && month <= 11) && (cat === "wildfire_dry" || cat === "dust_ozon")) {
+      score += 300;
     }
 
-    const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 30;
+    if (env.ta >= 31.0 && cat === "heatwave") score += 150;
+    if (env.ta <= 5.0 && cat === "coldwave") score += 150;
+    if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 120;
+    if (env.pm10 >= 80 && cat === "dust_ozon") score += 100;
+    if (env.ws >= 4.0 && cat === "strongwind") score += 80;
+
+    // 4. Per-Date Pseudo-random offset for unique date variations
+    const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 40;
     const finalScore = score + pseudoRandom;
 
-    return { item, finalScore };
+    return { item, finalScore, isMilitary };
   });
 
-  // Filter out hard excluded items (-99999) and sort descending
+  // Filter out hard excluded items (-99999) and sort descending (Military First + Date Weather Match)
   const validScored = scoredNews.filter(s => s.finalScore > -9000);
   validScored.sort((a, b) => b.finalScore - a.finalScore);
 
   const listToRender = validScored.map(s => s.item).slice(0, newsDisplayCount);
 
   if (!listToRender.length) {
-    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">선택하신 날짜(${dateStr}) 계절 조건에 맞는 기상 특보 뉴스가 없습니다.</p>`;
+    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">선택하신 날짜(${dateStr}) 계절 조건에 맞는 군 관련 기상 재난 사고 기사가 없습니다.</p>`;
     return;
   }
 
@@ -421,16 +431,22 @@ function renderSafetyNews(forceShuffle = false) {
     foodpoison: "🍱 식중독/위생"
   };
 
-  container.innerHTML = listToRender.map(n => `
-    <div class="news-card">
-      <div class="hdr">
-        <a href="${n.url}" target="_blank" rel="noopener" class="news-title">⚠️ ${n.title}</a>
-        <span class="news-tag">${n.source}</span>
+  container.innerHTML = listToRender.map(n => {
+    const isMil = n.isMilitary || anyKw(n.title + n.snippet, ["군", "군대", "장병", "부대", "훈련", "국방"]);
+    const pubDateStr = n.date ? `보도일자: ${n.date}` : "최신 보도";
+    return `
+      <div class="news-card" style="${isMil ? 'border-left:3.5px solid var(--accent);background:var(--glass-2)' : ''}">
+        <div class="hdr">
+          <a href="${n.url}" target="_blank" rel="noopener" class="news-title">
+            ${isMil ? '🪖 [군 사고사례]' : '⚠️ [기상 특보]'} ${n.title}
+          </a>
+          <span class="news-tag" style="${isMil ? 'background:var(--accent);color:#fff' : ''}">${n.source}</span>
+        </div>
+        <p class="news-snippet">${n.snippet}</p>
+        <div class="news-meta">${pubDateStr} · [${catNames[n.category] || "8대 기상재난"}] ${isMil ? '★ 군 사고사례 우선배치' : ''}</div>
       </div>
-      <p class="news-snippet">${n.snippet}</p>
-      <div class="news-meta">선택일(${dateStr}) 계절 기상 매칭 · [${catNames[n.category] || "8대 기상재난특보"}]</div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 function drawDay(D) {

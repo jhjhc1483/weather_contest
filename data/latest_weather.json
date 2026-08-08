@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-08T05:28:44Z",
+  "updatedAt": "2026-08-08T05:31:28Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "location": "충청남도 논산시 연무대읍 (육군훈련소)",
   "startDate": "2026-08-08",
@@ -2891,211 +2891,274 @@
   },
   "news": [
     {
-      "id": "disaster_news_1",
+      "id": "mil_news_1",
       "category": "heatwave",
-      "title": "올해만 온열산재 8건…취약사업장 11% '안전조치 위반'",
-      "source": "뉴시스",
-      "snippet": "이어지고 폭염중대경보가 발령되는 등 극한 고온이 계속되면서 온열질환 산재 피해가 더 늘어날 우려가... 이어 물·소금 미비치 38건, 옥외 그늘 미설치 23건, 체감온도 미측정 14건, 냉방장치 미설치 4건 등이었다....",
-      "url": "https://www.newsis.com/view/NISX20260807_0003740269",
-      "date": "2026-08-07"
+      "isMilitary": false,
+      "title": "'살인 더위' 속 강행 문학 SSG 경기 중 관중 실신…안전 우려 현실화",
+      "source": "국방/기상 재난보도",
+      "snippet": "중단되는 사고가 발생했다. 앞서 인천에서 올해 첫 온열질환 사망자가 나온 데 이어 야구장에서도 응급상황이 발생하면서, 폭염 속 경기 운영 기준을 다시 살펴봐야 한다는 목소리가 커지고 있다. 4일 인천...",
+      "url": "https://www.incheontoday.com/news/articleView.html?idxno=321959",
+      "date": "2026-08-04"
     },
     {
-      "id": "disaster_news_2",
+      "id": "mil_news_2",
       "category": "heatwave",
-      "title": "폭염 속 밭일하던 고령자 잇따라 숨져…온열질환 피해 우려",
-      "source": "기상청/재난안전보도",
-      "snippet": "당시 장성을 비롯한 광주·전남 대부분 지역에는 폭염특보가 내려진 상태였다. 앞서 지난 2일에는 담양군 고서면의 한 고추 텃밭에서 70대 여성이 숨진 채 발견됐다. 병원 측은 이 여성이 온열질환의 하나인 열사병으로...",
-      "url": "https://www.nocutnews.co.kr/news/6560040?utm_source=naver&utm_medium=article&utm_campaign=20260807090707",
-      "date": "2026-08-07"
+      "isMilitary": false,
+      "title": "[이슈대담] 긴 폭염, 최대 우려 ‘온열질환’…대비 어떻게?",
+      "source": "국방/기상 재난보도",
+      "snippet": "[앵커] 그런데 폭염에 취약한 것이 실내 노동자도 마찬가지다라고 합니다. 실제로 지난해 청년 노동자 양준혁 씨가 냉방 시설이 없는 실내에서 작업을 하다가 숨진 사고도 있었는데, 실제로 실내 작업도 온열 질환 위험이...",
+      "url": "https://news.kbs.co.kr/news/pc/view/view.do?ncd=8294838&ref=A",
+      "date": "2025-07-03"
     },
     {
-      "id": "disaster_news_3",
+      "id": "mil_news_3",
       "category": "heatwave",
-      "title": "입추에도 폭염…충북서 온열질환 추정 환자 속출",
-      "source": "뉴스1",
-      "snippet": "누적 온열질환자는 116명으로 늘었다. 열탈진이 86명으로 가장 많았고 열사병 17명(사망 1명), 열경련 6명... 경보, 나머지 시군에는 폭염주의보가 발효된 상태다. 청주기상지청 관계자는 \"당분간 낮 최고 체감온도가...",
-      "url": "https://www.news1.kr/local/sejong-chungbuk/6252860",
-      "date": "2026-08-07"
+      "isMilitary": true,
+      "title": "온열질환 군인 계속 증가…역대급 폭염에 군 장병 보호 기준 모호",
+      "source": "국방/기상 재난보도",
+      "snippet": "온열질환 환자는 한해 1000명이 훌쩍 넘는다는 얘기다. 군대에서는 한여름 뙤약볕에 행군하다 열 실신 의심 증상으로 쓰러져 석 달 가까이 입원하거나 아침 체력 단련을 위한 뜀걸음(구보) 중 열사병으로 사망하는 사고...",
+      "url": "https://www.seoul.co.kr/news/society/2024/06/11/20240611500175?wlog_tag3=naver",
+      "date": "2024-06-11"
     },
     {
-      "id": "disaster_news_4",
+      "id": "mil_news_4",
+      "category": "heatwave",
+      "isMilitary": false,
+      "title": "폭염을 이기는 소중한 지혜가 필요하다",
+      "source": "국방/기상 재난보도",
+      "snippet": "열사병, 열탈진, 열경련, 열피로로 심하면 사망에 이르게 된다. 이와 같은 온열질환자를 발견하면 지체없이... 건강체크와 온열질환 예방 안전교육을 통해 폭염사고가 발생되지 않도록 매진하고 있다. 특히 야외활동이...",
+      "url": "http://www.jeonmin.co.kr/news/articleView.html?idxno=311547",
+      "date": "2020-06-08"
+    },
+    {
+      "id": "mil_news_5",
+      "category": "heatwave",
+      "isMilitary": true,
+      "title": "파주 40도-서울 37.8도… 온열질환 사망 작년 3배",
+      "source": "국방/기상 재난보도",
+      "snippet": "숨지는 사고까지 발생했다. 예상보다 이르게 찾아온 폭염에 온열질환으로 인한 사망 사례가 증가하고... 실제 7일 인천 부평구의 한 군부대 유격훈련장에서는 20대 군인 6명이 열탈진 증세로 병원에 이송되기도 했다....",
+      "url": "https://www.donga.com/news/Society/article/all/20250709/131964791/2",
+      "date": "2025-07-09"
+    },
+    {
+      "id": "mil_news_6",
+      "category": "heatwave",
+      "isMilitary": true,
+      "title": "‘체온 40도’ 공사장 첫출근 외국인, 앉은채 숨졌다",
+      "source": "국방/기상 재난보도",
+      "snippet": "숨지는 사고까지 발생했다. 예상보다 이르게 찾아온 폭염에 온열질환으로 인한 사망 사례가 증가하고... 실제 7일 인천 부평구의 한 군부대 유격훈련장에서는 20대 군인 6명이 열탈진 증세로 병원에 이송되기도 했다....",
+      "url": "https://www.donga.com/news/Society/article/all/20250708/131961314/2",
+      "date": "2025-07-08"
+    },
+    {
+      "id": "mil_news_7",
+      "category": "heatwave",
+      "isMilitary": true,
+      "title": "경북도 폭염 피해 속출…더위에 사람·동물 할 것 없이 기진맥진 시군 ...",
+      "source": "국방/기상 재난보도",
+      "snippet": "지난 24일까지 열사병 환자가 3명, 열탈진 11명, 열경련 환자 1명이 발생해 치료를 받고 모두 퇴원했다.... 군부대 예비군훈련 현황, 중소기업체 현황에 대한 설명 등 해당 분야별 폭염 예방과 대응대책을 설명하고...",
+      "url": "http://www.idaegu.com?c=3&uid=392109",
+      "date": "2018-07-25"
+    },
+    {
+      "id": "mil_news_8",
+      "category": "heatwave",
+      "isMilitary": true,
+      "title": "7월 6일 오늘의 안전 상황",
+      "source": "국방/기상 재난보도",
+      "snippet": "‘범죄적 훈련’감행”비난(조선중앙통신) (미국) 국무부, 北 기업과 개인 등 추가 제재대상에 포함... 갇힘사고 110, 전기‧가스안전 17, 기타 885❖폭 염 : 1건 1명(열탈진1)❖집중호우: 인명구조 16건 / 81명...",
+      "url": "http://fpn119.co.kr/sub_read.html?uid=57501&section=sc72",
+      "date": "2016-07-06"
+    },
+    {
+      "id": "mil_news_9",
       "category": "coldwave",
-      "title": "한파에 '경기 기후보험' 지급 6배 급증…한랭질환·빙판길 사고 늘어",
-      "source": "뉴스1",
-      "snippet": "기후보험 사고위로금 지급 건수도 대설과 한파의 영향으로 크게 늘었다. 보험 신청이 시작된 지난해... 한랭질환은 한파로 인한 동상과 저체온증 등이 해당되며, 사고위로금은 빙판길 낙상 등으로 상해가 발생한...",
-      "url": "https://www.news1.kr/local/gyeonggi/6051705",
-      "date": "2026-01-27"
+      "isMilitary": false,
+      "title": "(22)한파 땐 두꺼운 옷 하나보다 얇은 옷 여러 겹이 좋아[안녕하세요 응...",
+      "source": "국방/기상 재난보도",
+      "snippet": "이번 겨울도 지난해 못지않은 한파가 예상된다고 한다. 이러한 추위에 일상적인 야외 활동이나 레포츠를 즐기다보면 동상이나 동창, 저체온증 등 한랭 관련 질환의 발생 가능성이 높아진다. 전신증상인 저체온증은 추위에...",
+      "url": "https://www.khan.co.kr/article/201901082034015",
+      "date": "2019-01-08"
     },
     {
-      "id": "disaster_news_5",
+      "id": "mil_news_10",
       "category": "coldwave",
-      "title": "계속되는 한파에 경기 기후보험 지급 증가···한랭질환·빙판길 낙상 ...",
-      "source": "기상청/재난안전보도",
-      "snippet": "계속되는 한파에 한랭질환과 빙판길 낙상 등이 잇따르며 경기 기후보험 청구와 지급이 증가하고 있다.... 역시 대설과 한파 등의 영향으로 12월 48건, 1월 1~23일 89건으로 늘었다. 한랭질환은 한파에 따른 동상...",
-      "url": "https://www.khan.co.kr/article/202601271100001",
-      "date": "2026-01-27"
+      "isMilitary": false,
+      "title": "[이브닝 이슈] 최강 한파에 전국 '꽁꽁' 언제까지?",
+      "source": "국방/기상 재난보도",
+      "snippet": "기록적인 한파에 어제부터 최고 20센티미터가 넘는 폭설이 쏟아진 전북 지방에서는 교통사고가... ◀ 유선경 아나운서 ▶ 저체온증, 동상 같은 추위로 인한 질환을 보통 '한랭질환'이라고 부르는데요. 앞서 들으신 것처럼...",
+      "url": "http://imnews.imbc.com/replay/2016/nw1800/article/3862816_19830.html",
+      "date": "2016-01-19"
     },
     {
-      "id": "disaster_news_6",
+      "id": "mil_news_11",
       "category": "coldwave",
-      "title": "\"빙판길 낙상·한랭질환, 경기 기후보험 청구하세요\"... 한파 속 지급 급...",
-      "source": "기상청/재난안전보도",
-      "snippet": "한랭질환인 저체온증이나 동상 등을 진단받을 경우 진단비 10만 원을 받을 수 있으며, 기상특보일에 한파나 폭설로 인해 4주 이상 상해 진단 시 사고위로금 30만 원이 지급된다. 지난해 4월 시행 이후 1월 23일 기준...",
-      "url": "https://www.tournews21.com/news/articleView.html?idxno=127827",
-      "date": "2026-01-27"
+      "isMilitary": true,
+      "title": "미군 베테랑 겸 소설가가 직접 취재한 '우크라이나의 비밀 병기', 자원봉...",
+      "source": "국방/기상 재난보도",
+      "snippet": "징집병을 훈련하는 데 초점을 맞춘 비영리단체다. 교관은 대개 퇴역한 나토군으로, 그중 몇 명은 이전 몇 달 동안 외국 군인으로 결성된 군부대 우크라이나 국제 여단과 함께 최전선에서 싸우기도 했다. “‘나는 군...",
+      "url": "http://www.esquirekorea.co.kr/article/76045",
+      "date": "2023-03-29"
     },
     {
-      "id": "disaster_news_7",
+      "id": "mil_news_12",
       "category": "typhoon_heavyrain",
-      "title": "서산시, 집중호우 비상대응 강화…특보 해제 후에도 유지",
-      "source": "뉴스1",
-      "snippet": "특보 없음, 태풍 예비특보·호우주의보, 태풍주의보·호우경보 등 기상특보에 따라 단계별로 운영한다.... 국지성 집중호우가 잦아지는 만큼 기상 상황을 실시간으로 분석해 선제 대응에 나설 방침이다. 또한 침수·산사태...",
-      "url": "https://www.news1.kr/local/daejeon-chungnam/6234896",
-      "date": "2026-07-22"
+      "isMilitary": true,
+      "title": "강수현 양주시장, 집중호우로부터 시민 집중 보호 총력 대응",
+      "source": "국방/기상 재난보도",
+      "snippet": "양주시장이 집중호우로 인한 각종 침수 피해, 산사태 등 자연 재난으로부터 시민의 생명과 재산을 보호하기... 또한, 양주소방서, 양주경찰서, KT, 한국전력공사, 한국가스공사, 군대, 양주자원봉사센터 등 주요 협업...",
+      "url": "http://www.m-i.kr/news/articleView.html?idxno=1136638",
+      "date": "2024-07-04"
     },
     {
-      "id": "disaster_news_8",
+      "id": "mil_news_13",
       "category": "typhoon_heavyrain",
-      "title": "[날씨] 전국 곳곳 물폭탄...서울 첫 호우 재난문자",
-      "source": "기상청/재난안전보도",
-      "snippet": "[김승배] 호우특보가 있습니다. 호우주의보와 호우경보가 있는데 이건 비가 많이 올 겁니다라는 경고죠.... 변했고 태풍의 강도도 과거보다 강해졌고. 어찌됐건 여름철에 내리는 집중호우성 비는 과거보다 더...",
-      "url": "https://www.ytn.co.kr/_ln/0108_202607181120468532",
-      "date": "2026-07-18"
+      "isMilitary": true,
+      "title": "군, 호우피해 복구 총력전 ‘생존을 위한 작전’ 포기는 없다",
+      "source": "국방일보",
+      "snippet": "피해 지역 도움 손길로 ‘국민의 군대’ 실현 이날 육군은 집중호우 피해를 본 충청·경상·전라 지역 85곳에... 군은 주둔지 인근 산사태·하천 범람 우려 지역에는 사고가 발생하지 않도록 선제적으로 돕고, 현재 발생한...",
+      "url": "https://kookbang.dema.mil.kr/newsWeb/20230718/13/ATCE_CTGR_0010010000/view.do",
+      "date": "2023-07-17"
     },
     {
-      "id": "disaster_news_9",
+      "id": "mil_news_14",
       "category": "typhoon_heavyrain",
-      "title": "서산시, 여름철 집중호우 대비 '비상 대응체계' 가동",
-      "source": "기상청/재난안전보도",
-      "snippet": "▲ 서산시가 지난 20일 집중호우 피해 예방을 위해 성연면 일원 산책로를 통제하는 모습. 서산시 제공... 시에 따르면 시는 특보 없음, 태풍 예비특보·호우주의보, 태풍주의보·호우경보 등 기상특보에 따라 단계별로 비상...",
-      "url": "https://www.ggilbo.com/news/articleView.html?idxno=1170758",
-      "date": "2026-07-22"
+      "isMilitary": true,
+      "title": "“땀방울, 빗방울 훔쳐가며 복구 최선”… 예천·문경 호우 현장을 가다",
+      "source": "국방/기상 재난보도",
+      "snippet": "집중호우로 침수된 주민들의 침수가옥을 복구하고 토사를 제거하던 육군 50사단 칠곡대대 우현식(23) 소위는 “산사태 피해 현장에 오니 마음이 아팠는데 내 가족, 우리 동네라 생각으로 최선을 다해 주민들이 하루빨리...",
+      "url": "http://www.kukinews.com/newsView/kuk202307190001",
+      "date": "2023-07-19"
     },
     {
-      "id": "disaster_news_10",
-      "category": "lightning",
-      "title": "<월드컵2014> 훈련장에 뇌우주의보 '홍명보호 대피 소동'",
-      "source": "기상청/재난안전보도",
-      "snippet": "울리면서 뇌우주의보가 내려졌다. <월드컵2014> '낙뢰경보 풀렸나?' (마이애미=연합뉴스) 김주성 기자 = 8일... 순간 그라운드에서 몸을 풀던 선수들은 '무슨 일이지'라는 표정으로 하늘을 쳐다봤고, 곧바로 번쩍하며 벼락이...",
-      "url": "https://m.sports.naver.com/general/article/001/0006948725",
-      "date": "2014-06-08"
+      "id": "mil_news_15",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "title": "중부지방 강타한 '국지성 호우'… 유비무환 했더니 'SAFE 양평'",
+      "source": "국방/기상 재난보도",
+      "snippet": "이 때문에 주택 8가구가 물에 잠겨 이재민 17명이 발생됐고 도로 22곳 파손, 농작물 14㏊ 훼손, 산사태 7곳... CC-TV통합관제센터는 올 여름 중부지방을 강타한 국지성 집중호우에 진가를 발휘했다. 상습 침수지역은 물론...",
+      "url": "http://www.kyeonggi.com/news/articleView.html?idxno=699967",
+      "date": "2013-08-20"
     },
     {
-      "id": "disaster_news_11",
-      "category": "lightning",
-      "title": "벼락·폭염·산불 美 기후재앙? ‘죽음의 계곡’ 54.4도, 107년만 최고더...",
-      "source": "기상청/재난안전보도",
-      "snippet": "16일 브렌트우드시에도 낙뢰로 인한 산불이 여러 건 발생해 소방당국이 진화에 나섰다. 현재까지도 새크라멘토 등 캘리포니아 일부 지역에는 벼락이 계속되고 있으며, 미국 기상청(NSW)은 17일 아침까지 뇌우 경보를...",
-      "url": "https://nownews.seoul.co.kr/news/newsView.php?id=20200817601007&wlog_tag3=naver",
-      "date": "2020-08-17"
-    },
-    {
-      "id": "disaster_news_12",
+      "id": "mil_news_16",
       "category": "strongwind",
-      "title": "태풍 '돌핀' 간접 영향…제주 강풍·풍랑에 축제 차질",
-      "source": "기상청/재난안전보도",
-      "snippet": "제주지방기상청은 제주 산지와 서귀포시, 제주시 일부 지역에 강풍주의보를 발효했으며, 제주도 남쪽 먼바다에는 풍랑경보, 대부분 앞바다에는 풍랑주의보를 내렸다. 기상청은 순간풍속이 초속 20m 안팎까지 강해질 수...",
-      "url": "https://www.edaily.co.kr/news/newspath.asp?newsid=07937606645545024",
-      "date": "2026-08-07"
+      "isMilitary": false,
+      "title": "호르무즈 화재 '나무호' 두바이항 접안 완료...사고 원인 조사 본격화 外...",
+      "source": "국방/기상 재난보도",
+      "snippet": "있어 시설물 관리와 안전사고에 각별히 유의해야 한다. 낮 최고기온은 18~22도 분포로 예년과 비슷하거나... 전국적으로 바람이 강하게 부는 만큼 화재 예방과 강풍으로 인한 피해가 없도록 대비가 필요하다.",
+      "url": "http://www.sisunnews.co.kr/news/articleView.html?idxno=238133",
+      "date": "2026-05-08"
     },
     {
-      "id": "disaster_news_13",
+      "id": "mil_news_17",
       "category": "strongwind",
-      "title": "태풍 '돌핀' 영향 강풍·풍랑에 제주 긴장…야외행사 조정(종합)",
-      "source": "연합뉴스 기상",
-      "snippet": "풍랑주의보도 각각 내려져 있다. 오후 4시 기준 일 최대순간풍속은 마라도 초속 19.5ｍ, 한라산 사제비 초속 18.8ｍ, 강정 초속 17.8ｍ, 새별오름 초속 17.5ｍ 등을 기록하고 있다. 기상청은 강풍특보 지역에서 바람이...",
-      "url": "https://www.yna.co.kr/view/AKR20260807060951056?input=1195m",
-      "date": "2026-08-07"
+      "isMilitary": false,
+      "title": "변화하는 겨울, 기상정보와 함께 지키는 안전한 일상",
+      "source": "국방/기상 재난보도",
+      "snippet": "대설과 강풍, 풍랑과 한파 등 위험기상이 복합적으로 발생하는 계절이다. 겨울철 위험기상은 해난사고와... 또, 무겁게 쌓인 눈으로 인한 시설물 피해를 막기 위해, 눈의 무게까지 고려한 '상세 강설정보'도 제공 중이다....",
+      "url": "http://www.jndn.com/article.php?aid=1764230789422373130",
+      "date": "2025-11-27"
     },
     {
-      "id": "disaster_news_14",
+      "id": "mil_news_18",
       "category": "strongwind",
-      "title": "태풍 '돌핀' 비껴가지만…강풍에 주말 행사 '비상'",
-      "source": "기상청/재난안전보도",
-      "snippet": "동부에 강풍주의보를 내렸다. 이날 오전 10시 기준 일 최대순간풍속은 한라산 사제비 초속 18.8ｍ, 새별오름... 기상청은 강풍에 따른 시설물 피해와 안전사고에 대비하고 항해하거나 조업하는 선박도 각별히 주의해야...",
-      "url": "http://www.wowtv.co.kr/NewsCenter/News/Read?articleId=A202608070437&t=NN",
-      "date": "2026-08-07"
+      "isMilitary": false,
+      "title": "안심은 절대금물...\"꺼진 불 반드시 다시 봐야\"",
+      "source": "국방/기상 재난보도",
+      "snippet": "사망 사고가 적은 폭입니다. [앵커] 그러니까 인가, 도심 시가지나 인가 쪽으로 산불이 많이 번지면 피해가... 산과 인접해 있는 대규모 아파트 단지나 아니면 주유소 시설물 이런 것들을 만들 때 그 인접한 곳에는 방호벽...",
+      "url": "https://www.ytn.co.kr/_ln/0103_201904051502489654",
+      "date": "2019-04-05"
     },
     {
-      "id": "disaster_news_15",
+      "id": "mil_news_19",
+      "category": "strongwind",
+      "isMilitary": false,
+      "title": "안심은 절대금물...\"꺼진 불 반드시 다시 봐야\"",
+      "source": "국방/기상 재난보도",
+      "snippet": "사망 사고가 적은 폭입니다. [앵커] 그러니까 인가, 도심 시가지나 인가 쪽으로 산불이 많이 번지면 피해가... 산과 인접해 있는 대규모 아파트 단지나 아니면 주유소 시설물 이런 것들을 만들 때 그 인접한 곳에는 방호벽...",
+      "url": "https://www.ytn.co.kr/_ln/0103_201904051502489654",
+      "date": "2019-04-05"
+    },
+    {
+      "id": "mil_news_20",
       "category": "wildfire_dry",
-      "title": "산불 잡기도 전에 다시 폭염…서유럽 긴장 고조(종합)",
-      "source": "연합뉴스 기상",
-      "snippet": "폭염주의보를 발령했다. 지롱드의 수도인 보르도의 기온은 이날 36도까지 상승했다. 29일엔 기온이 더 크게... 포르투갈에서도 기온이 급상승하면서 이번 주중 40도 폭염이 예보됐으며 건조한 날씨까지 겹쳐 산불 경보가...",
-      "url": "https://www.yna.co.kr/view/AKR20260728156251081?input=1195m",
-      "date": "2026-07-29"
+      "isMilitary": true,
+      "title": "폭염에 끙끙 앓는 지구촌…헝가리 원전 가동 중단·그리스 발전기 화재",
+      "source": "국방/기상 재난보도",
+      "snippet": "그리스 당국은 메가라 인근 산업 단지를 포함해 서부 아티카 지역 여러 마을에 긴급 대피 경보를 발령했다.산불은 아테네 북서쪽 약 60㎞ 떨어진 코린토스만의 포르토 게르메노 지역으로 번졌고, 베니자 마을과 군 사격장...",
+      "url": "https://www.asiatoday.co.kr/kn/view.php?key=20260803010000466",
+      "date": "2026-08-03"
     },
     {
-      "id": "disaster_news_16",
+      "id": "mil_news_21",
       "category": "wildfire_dry",
-      "title": "산불도 안 잡혔는데 다시 폭염…서유럽 긴장 '고조'",
-      "source": "기상청/재난안전보도",
-      "snippet": "기상청은 산불 진화 작업이 한창인 남서부 지롱드와 랑드 데파르트망에 이날 정오부터 황색 폭염주의보를... 포르투갈에서도 기온이 급상승하면서 이번 주중 40도 폭염이 예보됐으며 건조한 날씨까지 겹쳐 산불 경보가...",
-      "url": "https://news.sbs.co.kr/news/endPage.do?news_id=N1008679424&plink=ORI&cooper=NAVER",
-      "date": "2026-07-29"
+      "isMilitary": false,
+      "title": "[고성산불 30년] 인재에 더해진 진화시스템 부재, 속수무책 흐른 '골든타...",
+      "source": "국방/기상 재난보도",
+      "snippet": "더욱이 전날 동두천 산불진화요원 사망사고로 진화에 대한 위험 인식도가 높아 인력 진화를 강행할 수 없었다. 주불 진화를 위한 헬기 지원도 여의치 않았다. 건조한 날씨로 이날 인제 등 전국에서 산불이 동시다발로...",
+      "url": "https://www.kado.net/news/articleView.html?idxno=2029927",
+      "date": "2026-01-23"
     },
     {
-      "id": "disaster_news_17",
+      "id": "mil_news_22",
       "category": "wildfire_dry",
-      "title": "산불에 40도 폭염…프랑스·스페인 진화 '최대 고비'",
-      "source": "기상청/재난안전보도",
-      "snippet": "폭염주의보를 발령했습니다. 기온은 33도∼35도까지 오를 것으로 전망했습니다. 29일엔 기온이 더 크게 올라... 포르투갈에서도 기온이 급상승하면서 이번 주중 40도 폭염이 예보됐으며 건조한 날씨까지 겹쳐 산불 경보가...",
-      "url": "https://biz.sbs.co.kr/article_hub/20000325434?division=NAVER",
-      "date": "2026-07-29"
+      "isMilitary": true,
+      "title": "[29일 오늘의 사건사고 ②] 광주 북구 양산동 한 사거리 주행하던 23톤 ...",
+      "source": "국방/기상 재난보도",
+      "snippet": "떨어지는 사고가 발생한 가운데 전북 전주시 완산구 효자동 다가구주택 1층 주차장, 대구 북구 노곡동... ◆강원 영월군 상동읍 천평리 군부대 사격장 인근서 산불...1시간여만에 진화 29일 오후 1시 12분경 강원 영월군...",
+      "url": "https://idsn.co.kr/news/view/1065596454281330",
+      "date": "2025-04-29"
     },
     {
-      "id": "disaster_news_18",
-      "category": "dust_ozon",
-      "title": "내일까지 황사 영향…전남, 경남, 제주 비",
-      "source": "기상청/재난안전보도",
-      "snippet": "지금은 미세먼지 농도가 다소 낮아지면서 황사 위기경보가 대부분 해제됐는데요. 그래도 여전히 미세먼지... 강원도와 경북북부의 대기는 무척 건조한 가운데, 곳곳에 건조주의보가 발효중인데요. 바람도 강하게 불어서...",
-      "url": "https://www.obsnews.co.kr/news/articleView.html?idxno=1521901",
-      "date": "2026-04-21"
+      "id": "mil_news_23",
+      "category": "wildfire_dry",
+      "isMilitary": true,
+      "title": "'4월의 강원도' 공식 깨졌다…대형산불 '여의도 면적'으로 따져보니[타...",
+      "source": "국방/기상 재난보도",
+      "snippet": "1996-04-23 여의도 면적 13배…고성 산불 군부대 사격장에서 불량 TNT를 폭파시키다 불똥이 수풀로 튀면서... 사진=연합뉴스 2023-04-03 여의도 면적 2배…함평 산불 건조한 날씨와 강한 바람으로 전남 함평에서 발생한...",
+      "url": "https://www.nocutnews.co.kr/news/6317751?utm_source=naver&utm_medium=article&utm_campaign=20250401050431",
+      "date": "2025-04-01"
     },
     {
-      "id": "disaster_news_19",
-      "category": "dust_ozon",
-      "title": "황사 영향 미세먼지 ‘나쁨’…낮과 밤 기온 차 커",
-      "source": "기상청/재난안전보도",
-      "snippet": "현재 대구와 경북에는 고농도 황사의 영향으로 미세먼지 주의보도 이어지고 있습니다. 오늘 대구와 경북의... 기온이 최고 26도 안팎까지 올라 일교차가 10도에서 많게는 20도까지 크게 벌어지겠습니다. 더불어 자외선...",
-      "url": "https://dgmbc.com/article/MiI6dSeOgRA12EwhjeflJ",
-      "date": "2024-04-17"
-    },
-    {
-      "id": "disaster_news_20",
-      "category": "dust_ozon",
-      "title": "[날씨] 낮 동안 따뜻‥미세먼지 '좋음'",
-      "source": "기상청/재난안전보도",
-      "snippet": "황사가 물러나고 깨끗한 하늘이 드러나 있습니다. 제 옆으로는 서울 서강대교의 모습이 보이고 있는데요. 미세먼지 좋음 수준으로 공기도 깨끗해서요. 하늘과 건물이 선명하게 보이고 있습니다. 낮 동안 햇살이...",
-      "url": "https://imnews.imbc.com/replay/2024/nw930/article/6597751_36507.html",
-      "date": "2024-05-13"
-    },
-    {
-      "id": "disaster_news_21",
+      "id": "mil_news_24",
       "category": "foodpoison",
-      "title": "폭염의 일상화, 온열질환 넘어 식중독·방광염까지",
-      "source": "기상청/재난안전보도",
-      "snippet": "여기에 고온다습한 환경에서 급증하는 세균성 질환, 신체 대사 변화로 인한 '숨은 질병'까지 더해지며 건강... 식중독과 장염도 복병이다. 습하고 무더운 날씨는 살모넬라균·대장균 등 세균이 번식하기 가장 좋은 환경으로...",
-      "url": "http://www.newsprime.co.kr/news/article.html?no=742117",
-      "date": "2026-07-30"
+      "isMilitary": true,
+      "title": "“군대 간 우리 아들 먹거리 더욱 안전해진다”",
+      "source": "국방/기상 재난보도",
+      "snippet": "세니젠은 군 급식 환경에서 발생할 수 있는 식중독 사고를 예방하기 위해 전문 장비나 분석인력 없이도... 아울러 조리 및 보관 단계 전반에 걸친 위생 관리 체계 구축을 목표로 사용자 매뉴얼과 교육체계도 함께 마련할...",
+      "url": "https://www.dt.co.kr/article/12043269?ref=naver",
+      "date": "2026-01-28"
     },
     {
-      "id": "disaster_news_22",
+      "id": "mil_news_25",
       "category": "foodpoison",
-      "title": "‘국가재난급 폭염’ 비상…보건당국, 취약계층 보호 총력",
-      "source": "기상청/재난안전보도",
-      "snippet": "5일 기상청에 따르면 경기 일부와 인천 남부, 충남 청양에 폭염중대경보가 추가로 내려졌다. 서울 전역을... 음식점·급식소 위생점검…식중독 관리 강화 식품의약품안전처도 폭염으로 세균성 식중독 발생 가능성이...",
-      "url": "https://www.kukinews.com/article/view/kuk202608050183",
-      "date": "2026-08-05"
+      "isMilitary": true,
+      "title": "영양교사 검식만 식사? 학교급식 이중잣대의 문제점",
+      "source": "국방/기상 재난보도",
+      "snippet": "기업체, 군대 등 집단급식소 대부분은 검식 담당자에게 식비를 징수하여 개인의 식사로 취급하지 않는다. 영양교사의 검식은 기록하고, 결재를 받는 공무이지, 권리가 아니다. 식중독 사고가 발생하면 그 책임은 매우...",
+      "url": "https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0003192898&CMPT_CD=P0010&utm_source=naver&utm_medium=newsearch&utm_campaign=naver_news",
+      "date": "2025-12-22"
     },
     {
-      "id": "disaster_news_23",
+      "id": "mil_news_26",
       "category": "foodpoison",
-      "title": "李 \"폭염은 국가재난\"…복지부·질병청·식약처 총력대응",
-      "source": "뉴스1",
-      "snippet": "세균성 식중독 발생 가능성이 커지는 데 대비해 여름철 식품안전 관리체계를 가동하고 있다. 식약처는 냉면과 김밥 및 육류와 어패류 등 여름철 소비가 늘어나는 식품을 취급하는 음식점과 집단급식소를 대상으로 위생점...",
-      "url": "https://www.news1.kr/bio/welfare-medical/6250081",
-      "date": "2026-08-05"
+      "isMilitary": false,
+      "title": "'프라보워표 무상급식' 인도네시아서 학생 800명 집단 식중독",
+      "source": "국방/기상 재난보도",
+      "snippet": "제공 급식을 먹은 뒤 집단으로 식중독 증세를 보였다. 이는 프로그램 시작 이후 단일 사건으로는 최대... 급식을 중단하는 대신 빵·우유·계란 등 기본 식품으로 대체 공급하겠다고 밝혀 미봉책이라는 비판을 사고 있다....",
+      "url": "https://www.asiatoday.co.kr/view.php?key=20250921010011146",
+      "date": "2025-09-21"
+    },
+    {
+      "id": "mil_news_27",
+      "category": "foodpoison",
+      "isMilitary": false,
+      "title": "요양원·요양병원 단체급식 전문기업 '㈜장수마을'을 가다",
+      "source": "국방/기상 재난보도",
+      "snippet": "그러나 단체위탁급식 산업의 성장과 함께 업체가 난립하면서 다양한 문제점도 나타나고 있다. 우선 첫 번째로 꼽을 수 있는 문제점은 바로 식품 안전 문제다. 대량의 식재료를 취급하는 만큼 식중독 사고 발생 위험이 높을...",
+      "url": "https://www.newsquest.co.kr/news/articleView.html?idxno=230865",
+      "date": "2024-09-06"
     }
   ]
 }
