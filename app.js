@@ -196,7 +196,7 @@ const S = {
   region: "nonsan",
   planDate: "2026-08-08",
   activeActivityId: "act_march40",
-  task: "heavy", gear: "iba", pax: 600, from: 8, to: 12,
+  task: "heavy", gear: "iba", pax: 600, from: 8, to: 12, mission: "normal",
   meas: HOURS.map(() => null),
   envData: { ta: 33.2, rh: 68, ws: 2.1, chillTemp: 34.5, wbgt: 31.8, pm10: 42, pm25: 22, dustStatus: "보통", uvIndex: 8, pop: 10 },
   newsList: [],
@@ -588,29 +588,74 @@ const ARAS_LEVELS = [
 
 const arasLevelOf = score => ARAS_LEVELS.find(l => score >= l.min && score <= l.max) || ARAS_LEVELS[3];
 
-/* 사고발생 가능성 (1~5) — 노출빈도·노출시간·회피가능성 */
-function arasLikelihood(peak, hours, hasSafeWindow) {
-  // 본 시스템의 통합 위험등급(0~5)을 기준값으로 삼는다
-  let p = [1, 1, 2, 3, 4, 5][Math.min(5, Math.max(0, peak.lv))];
-  if (hours >= 4) p += 1;            // 노출시간 4시간 이상
-  if (hours >= 8) p += 1;            // 장시간 연속 노출
-  if (hasSafeWindow && p > 1) p -= 1; // 대체 시간대 존재 = 회피 가능
-  return Math.min(5, Math.max(1, p));
+/* 임무 중요도 — 중대성(임무수행능력·준비태세 영향) 및 회피 가능성에 반영
+   defer=false 인 임무는 연기·대체가 불가하므로 안전 시간창이 있어도 회피 감점을 주지 않는다 */
+const MISSIONS = [
+  { id: "normal",    name: "통상 훈련", sev: 0, defer: true,
+    desc: "연기·시간대 조정이 가능한 일반 훈련 · 임무 차질 영향 낮음" },
+  { id: "key",       name: "핵심 훈련", sev: 1, defer: true,
+    desc: "전투력 측정·검열 등 일정 조정 부담이 큰 훈련" },
+  { id: "essential", name: "필수 임무", sev: 2, defer: false,
+    desc: "경계작전 등 중단 불가 임무 · 연기 불가로 회피 수단 제한" }
+];
+
+/* ── 사고발생 가능성 (1~5) ──
+   고용노동부 위험성평가 지침 해설의 3요소로 분해한다.
+   ① 유해·위험한 사건의 발생(기상 위험등급) ② 노출(시간대 길이) ③ 회피·제한 가능성 */
+function arasLikelihood(peak, hours, hasSafeWindow, missionId) {
+  const mission = MISSIONS.find(m => m.id === missionId) || MISSIONS[0];
+  const parts = [];
+  const lv = Math.min(5, Math.max(0, peak.lv));
+  let p = [1, 1, 2, 3, 4, 5][lv];
+  parts.push({ label: "사건 발생", delta: p, why: `기상 위험등급 ${lv}단계 기준값`, base: true });
+
+  if (hours >= 8) { p += 2; parts.push({ label: "노출", delta: +2, why: `연속 노출 ${hours}시간 (8시간 이상)` }); }
+  else if (hours >= 4) { p += 1; parts.push({ label: "노출", delta: +1, why: `연속 노출 ${hours}시간 (4시간 이상)` }); }
+  else parts.push({ label: "노출", delta: 0, why: `연속 노출 ${hours}시간 (4시간 미만)` });
+
+  if (!mission.defer) {
+    parts.push({ label: "회피·제한", delta: 0, why: `${mission.name} — 연기 불가로 회피 수단 제한` });
+  } else if (hasSafeWindow && p > 1) {
+    p -= 1; parts.push({ label: "회피·제한", delta: -1, why: "안전 시간창 존재 — 시간대 이동으로 회피 가능" });
+  } else {
+    parts.push({ label: "회피·제한", delta: 0, why: hasSafeWindow ? "이미 최저 수준" : "안전 시간창 없음 — 회피 수단 제한" });
+  }
+
+  const score = Math.min(5, Math.max(1, p));
+  if (score !== p) parts.push({ label: "범위 보정", delta: score - p, why: "1~5점 범위로 조정" });
+  return { score, parts };
 }
 
-/* 사고결과의 중대성 (1~4) — 전투력·임무수행능력·준비태세 영향
-   혹서기에는 고강도 과업이, 혹한기에는 정적 과업이 중증 손상으로 이어진다 */
-function arasSeverity(peak, taskId, pax) {
+/* ── 사고결과의 중대성 (1~4) ──
+   ARAS 정의: 부대의 전투력·임무수행능력·준비태세에 미치는 영향
+   민간 기준의 '치료기간·사망'이 아니라 부대 임무 관점이라는 점이 핵심 차이다.
+   혹서기에는 고강도 과업이, 혹한기에는 정적 과업이 중증 손상으로 이어진다. */
+function arasSeverity(peak, taskId, pax, missionId) {
   const isCold = peak.seasonal && peak.seasonal.activeSeason === "WINTER";
+  const mission = MISSIONS.find(m => m.id === missionId) || MISSIONS[0];
+  const parts = [];
   let s = 2;
-  if (isCold) {
-    if (taskId === "static") s += 1;                       // 저체온·동상 중증화
+  parts.push({ label: "기본", delta: 2, why: "개인 후송 · 임무 지속 가능 수준", base: true });
+
+  if (isCold && taskId === "static") {
+    s += 1; parts.push({ label: "과업 특성", delta: +1, why: "한랭 정적 과업 — 저체온·동상 중증화" });
+  } else if (!isCold && (taskId === "heavy" || taskId === "vhard")) {
+    s += 1; parts.push({ label: "과업 특성", delta: +1, why: "혹서기 고강도 과업 — 열사병 중증화" });
   } else {
-    if (taskId === "heavy" || taskId === "vhard") s += 1;  // 열사병 중증화
+    parts.push({ label: "과업 특성", delta: 0, why: "중증화 요인 없음" });
   }
-  if (pax >= 300) s += 1;                                  // 다수 환자 동시 발생
-  if (peak.lv >= 5) s += 1;                                // 최고 등급 = 치명적 결과 가능
-  return Math.min(4, Math.max(1, s));
+
+  if (pax >= 300) { s += 1; parts.push({ label: "피해 범위", delta: +1, why: `${pax}명 — 다수 환자 동시 발생 가능` }); }
+  else parts.push({ label: "피해 범위", delta: 0, why: `${pax}명 — 소수 인원` });
+
+  if (mission.sev > 0) { s += mission.sev; parts.push({ label: "임무 영향", delta: +mission.sev, why: `${mission.name} — 임무수행능력·준비태세 영향` }); }
+  else parts.push({ label: "임무 영향", delta: 0, why: `${mission.name} — 연기·대체로 임무 차질 최소화 가능` });
+
+  if (peak.lv >= 5) { s += 1; parts.push({ label: "최고 등급", delta: +1, why: "위험등급 5단계 — 치명적 결과 가능" }); }
+
+  const score = Math.min(4, Math.max(1, s));
+  if (score !== s) parts.push({ label: "범위 보정", delta: score - s, why: "1~4점 범위로 조정" });
+  return { score, parts };
 }
 
 /* 감소대책 — ① 제거 → ② 대체 → ③ 공학적 → ④ 관리적 → ⑤ 개인보호구 우선순위
@@ -660,8 +705,9 @@ function arasMeasures(peak, safeWindowLabel) {
 function computeAras(D, peak, safeWindowLabel) {
   const hours = Math.max(1, S.to - S.from);
   const hasSafe = !!(safeWindowLabel && safeWindowLabel !== "없음");
-  const likelihood = arasLikelihood(peak, hours, hasSafe);
-  const severity = arasSeverity(peak, S.task, S.pax);
+  const L = arasLikelihood(peak, hours, hasSafe, S.mission);
+  const V = arasSeverity(peak, S.task, S.pax, S.mission);
+  const likelihood = L.score, severity = V.score;
   const score = likelihood * severity;
 
   // 감소대책 적용 후 잔여 위험성: 안전 시간창으로 이동했을 때의 등급으로 재산출
@@ -670,12 +716,13 @@ function computeAras(D, peak, safeWindowLabel) {
     const safeLv = hasSafe
       ? Math.min(...D.filter(d => d.lv <= 3).map(d => d.lv))
       : 0;
-    const rl = arasLikelihood({ lv: safeLv, seasonal: peak.seasonal }, Math.min(hours, 4), true);
-    residual = rl * severity;
+    const rl = arasLikelihood({ lv: safeLv, seasonal: peak.seasonal }, Math.min(hours, 4), true, S.mission);
+    residual = rl.score * severity;
   }
 
   return {
     likelihood, severity, score,
+    likelihoodParts: L.parts, severityParts: V.parts,
     level: arasLevelOf(score),
     residual,
     residualLevel: residual !== null ? arasLevelOf(residual) : null,
@@ -1407,6 +1454,23 @@ function renderAras(a, safeWinLabel) {
         <span class="aras-total ${a.level.cls}"><em>위험성</em><b>${a.score}</b><small>${a.level.name}</small></span>
       </div>
       <p class="aras-act">${a.level.act}</p>
+
+      <div class="aras-break">
+        ${[["사고발생 가능성", a.likelihoodParts, a.likelihood, "1~5"],
+           ["사고결과 중대성", a.severityParts, a.severity, "1~4"]].map(([t, parts, total, range]) => `
+          <div class="aras-bcol">
+            <h5>${t} 산출 근거 <small>(${range}점)</small></h5>
+            <table class="aras-btbl">
+              ${parts.map(p => `
+                <tr class="${p.base ? "base" : ""}">
+                  <td class="bl">${p.label}</td>
+                  <td class="bd ${p.delta > 0 ? "up" : p.delta < 0 ? "dn" : "zero"}">${p.base ? p.delta : (p.delta > 0 ? "+" + p.delta : p.delta === 0 ? "±0" : p.delta)}</td>
+                  <td class="bw">${p.why}</td>
+                </tr>`).join("")}
+              <tr class="sum"><td class="bl">합계</td><td class="bd">${total}</td><td class="bw"></td></tr>
+            </table>
+          </div>`).join("")}
+      </div>
       ${a.residual !== null ? `
         <p class="aras-res">감소대책 적용 시 잔여 위험성 →
           <b class="${a.residualLevel.cls}">${a.residual}점 (${a.residualLevel.name})</b>
@@ -1803,6 +1867,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   seg("task", TASKS, "task", "taskHint", () => { const t = TASKS.find(x => x.id === S.task); return t ? `${t.w} · ${t.ex}` : ''; }, () => recomputeAll());
   seg("gear", GEARS, "gear", "gearHint", () => { const g = GEARS.find(x => x.id === S.gear); return g ? g.src : ''; }, () => recomputeAll());
+  seg("mission", MISSIONS, "mission", "missionHint", () => { const m = MISSIONS.find(x => x.id === S.mission); return m ? m.desc : ''; }, () => recomputeAll());
 
   const sf = document.getElementById("from"), st = document.getElementById("to");
   if (sf && st) {
