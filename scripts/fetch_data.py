@@ -161,13 +161,50 @@ def fetch_naver_military_disaster_news():
         print("[WARN] No news fetched. Falling back to default feed.")
         return DEFAULT_NEWS_FEED
 
+# ══════════ TARGET REGION DATABASE (논산 / 양평) ══════════
+# taOffset: 지역별 계절 기온 편차(°C), diurnal: 일교차 배율, rhOffset: 상대습도 편차(%p)
+REGIONS = {
+    "nonsan": {
+        "id": "nonsan",
+        "name": "논산 육군훈련소",
+        "short": "논산",
+        "location": "충청남도 논산시 연무대읍 (육군훈련소)",
+        "lat": 36.1133, "lon": 127.0989,
+        "kmaGridX": 68, "kmaGridY": 95,
+        "taOffset": {"winter": 0.0, "spring": 0.0, "summer": 0.0, "autumn": 0.0},
+        "diurnal": 1.00, "rhOffset": 0, "wsBase": 2.1,
+        "pm10Offset": 0, "pm25Offset": 0
+    },
+    "yangpyeong": {
+        "id": "yangpyeong",
+        "name": "양평 지역",
+        "short": "양평",
+        "location": "경기도 양평군",
+        "lat": 37.4917, "lon": 127.4875,
+        "kmaGridX": 69, "kmaGridY": 133,
+        # 내륙 분지 지형 + 고위도: 겨울 한파 심하고 일교차가 큼
+        "taOffset": {"winter": -3.8, "spring": -1.6, "summer": -1.3, "autumn": -2.1},
+        "diurnal": 1.15, "rhOffset": 3, "wsBase": 1.7,
+        "pm10Offset": -6, "pm25Offset": -3
+    }
+}
+
+DEFAULT_REGION = "nonsan"
+
+def season_of(month):
+    if month in [12, 1, 2]: return "winter"
+    if month in [3, 4, 5]: return "spring"
+    if month in [6, 7, 8]: return "summer"
+    return "autumn"
+
 def calculate_apparent_temp(ta, rh, ws=2.0):
     """KMA Summer Apparent Temperature Formula 3.0"""
     tw = ta * math.atan(0.151977 * (rh + 8.313659)**0.5) + math.atan(ta + rh) - math.atan(rh - 1.676331) + 0.00391838 * (rh**1.5) * math.atan(0.023101 * rh) - 4.686035
     app = -0.2442 + 0.55399 * tw + 0.45535 * ta - 0.0022 * (tw**2) + 0.0029 * (tw * ta) + 3.0
     return round(app, 1)
 
-def generate_daily_weather(base_date, day_offset):
+def generate_daily_weather(base_date, day_offset, region_id=DEFAULT_REGION):
+    region = REGIONS.get(region_id, REGIONS[DEFAULT_REGION])
     target_dt = base_date + datetime.timedelta(days=day_offset)
     date_str = target_dt.strftime("%Y-%m-%d")
     month = target_dt.month
@@ -195,21 +232,34 @@ def generate_daily_weather(base_date, day_offset):
         base_rh = [68, 64, 59, 53, 46, 41, 38, 36, 35, 36, 39, 44, 50, 56, 61, 65, 68]
         pm10_base, pm25_base = 40, 20
 
+    # ── Apply region-specific climatology correction (지역 보정) ──
+    season = season_of(month)
+    ta_off = region["taOffset"][season]
+    diurnal = region["diurnal"]
+    day_mean = sum(base_ta) / len(base_ta)
+    base_ta = [day_mean + (t - day_mean) * diurnal + ta_off for t in base_ta]
+    base_rh = [max(15, min(100, r + region["rhOffset"])) for r in base_rh]
+    pm10_base = max(5, pm10_base + region["pm10Offset"])
+    pm25_base = max(3, pm25_base + region["pm25Offset"])
+
     ta = [round(t, 1) for t in base_ta]
     rh = base_rh
-    app = [calculate_apparent_temp(t, r) for t, r in zip(ta, rh)]
+    ws = region["wsBase"]
+    app = [calculate_apparent_temp(t, r, ws) for t, r in zip(ta, rh)]
     wbgt = [round(t * 0.7 + (r / 100) * 8.5 + 2.0, 1) for t, r in zip(ta, rh)]
-    
+
     peak_idx = 9 # 14:00
     return {
         "date": date_str,
         "dayOffset": day_offset,
+        "regionId": region["id"],
+        "regionName": region["name"],
         "dataType": "KMA_API_FORECAST" if is_api_forecast else "CLIMATOLOGY_1YR_ESTIMATE",
         "dataLabel": "기상청 API 실시간 예보" if is_api_forecast else "지난 1년 기후 실측 데이터 기반 추정",
         "env": {
             "ta": ta[peak_idx],
             "rh": rh[peak_idx],
-            "ws": 2.1,
+            "ws": ws,
             "chillTemp": app[peak_idx],
             "wbgt": wbgt[peak_idx],
             "pm10": pm10_base + (day_offset * 3) % 25,
@@ -231,10 +281,25 @@ def run_pipeline():
     now_str = today.strftime("%Y-%m-%dT%H:%M:%SZ")
     print(f"[{now_str}] [Python] D+10 KMA API & D+11~30 1-Year Climatology Estimate News Pipeline...")
 
-    by_date = {}
-    for d in range(31): # Today + 30 days
-        daily = generate_daily_weather(today, d)
-        by_date[daily["date"]] = daily
+    # ── Collect a full 31-day dataset for every target region (논산 · 양평) ──
+    regions_payload = {}
+    for region_id, region in REGIONS.items():
+        by_date = {}
+        for d in range(31): # Today + 30 days
+            daily = generate_daily_weather(today, d, region_id)
+            by_date[daily["date"]] = daily
+        regions_payload[region_id] = {
+            "id": region["id"],
+            "name": region["name"],
+            "short": region["short"],
+            "location": region["location"],
+            "lat": region["lat"],
+            "lon": region["lon"],
+            "kmaGridX": region["kmaGridX"],
+            "kmaGridY": region["kmaGridY"],
+            "byDate": by_date
+        }
+        print(f"[OK] {region['short']}: {len(by_date)} days collected.")
 
     live_news = fetch_naver_military_disaster_news()
 
@@ -242,10 +307,17 @@ def run_pipeline():
         "updatedAt": now_str,
         "status": "LIVE_GITHUB_ACTION_DATA",
         "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
-        "location": "충청남도 논산시 연무대읍 (육군훈련소)",
+        "defaultRegion": DEFAULT_REGION,
+        "regionList": [
+            {"id": r["id"], "name": r["name"], "short": r["short"], "location": r["location"]}
+            for r in REGIONS.values()
+        ],
+        "location": REGIONS[DEFAULT_REGION]["location"],
         "startDate": today.strftime("%Y-%m-%d"),
         "endDate": (today + datetime.timedelta(days=30)).strftime("%Y-%m-%d"),
-        "byDate": by_date,
+        "regions": regions_payload,
+        # Backward compatibility: 기존 단일 지역 소비 코드용 (기본 지역 = 논산)
+        "byDate": regions_payload[DEFAULT_REGION]["byDate"],
         "news": live_news
     }
 

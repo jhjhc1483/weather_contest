@@ -459,6 +459,62 @@ footer li { margin-bottom: 6px; }
   flex: 1;
 }
 
+/* ── 30일 DB 팝업: 지역(논산/양평) 선택 탭 ── */
+.modal-region-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  background: #16202E;
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: 12px;
+}
+.modal-region-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94A3B8;
+  letter-spacing: .3px;
+}
+.modal-region-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.modal-region-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 96px;
+  padding: 8px 14px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1B2433;
+  color: #CBD5E1;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .16s ease;
+}
+.modal-region-btn small {
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748B;
+  font-family: var(--mono);
+}
+.modal-region-btn:hover {
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #F8FAFC;
+}
+.modal-region-btn.active {
+  background: #38BDF8;
+  border-color: #38BDF8;
+  color: #0B1220;
+}
+.modal-region-btn.active small { color: rgba(11, 18, 32, 0.7); }
+
 .modal-grid-meta {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

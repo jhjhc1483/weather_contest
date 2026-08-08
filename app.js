@@ -110,8 +110,20 @@ const S = {
   meas: HOURS.map(() => null),
   envData: { ta: 33.2, rh: 68, ws: 2.1, chillTemp: 34.5, wbgt: 31.8, pm10: 42, pm25: 22, dustStatus: "보통", uvIndex: 8, pop: 10 },
   newsList: [],
-  byDateWeather: {}
+  byDateWeather: {},      // 현재 선택 지역의 30일 데이터
+  byRegionWeather: {},    // { nonsan: {...}, yangpyeong: {...} } 지역별 30일 데이터 전체
+  modalRegion: "nonsan"   // 30일 DB 팝업에서 보고 있는 지역
 };
+
+/* 선택 지역의 30일 데이터를 S.byDateWeather 로 적용 */
+function applyRegionDataset(regionId) {
+  const bucket = S.byRegionWeather && S.byRegionWeather[regionId];
+  if (bucket && bucket.byDate) {
+    S.byDateWeather = bucket.byDate;
+    return true;
+  }
+  return false;
+}
 
 function seg(id, items, key, hintId, hintFn, cb) {
   const el = document.getElementById(id);
@@ -185,6 +197,9 @@ window.switchRegion = function(regionId) {
     const dateStr = document.getElementById("currentDateStr");
     subEl.innerHTML = `${r.location} · <span id="currentDateStr">${dateStr ? dateStr.textContent : S.planDate}</span>`;
   }
+
+  // Swap in the selected region's 30-day dataset
+  applyRegionDataset(regionId);
 
   // Re-render region buttons
   renderRegionSelector();
@@ -524,7 +539,7 @@ function renderSafetyNews(forceShuffle = false) {
       <div class="news-card" style="${isMil ? 'border-left:3.5px solid var(--accent);background:var(--glass-2)' : ''}">
         <div class="hdr">
           <a href="${n.url}" target="_blank" rel="noopener" class="news-title">
-            ${isMil ? '🪖 [군 사고사례]' : '⚠️ [기상 특보]'} ${n.title}
+            ${isMil ? '🪖' : '⚠️'} ${n.title}
           </a>
           <span class="news-tag" style="${isMil ? 'background:var(--accent);color:#fff' : ''}">${n.source}</span>
         </div>
@@ -688,11 +703,51 @@ window.openJsonModal = function() {
   const modal = document.getElementById("jsonModal");
   if (!modal) return;
   modal.hidden = false;
+  if (!S.byRegionWeather || !S.byRegionWeather[S.modalRegion]) S.modalRegion = S.region;
+  renderJsonModalBody();
+};
 
+/* 30일 DB 팝업 상단 지역 선택 탭 (논산 / 양평) */
+function renderModalRegionTabs() {
+  const tabs = document.getElementById("mRegionTabs");
+  if (!tabs) return;
+  const ids = (S.byRegionWeather && Object.keys(S.byRegionWeather).length)
+    ? Object.keys(S.byRegionWeather)
+    : Object.keys(REGIONS);
+
+  tabs.innerHTML = ids.map(id => {
+    const meta = REGIONS[id] || {};
+    const bucket = (S.byRegionWeather && S.byRegionWeather[id]) || {};
+    const label = meta.short || bucket.short || id;
+    const icon = meta.icon || "📍";
+    const count = bucket.byDate ? Object.keys(bucket.byDate).length : 0;
+    return `<button type="button" class="modal-region-btn ${S.modalRegion === id ? 'active' : ''}" onclick="switchModalRegion('${id}')">
+      <span>${icon} ${label}</span><small>${count ? count + '일' : '연동중'}</small>
+    </button>`;
+  }).join("");
+}
+
+window.switchModalRegion = function(regionId) {
+  S.modalRegion = regionId;
+  renderJsonModalBody();
+};
+
+function renderJsonModalBody() {
   const rangeEl = document.getElementById("mMetaRange");
+  const locEl = document.getElementById("mMetaLocation");
   const tbody = document.querySelector("#mSummaryTable tbody");
 
-  const dates = S.byDateWeather ? Object.keys(S.byDateWeather).sort() : [];
+  renderModalRegionTabs();
+
+  const bucket = (S.byRegionWeather && S.byRegionWeather[S.modalRegion]) || null;
+  const dataset = bucket && bucket.byDate ? bucket.byDate : (S.modalRegion === S.region ? S.byDateWeather : {});
+  const regionMeta = REGIONS[S.modalRegion] || {};
+
+  if (locEl) {
+    locEl.textContent = (bucket && bucket.location) || regionMeta.location || "-";
+  }
+
+  const dates = dataset ? Object.keys(dataset).sort() : [];
   if (rangeEl) {
     rangeEl.textContent = dates.length ? `${dates.length}개 날짜 (${dates[0]} ~ ${dates[dates.length-1]})` : "31개 날짜 예보 연동완료";
   }
@@ -700,9 +755,9 @@ window.openJsonModal = function() {
   if (tbody) {
     if (dates.length) {
       tbody.innerHTML = dates.map(dStr => {
-        const item = S.byDateWeather[dStr] || {};
+        const item = dataset[dStr] || {};
         const env = item.env || {};
-        const isSelected = dStr === S.planDate;
+        const isSelected = dStr === S.planDate && S.modalRegion === S.region;
         const diffDays = getDayDiffFromToday(dStr);
         const isApi = diffDays <= 10;
         const sourceLabel = isApi ? "📡 기상청 API 연동" : "📊 지난 1년 기후 추정";
@@ -726,7 +781,7 @@ window.openJsonModal = function() {
       tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:24px">저장된 30일치 데이터베이스 항목을 불러오는 중...</td></tr>`;
     }
   }
-};
+}
 
 window.closeJsonModal = function() {
   const modal = document.getElementById("jsonModal");
@@ -909,7 +964,17 @@ async function fetchKmaLiveWeather() {
       const json = await res.json();
       const badg = document.getElementById("liveBadge");
 
-      if (json && json.byDate) {
+      // 다지역(논산·양평) 데이터셋 우선 적용
+      if (json && json.regions) {
+        S.byRegionWeather = json.regions;
+        if (!applyRegionDataset(S.region)) {
+          const first = Object.keys(json.regions)[0];
+          if (first) { S.region = first; applyRegionDataset(first); }
+        }
+        S.modalRegion = S.region;
+        renderRegionSelector();
+      } else if (json && json.byDate) {
+        // 구버전 단일 지역 JSON 호환
         S.byDateWeather = json.byDate;
       }
       if (json && (json.status === 'LIVE_KMA_DATA' || json.status === 'LIVE_GITHUB_ACTION_DATA')) {

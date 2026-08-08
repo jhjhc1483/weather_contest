@@ -40,7 +40,7 @@
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
         <div style="display:flex;align-items:center;gap:8px">
           <button type="button" class="btn-sub-sm" onclick="openJsonModal()" aria-label="latest_weather.json 30일 수집 DB 현황 보기">
-            <span class="icon">🔍</span> +10일 날씨 DB
+            <span class="icon">🔍</span> +30일 날씨 DB
           </button>
           <button class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
         </div>
@@ -293,7 +293,16 @@
         <button type="button" class="modal-close" onclick="closeJsonModal()" aria-label="팝업 닫기">×</button>
       </div>
       <div class="modal-body">
+        <div class="modal-region-bar">
+          <label class="modal-region-label">📍 지역 선택</label>
+          <div class="modal-region-tabs" id="mRegionTabs"></div>
+        </div>
+
         <div class="modal-grid-meta">
+          <div class="modal-meta-box">
+            <label>선택 지역</label>
+            <span id="mMetaLocation" style="color:#38BDF8">충청남도 논산시 연무대읍 (육군훈련소)</span>
+          </div>
           <div class="modal-meta-box">
             <label>수집 일자 범위</label>
             <span id="mMetaRange">31개 날짜 (2026-08-08 ~ 2026-09-07)</span>
@@ -334,6 +343,6 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=25"></script>
+  <script src="app.js?v=26"></script>
 </body>
 </html>
