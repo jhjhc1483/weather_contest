@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="styles.css?v=31">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -127,6 +127,21 @@
 
       <!-- RIGHT CONTENT AREA: Results & Detailed Modules -->
       <main class="dashboard-content">
+
+        <!-- SECTION: 📅 30일 훈련 가능 캘린더 (1,440시점 전수 분석) -->
+        <section class="panel glass" id="calendarSection">
+          <div class="phd">
+            <h2>📅 30일 훈련 가능 캘린더 · 1,440시점 전수 분석</h2>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span class="note">현재 과업·복장·인원 조건으로 30일 × 17시간대 전수 위험도 판정 · 날짜 클릭 시 상세 분석 전환</span>
+              <div class="cal-region-tabs" id="calRegionTabs"></div>
+            </div>
+          </div>
+          <div class="pbd" style="padding-top:14px">
+            <div class="cal-stats" id="calStats"></div>
+            <div id="calGrid"></div>
+          </div>
+        </section>
 
         <!-- SECTION 2: SIDE-BY-SIDE COMPARISON & DECISION CARD -->
         <section class="panel glass">
@@ -380,6 +395,6 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=30"></script>
+  <script src="app.js?v=31"></script>
 </body>
 </html>

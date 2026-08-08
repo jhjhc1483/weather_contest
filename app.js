@@ -1499,8 +1499,247 @@ function renderAras(a, safeWinLabel) {
   `;
 }
 
+/* ═══════════ 30일 훈련 가능 캘린더 엔진 ═══════════
+   기존 파이프라인이 산출한 1,440개 시점(30일 × 24시간 × 2지역)을 전수 판정하여
+   과업·복장·인원 조건별 "어느 날 몇 시가 훈련 가능한가"를 달력 형태로 시각화한다.
+   핵심: computeDay() 로직을 재사용하므로 모든 보정(착의·대사율·MET·clo·동상)이 동일하게 적용된다. */
+
+let _calRegion = null; // 캘린더 전용 지역 선택 (null이면 S.region 추종)
+
+function computeDayForDate(dateStr) {
+  const savedPlanDate = S.planDate;
+  S.planDate = dateStr;
+  const D = computeDay();
+  S.planDate = savedPlanDate;
+  return D;
+}
+
+function computeCalendar(regionId) {
+  const savedRegion = S.region;
+  const savedByDate = S.byDateWeather;
+  const needSwap = regionId && regionId !== savedRegion;
+
+  if (needSwap) {
+    const bucket = S.byRegionWeather && S.byRegionWeather[regionId];
+    if (bucket && bucket.byDate) S.byDateWeather = bucket.byDate;
+    const r = REGIONS[regionId];
+    if (r) { TA = [...r.fallbackTA]; RH = [...r.fallbackRH]; }
+  }
+
+  const dataset = S.byDateWeather || {};
+  const dates = Object.keys(dataset).sort();
+  const results = [];
+
+  for (const dateStr of dates) {
+    const D = computeDayForDate(dateStr);
+    const peak = getSelectedWindowPeakData(D);
+    const trainableHours = D.filter(d => d.lv <= 3);
+
+    let best = null, cur = null;
+    D.forEach((d, i) => {
+      if (d.lv <= 3) {
+        if (cur === null) cur = i;
+        if (!best || (i - cur) >= (best[1] - best[0])) best = [cur, i];
+      } else cur = null;
+    });
+    const safeWin = best ? `${pad(D[best[0]].h)}:00–${pad(D[best[1]].h+1)}:00` : "없음";
+
+    results.push({
+      date: dateStr,
+      trainableCount: trainableHours.length,
+      totalHours: D.length,
+      peakLv: peak.lv,
+      peakSeason: peak.seasonal,
+      safeWindow: safeWin,
+      peak
+    });
+  }
+
+  if (needSwap) {
+    S.byDateWeather = savedByDate;
+    const r = REGIONS[savedRegion];
+    if (r) { TA = [...r.fallbackTA]; RH = [...r.fallbackRH]; }
+  }
+
+  return results;
+}
+
+function renderCalendarRegionTabs() {
+  const container = document.getElementById("calRegionTabs");
+  if (!container) return;
+  const activeRegion = _calRegion || S.region;
+  const ids = (S.byRegionWeather && Object.keys(S.byRegionWeather).length)
+    ? Object.keys(S.byRegionWeather) : Object.keys(REGIONS);
+
+  container.innerHTML = ids.map(id => {
+    const meta = REGIONS[id] || {};
+    return `<button type="button" class="cal-region-tab ${activeRegion === id ? 'active' : ''}"
+      onclick="switchCalRegion('${id}')">${meta.icon || '📍'} ${meta.short || id}</button>`;
+  }).join("");
+}
+
+window.switchCalRegion = function(regionId) {
+  _calRegion = regionId;
+  renderCalendarView();
+};
+
+function renderCalendarStats(calData) {
+  const box = document.getElementById("calStats");
+  if (!box) return;
+
+  const total = calData.length;
+  if (!total) { box.innerHTML = ""; return; }
+
+  const totalHoursAll = calData.reduce((s, d) => s + d.totalHours, 0);
+  const trainableAll = calData.reduce((s, d) => s + d.trainableCount, 0);
+  const pct = totalHoursAll ? Math.round(trainableAll / totalHoursAll * 100) : 0;
+  const barColor = pct >= 60 ? "var(--c2)" : pct >= 30 ? "var(--c3)" : "var(--c4)";
+
+  // 등급별 일수 분포 (피크 등급 기준)
+  const lvCounts = [0,0,0,0,0,0];
+  calData.forEach(d => { if (d.peakLv >= 0 && d.peakLv <= 5) lvCounts[d.peakLv]++; });
+  const lvColors = ["var(--c0)","var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--black-fill)"];
+  const lvNames = ["해당없음","관심","주의","경고","위험","중대위험"];
+
+  // 완전 가용일 (17/17시간 가능) vs 불가일
+  const fullDays = calData.filter(d => d.trainableCount >= d.totalHours).length;
+  const noDays = calData.filter(d => d.trainableCount === 0).length;
+
+  // 지역 비교 (현재 선택된 지역 외의 지역과 비교)
+  const activeRegion = _calRegion || S.region;
+  const otherRegionId = Object.keys(REGIONS).find(id => id !== activeRegion);
+  let compareHtml = "";
+  if (otherRegionId && S.byRegionWeather && S.byRegionWeather[otherRegionId]) {
+    const otherData = computeCalendar(otherRegionId);
+    const otherTrainable = otherData.reduce((s, d) => s + d.trainableCount, 0);
+    const otherTotal = otherData.reduce((s, d) => s + d.totalHours, 0);
+    const otherPct = otherTotal ? Math.round(otherTrainable / otherTotal * 100) : 0;
+    const diff = pct - otherPct;
+    const otherMeta = REGIONS[otherRegionId] || {};
+    compareHtml = `
+      <div class="cal-stat-box">
+        <span class="cs-label">${otherMeta.icon || ''} ${otherMeta.short || otherRegionId} 대비</span>
+        <span class="cs-val">${diff > 0 ? "+" : ""}${diff}<small>%p</small></span>
+        <span class="cs-label" style="margin-top:2px">${otherMeta.short} ${otherPct}% vs 현재 ${pct}%</span>
+      </div>`;
+  }
+
+  box.innerHTML = `
+    <div class="cal-stat-box">
+      <span class="cs-label">30일 훈련 가용률</span>
+      <span class="cs-val">${pct}<small>% (${trainableAll}/${totalHoursAll}시간)</small></span>
+      <div class="cs-bar"><div class="cs-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
+    </div>
+    <div class="cal-stat-box">
+      <span class="cs-label">완전 가용일 / 완전 불가일</span>
+      <span class="cs-val">${fullDays}<small>일 가용</small> / ${noDays}<small>일 불가</small></span>
+      <span class="cs-label" style="margin-top:2px">전체 ${total}일 중</span>
+    </div>
+    <div class="cal-stat-box">
+      <span class="cs-label">피크 등급별 일수 분포</span>
+      <div class="cal-dist">
+        ${lvCounts.map((c, i) => c > 0 ? `<span class="cal-dist-chip" style="background:${lvColors[i]};color:${i===0||i===1||i===3?'#13202E':'#fff'}">
+          ${lvNames[i]} ${c}일</span>` : "").join("")}
+      </div>
+    </div>
+    ${compareHtml}
+  `;
+}
+
+function renderCalendar(calData) {
+  const container = document.getElementById("calGrid");
+  if (!container) return;
+
+  if (!calData.length) {
+    container.innerHTML = `<p style="color:var(--dim);padding:24px;text-align:center">
+      30일 날씨 DB 데이터를 불러오는 중... 상단의 ⚡ 날씨 수집 버튼을 누르거나 잠시 후 새로고침해 주세요.</p>`;
+    return;
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const dowNames = ["일","월","화","수","목","금","토"];
+
+  // 월별로 그룹핑
+  const months = {};
+  calData.forEach(d => {
+    const ym = d.date.slice(0, 7); // "2026-08"
+    if (!months[ym]) months[ym] = [];
+    months[ym].push(d);
+  });
+
+  let html = "";
+
+  for (const [ym, days] of Object.entries(months)) {
+    const [y, m] = ym.split("-");
+    html += `<div class="cal-month-hdr">${y}년 ${parseInt(m)}월</div>`;
+
+    // 요일 헤더
+    html += `<div class="cal-dow-row">${dowNames.map(d => `<div class="cal-dow">${d}</div>`).join("")}</div>`;
+
+    html += `<div class="cal-grid-inner">`;
+
+    // 첫 날짜의 요일에 맞춰 빈 셀 삽입
+    const firstDate = new Date(days[0].date + "T00:00:00");
+    const startDow = firstDate.getDay(); // 0=일 ~ 6=토
+    for (let i = 0; i < startDow; i++) {
+      html += `<div class="cal-cell empty"></div>`;
+    }
+
+    for (const d of days) {
+      const isToday = d.date === today;
+      const isSelected = d.date === S.planDate;
+      const lv = Math.min(5, Math.max(0, d.peakLv));
+      const s = d.peakSeason || {};
+      const seasonIcon = s.seasonIcon || "";
+      const lvObj = LV[lv] || LV[0];
+      const dayNum = parseInt(d.date.slice(8), 10);
+
+      html += `
+        <div class="cal-cell lv${lv} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}"
+             onclick="selectCalDate('${d.date}')" title="${d.date} · 피크 ${lv}단계 · ${d.trainableCount}/${d.totalHours}시간 가용">
+          <div class="cal-date">
+            ${isToday ? '<span class="cal-today-dot"></span>' : ''}
+            ${dayNum}
+            <span class="cal-season">${seasonIcon}</span>
+          </div>
+          <div class="cal-hours"><b>${d.trainableCount}</b>/${d.totalHours}h</div>
+          <div class="cal-safe">${d.safeWindow}</div>
+          <span class="cal-lv-badge" style="background:${lvObj.c};color:${lvObj.i}">${lv}</span>
+        </div>`;
+    }
+
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+window.selectCalDate = function(dateStr) {
+  S.planDate = dateStr;
+  const dateInput = document.getElementById("planDate");
+  if (dateInput) dateInput.value = dateStr;
+  const dateStrEl = document.getElementById("currentDateStr");
+  if (dateStrEl) dateStrEl.textContent = dateStr;
+  newsDisplayCount = 3;
+  updateNewsToggleBtnUI();
+  recomputeAll();
+
+  // 스크롤을 상세 패널로 이동
+  const compBox = document.getElementById("compBox");
+  if (compBox) compBox.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+function renderCalendarView() {
+  const activeRegion = _calRegion || S.region;
+  renderCalendarRegionTabs();
+  const calData = computeCalendar(activeRegion);
+  renderCalendarStats(calData);
+  renderCalendar(calData);
+}
+
 function recomputeAll() {
   renderDay();
+  renderCalendarView();
 }
 
 /* 📂 MODAL POPUP CONTROL FUNCTIONS FOR LATEST_WEATHER.JSON VIEWER (HIGH CONTRAST) */
