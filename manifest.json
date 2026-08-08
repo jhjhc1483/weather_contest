@@ -1,0 +1,25 @@
+{
+  "short_name": "ARAS-FSB",
+  "name": "부대활동 기상 위험성평가 지원체계",
+  "description": "육군 ARAS의 실시간 기상 반영 공백을 보완하고 실행 직전 FSB Go/No-Go 판단을 지원하는 체계",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/192/military-shield.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/military-shield.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#080C13",
+  "theme_color": "#080C13",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "categories": ["utilities", "productivity", "medical"]
+}
