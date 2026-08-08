@@ -421,10 +421,10 @@ window.calculateAndTriggerAction = async function() {
 
   if (toast) toast.hidden = false;
   if (toastText) {
-    toastText.textContent = `[${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] 부대활동(${S.activeActivityId}) 날씨 파싱 및 GitHub Actions 연산 중...`;
+    toastText.textContent = `[${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] 부대활동(${S.activeActivityId}) 파싱 및 GitHub Actions 연산 중...`;
   }
   if (ghBadge) {
-    ghBadge.textContent = '● GitHub Actions Pipeline: Processing...';
+    ghBadge.textContent = '● GitHub Actions Pipeline: Running...';
     ghBadge.className = 'badge warn';
   }
 
@@ -443,10 +443,21 @@ window.calculateAndTriggerAction = async function() {
       })
     });
 
-    if (res.ok) {
-      const json = await res.json();
-      if (json && json.env) S.envData = json.env;
-      if (json && json.news) S.newsList = json.news;
+    const json = await res.json();
+    console.log("Trigger API Response:", json);
+
+    if (json.triggered) {
+      if (toastText) toastText.textContent = `✅ ${json.message}`;
+      if (ghBadge) {
+        ghBadge.textContent = '● GitHub Actions: TRIGGERED & ACTIVE';
+        ghBadge.className = 'badge live';
+      }
+    } else {
+      if (toastText) toastText.textContent = `ℹ️ ${json.message}`;
+      if (ghBadge) {
+        ghBadge.textContent = `● GitHub Actions: ${json.error || 'Standby'}`;
+        ghBadge.className = 'badge warn';
+      }
     }
   } catch (e) {
     console.log('GitHub Actions trigger note:', e.message);
@@ -454,17 +465,9 @@ window.calculateAndTriggerAction = async function() {
 
   setTimeout(() => {
     if (toast) toast.hidden = true;
-    if (ghBadge) {
-      ghBadge.textContent = '● GitHub Actions Pipeline: Completed & Parsed';
-      ghBadge.className = 'badge gh-badge';
-    }
     renderEnvCards();
     recomputeAll();
-  }, 1400);
-};
-
-window.triggerGitHubActionPipeline = function() {
-  window.calculateAndTriggerAction();
+  }, 2200);
 };
 
 async function fetchKmaLiveWeather() {
