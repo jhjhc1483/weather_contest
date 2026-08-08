@@ -222,6 +222,13 @@ function seg(id, items, key, hintId, hintFn, cb) {
   el.querySelectorAll("button").forEach(b => b.onclick = () => {
     S[key] = isNaN(+b.dataset.v) ? b.dataset.v : +b.dataset.v;
     el.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.v) === String(S[key])));
+
+    // 수동 조작 시 '사용자 직접설정' 프리셋으로 자동 전환하여 UI 하이라이트 갱신
+    if (key === "task" || key === "gear") {
+      S.activeActivityId = "act_custom";
+      renderActivityPresets();
+    }
+
     if (hintId) {
       const hintEl = document.getElementById(hintId);
       if (hintEl && typeof hintFn === 'function') hintEl.textContent = hintFn();
@@ -251,9 +258,9 @@ window.selectActivity = function(actId) {
     S.task = act.task; S.gear = act.gear; S.pax = act.pax;
     const paxEl = document.getElementById("pax");
     if (paxEl) paxEl.value = act.pax;
-    seg("task", TASKS, "task", "taskHint", () => { const t = TASKS.find(x => x.id === S.task); return t ? `${t.w} · ${t.ex}` : ''; }, () => recomputeAll());
-    seg("gear", GEARS, "gear", "gearHint", () => { const g = GEARS.find(x => x.id === S.gear); return g ? g.src : ''; }, () => recomputeAll());
   }
+  seg("task", TASKS, "task", "taskHint", () => { const t = TASKS.find(x => x.id === S.task); return t ? `${t.w} · ${t.ex}` : ''; }, () => recomputeAll());
+  seg("gear", GEARS, "gear", "gearHint", () => { const g = GEARS.find(x => x.id === S.gear); return g ? g.src : ''; }, () => recomputeAll());
   renderActivityPresets();
   recomputeAll();
 };
@@ -381,7 +388,8 @@ function fill() {
       out.push(S.meas[lo] + (S.meas[hi] - S.meas[lo]) * t);
       src.push("보간");
     } else {
-      out.push(BASE[i] || 25.0); src.push("기준");
+      out.push(typeof BASE[i] === 'number' && !isNaN(BASE[i]) ? BASE[i] : 25.0);
+      src.push("기준");
     }
   }
   return { series: out, src, any: true };
@@ -389,7 +397,8 @@ function fill() {
 
 /* ══════════ 4-SEASON ALL-WEATHER HAZARD ENGINE ══════════ */
 function calculateWindChill(ta, ws) {
-  const vKmh = (ws || 2.0) * 3.6;
+  const wsVal = typeof ws === 'number' && !isNaN(ws) ? ws : 2.0;
+  const vKmh = wsVal * 3.6;
   if (ta <= 10.0 && vKmh >= 4.8) {
     const chill = 13.12 + 0.6215 * ta - 11.37 * Math.pow(vKmh, 0.16) + 0.3965 * ta * Math.pow(vKmh, 0.16);
     return +chill.toFixed(1);
@@ -532,13 +541,15 @@ function computeDay() {
   const f = fill();
 
   return HOURS.map((h, i) => {
-    const wRaw = typeof f.series[i] === 'number' && !isNaN(f.series[i]) ? f.series[i] : (BASE[i] || 25.0);
+    const wRaw = typeof f.series[i] === 'number' && !isNaN(f.series[i])
+      ? f.series[i]
+      : (typeof BASE[i] === 'number' && !isNaN(BASE[i]) ? BASE[i] : 25.0);
     const wC = wRaw + adjC;
-    const taVal = TA[i] || 25.0;
-    const rhVal = RH[i] || 60;
-    const wsVal = env.ws || 2.0;
-    const pm10Val = env.pm10 || 40;
-    const pm25Val = env.pm25 || 20;
+    const taVal = typeof TA[i] === 'number' && !isNaN(TA[i]) ? TA[i] : 25.0;
+    const rhVal = typeof RH[i] === 'number' && !isNaN(RH[i]) ? RH[i] : 60;
+    const wsVal = typeof env.ws === 'number' && !isNaN(env.ws) ? env.ws : 2.0;
+    const pm10Val = typeof env.pm10 === 'number' && !isNaN(env.pm10) ? env.pm10 : 40;
+    const pm25Val = typeof env.pm25 === 'number' && !isNaN(env.pm25) ? env.pm25 : 20;
 
     const seasonal = computeSeasonalRisk(taVal, rhVal, wsVal, pm10Val, pm25Val, wC, month);
     const cat = seasonal.summerCat;
