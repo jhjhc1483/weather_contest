@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>군 훈련 온열/환경위험 예측 및 부대활동 사전 계획 지원 시스템</title>
+  <meta name="description" content="미군 TB MED 507 교리, DAFI 48-151 및 기상청/에어코리아 API 연동 8대 환경 지수 & 과거 사건·사고 경보 통합 대시보드">
+  
+  <!-- Premium Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <link rel="stylesheet" href="styles.css?v=10">
+</head>
+<body>
+  <!-- Ambient Dynamic Glow Field -->
+  <div class="field" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b><b class="b4"></b></div>
+
+  <div class="wrap">
+
+    <!-- Header & Main Command Trigger -->
+    <header class="glass">
+      <div>
+        <p class="eyebrow">국방 특화 온열/환경위험 예측 · 부대활동 사전 계획 지원 시스템</p>
+        <h1>부대활동 온열·환경위험 지휘 통제 대시보드</h1>
+        <p class="sub">육군훈련소(논산 연무대) 신병 및 부대 훈련 사전 위험도 자동 예측 · <span id="currentDateStr">2026-08-08</span></p>
+        <div class="badges">
+          <span class="badge">기상청 체감온도 3.0</span>
+          <span class="badge">미 육군 TB MED 507 (섭씨 개정)</span>
+          <span class="badge">미 공군 DAFI 48-151</span>
+          <span class="badge warn" id="liveBadge">● 기상청 & 에어코리아 API 연동</span>
+          <span class="badge gh-badge" id="ghBadge">● GitHub Actions Pipeline: Standby</span>
+        </div>
+      </div>
+      
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+        <button class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
+        <!-- ⚡ GITHUB ACTIONS TRIGGER BUTTON -->
+        <button type="button" class="btn-gh-trigger" id="ghTriggerBtn" onclick="triggerGitHubActionPipeline()">
+          <span class="icon">⚡</span> GitHub Actions 기상 수집
+        </button>
+      </div>
+    </header>
+
+    <!-- ⚡ GITHUB ACTIONS PIPELINE ALERT TOAST (HIDDEN BY DEFAULT) -->
+    <div class="gh-toast glass" id="ghToast" hidden>
+      <div class="spinner"></div>
+      <div>
+        <b style="color:var(--accent)">🚀 GitHub Actions 파이프라인 (fetch_weather.yml) 실행 중...</b>
+        <p style="margin:2px 0 0;font-size:12px;color:var(--dim)" id="ghToastText">선택 일자/시간대 날씨 데이터를 파싱하고 위험도를 자동 연산하고 있습니다.</p>
+      </div>
+    </div>
+
+    <!-- 8-Factor Environmental Weather Chips Bar -->
+    <div class="env-banner-8" id="envBanner"></div>
+
+    <!-- SECTION 1: Integrated Activity & Date Form -->
+    <section class="panel glass">
+      <div class="phd">
+        <h2>통합 부대활동 사전 계획 입력 (Automatic Command Input)</h2>
+        <span class="note">부대활동 · 날짜 · 시간대를 선택하고 [산출하기]를 누르면 GitHub Actions 날씨 수집 및 자동 위험도가 산출됩니다</span>
+      </div>
+      <div class="pbd">
+        <!-- Preset Unit Activity Buttons -->
+        <p class="hint" style="margin-bottom:10px;font-size:13px;color:var(--dim);font-weight:600">
+          🎯 주요 10대 부대활동 빠른 선택 (복장 및 대사율 자동 반영)
+        </p>
+        <div class="act-presets" id="actPresets"></div>
+        
+        <!-- Detailed Controls -->
+        <div class="ctl" style="margin-top:16px">
+          <div class="f">
+            <label for="planDate">훈련 예정 일자</label>
+            <input type="date" id="planDate" value="2026-08-08">
+            <p class="hint">기상 예보 연동 기준일자</p>
+          </div>
+          <div class="f">
+            <label for="from">계획 훈련 시간대</label>
+            <div class="row"><select id="from"></select><span style="color:var(--faint)">–</span><select id="to"></select></div>
+            <p class="hint">집중 야외 훈련 구간</p>
+          </div>
+          <div class="f">
+            <label for="pax">훈련 인원 (명)</label>
+            <input type="number" id="pax" value="240" min="1" max="9999" step="10">
+            <p class="hint">급수 및 얼음 사전 산출 기준</p>
+          </div>
+          <div class="f"><label>훈련 과업 대사율</label><div class="seg" id="task"></div><p class="hint" id="taskHint"></p></div>
+          <div class="f"><label>착의 · 복장 보정</label><div class="seg" id="gear"></div><p class="hint" id="gearHint"></p></div>
+        </div>
+
+        <!-- MAIN CALCULATION SUBMIT BUTTON -->
+        <div style="margin-top:20px;display:flex;justify-content:flex-end">
+          <button type="button" class="btn-calculate" id="calcBtn" onclick="calculateAndTriggerAction()">
+            <span class="icon">🧮</span> 부대활동 위험도 & 식수 산출하기 (GitHub Actions 날씨 수집)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: SIDE-BY-SIDE COMPARISON & DECISION CARD -->
+    <section class="panel glass">
+      <div class="phd">
+        <h2>현 규정 vs 본 시스템 섭씨 보정 모델 1:1 비교 & 지휘관 결정 가이드</h2>
+        <span class="note">단순 WBGT 32°C 한계 극복 · 과업 대사량 및 방탄복/화생방 보호의 착의 보정 반영</span>
+      </div>
+      <div class="pbd" style="padding-top:14px">
+        <!-- SIDE-BY-SIDE COMPARISON BOX -->
+        <div class="comp-box" id="compBox" style="margin-top:0"></div>
+
+        <!-- STATS & WATER REQUIREMENT GRID -->
+        <div class="g2" style="margin-top:16px">
+          <div class="card-inner glass" style="padding:0">
+            <div class="phd"><h2>14:00 기준 현 시각 판정</h2><span class="note">피크 시간대 기준</span></div>
+            <div class="verdict" id="verdict"></div>
+            <div class="stat"><div class="k">권장 작업 / 휴식 주기</div><div class="v" id="wr"></div><div class="d" id="wrDesc"></div></div>
+            <div class="stat"><div class="k">1인 시간당 권장 급수량</div><div class="v" id="water"></div>
+              <div class="d">TB MED 507 표 3-2 기준 (시간당 1.4 L, 1일 11.4 L 초과금지)</div></div>
+          </div>
+          
+          <div class="card-inner glass" style="padding:0">
+            <div class="phd"><h2>계획 구간 총 물/얼음 소요 산출</h2><span class="note" id="planRange"></span></div>
+            <div class="stat"><div class="k">총 필요 식수량 (L)</div><div class="v" id="totalWater"></div><div class="d" id="totalWaterDesc"></div></div>
+            <div class="stat"><div class="k">안전 훈련 가능 시간창</div><div class="v" style="font-size:19px" id="safeWin"></div>
+              <div class="d">채택 등급 3단계(경고) 이하로 유지되는 최장 연속 시간대</div></div>
+            <div class="slots" id="slots"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: ⚠️ SAFETY INCIDENT NEWS TIMELINE MODULE -->
+    <section class="panel glass">
+      <div class="phd">
+        <h2>⚠️ 훈련 안전 주의 경보 (과거 1~2년 전 사건·사고 뉴스 이슈)</h2>
+        <span class="note">선택 부대활동 및 날짜 기준 군 온열/환경 사고 기사 자동 매칭</span>
+      </div>
+      <div class="pbd">
+        <div class="news-box" id="newsBox"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: HOURLY RISK TIMELINE CARDS -->
+    <section class="panel glass">
+      <div class="phd">
+        <h2>시간대별 (05시~21시) 위험도 타임라인 & 1:1 조치 지침</h2>
+        <span class="note">시간대 클릭 시 해당 시각 세부 데이터 하이라이트</span>
+      </div>
+      <div class="pbd">
+        <div class="timeline-grid" id="timelineGrid"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: Time Series SVG Chart -->
+    <section class="panel glass">
+      <div class="phd">
+        <h2>시간대별 온열 위험도 곡선 및 비교 스트립</h2>
+        <span class="note">기상청 예보 · 실측 병렬 표출 (높은 쪽 자동 채택)</span>
+      </div>
+      <div class="pbd">
+        <svg id="chart" viewBox="0 0 900 424" role="img" aria-label="시간대별 체감온도 및 WBGT 곡선과 위험 등급 스트립"></svg>
+        <div class="legend">
+          <span><i style="background:var(--k3)"></i>기상청 체감온도 (예보)</span>
+          <span><i style="background:var(--accent)"></i>WBGT + 군 섭씨 보정 (°C)</span>
+          <span><i class="dot" style="background:var(--accent)"></i>실측 입력값</span>
+          <span><i class="dot" style="background:transparent;border:1.5px solid var(--faint)"></i>직선 보간/기준값</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: Measured WBGT Input Grid -->
+    <section class="panel glass">
+      <div class="phd"><h2>현장 실측 WBGT 시간별 입력 및 보간</h2><span class="note" id="measEcho"></span></div>
+      <div class="pbd">
+        <div class="tools">
+          <button type="button" id="mLoad">표본 기준값 불러오기</button>
+          <button type="button" id="mInterp">실측값 사이 직선 보간</button>
+          <button type="button" id="mClear">전체 지우기</button>
+        </div>
+        <div class="mgrid" id="mgrid"></div>
+        <p class="hint">측정한 시각만 수치로 입력하면 인접 실측값 사이를 직선 보간합니다. (단위: °C)</p>
+      </div>
+    </section>
+
+    <!-- SECTION 7: Detailed Data Table -->
+    <section class="panel glass">
+      <div class="phd"><h2>시간별 위험지수 및 등급 상세 데이터</h2></div>
+      <div class="scroll"><table id="tbl">
+        <thead><tr>
+          <th>시각</th><th class="num">기온(°C)</th><th class="num">습도(%)</th><th class="num">체감온도</th>
+          <th>기상청 단계</th><th class="num">WBGT(보정 °C)</th><th>미군 CAT</th><th>채택 등급</th><th>데이터 출처</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </section>
+
+    <!-- Footer & Regulations Reference -->
+    <footer class="glass">
+      <h4>📋 현 국방부 온열 / 한랭 / 미세먼지 훈련 행동기준 참조 (현기준.md)</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:16px">
+        <div style="background:var(--glass-2);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
+          <b style="color:var(--k3)">1. 온도지수(WBGT)별 현 기준</b>
+          <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
+            <li><b>26.5 ~ 29.5°C 미만 [주의]</b>: 양성교육 및 야외훈련 시 미숙련자 주의</li>
+            <li><b>29.5 ~ 31.0°C 미만 [부분제한]</b>: 뜀걸음, 행군 등 과중한 훈련 지양</li>
+            <li><b>31.0 ~ 32.0°C 미만 [제한]</b>: 옥외훈련 제한/중지, 1일 6시간 이내</li>
+            <li><b>32.0°C 이상 [중지]</b>: 경계작전 등 필수 활동만 실시</li>
+          </ul>
+        </div>
+        <div style="background:var(--glass-2);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
+          <b style="color:var(--k1)">2. 한랭 체감온도별 현 기준</b>
+          <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
+            <li><b>-10.0 ~ 0°C</b>: 정상 야외훈련 가능</li>
+            <li><b>-18.0 ~ -10.1°C</b>: 정상 가능하나 훈련 내용/시간 조정</li>
+            <li><b>-24.0 ~ -18.1°C</b>: 주둔지 훈련으로 전환 가능</li>
+            <li><b>-24.1°C 이하 [대체]</b>: 야외훈련 중지 및 주둔지 대체</li>
+          </ul>
+        </div>
+        <div style="background:var(--glass-2);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
+          <b style="color:var(--accent)">3. 미세먼지/황사 수준 지침</b>
+          <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
+            <li><b>나쁨 (PM2.5: 36~75)</b>: 마스크 불출/착용, 장소/시간 조정</li>
+            <li><b>매우나쁨/주의보 (PM2.5: 76+)</b>: 실내교육 전환 가능, 뜀걸음 최소화</li>
+            <li><b>경보 (PM2.5: 181+)</b>: 실내 훈련 전환 (장성급 판단 제한 시행)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>근거 문헌 및 지침 인용 표기</h4>
+      <ol>
+        <li><b>열지수 구분 · 작업/휴식 비율 · 시간당 급수량</b> — 미 육군성 <i>TB MED 507: Heat Stress Control and Heat Casualty Management</i> (2022.4.12 개정판, 미 육군/공군 공동 규정, 섭씨 환산 반영).</li>
+        <li><b>방탄복 및 전투조끼 착의 보정</b> — 미 공군 규정 <i>DAFI 48-151</i> 표 3.2 (+2.8°C 보정치 적용).</li>
+        <li><b>화생방 보호의 착의 보정</b> — TB MED 507 표 3-2 주7 (경작업 +5.6°C, 중등/중작업 +11.1°C).</li>
+      </ol>
+      <div class="caution">
+        <b>본 도구는 부대활동 사전 계획 수립용입니다.</b><br>
+        TB MED 507 교리는 "WBGT 예보는 지휘관의 사전 훈련 배치, 예비일 산정, 물/얼음 보급 사전 산출용으로 활용하며, <b>당일 훈련 현장의 실제 통제 판단은 실측 WBGT를 사용해야 한다</b>"고 규정합니다.<br><br>
+        본 서비스는 이 지침을 충실히 준수하여 부대 훈련 계획의 적절성과 논리성을 극대화합니다.
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="app.js?v=10"></script>
+</body>
+</html>

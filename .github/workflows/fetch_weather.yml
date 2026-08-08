@@ -1,0 +1,33 @@
+name: Execute Weather & Military Safety News Data Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */3 * * *'
+
+jobs:
+  fetch-and-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Execute Node.js Data Pipeline Script
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+          KMA_API_HUB_KEY: ${{ secrets.KMA_API_HUB_KEY }}
+        run: |
+          node scripts/fetch_data.js
+
+      - name: Commit and Push Updated Weather Data JSON
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Pipeline Bot"
+          git add data/latest_weather.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "⚡ [Automated] Update Military Weather & Incident News Data [skip ci]" && git push)

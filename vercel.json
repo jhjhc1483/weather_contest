@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "military-weather-contest",
+  "builds": [
+    { "src": "api/*.js", "use": "@vercel/node" },
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "styles.css", "use": "@vercel/static" },
+    { "src": "app.js", "use": "@vercel/static" },
+    { "src": "data/*.json", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/weather", "dest": "/api/weather.js" },
+    { "src": "/api/trigger-action", "dest": "/api/trigger-action.js" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

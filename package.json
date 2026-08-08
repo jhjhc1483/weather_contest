@@ -1,0 +1,20 @@
+{
+  "name": "military-weather-contest",
+  "version": "1.0.0",
+  "description": "Military Heat & Environmental Risk Prediction System with GitHub Actions Pipeline & Vercel Serverless Functions",
+  "main": "app.js",
+  "scripts": {
+    "start": "node scripts/fetch_data.js",
+    "fetch-data": "node scripts/fetch_data.js"
+  },
+  "keywords": [
+    "military",
+    "wbgt",
+    "weather",
+    "tb-med-507",
+    "github-actions",
+    "vercel"
+  ],
+  "author": "Antigravity Pairing AI",
+  "license": "MIT"
+}
