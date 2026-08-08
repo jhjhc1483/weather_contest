@@ -278,9 +278,10 @@ window.highlightHour = function(hour) {
   }
 };
 
-/* Refresh & Load More Safety News Handlers */
+/* Refresh & Expand/Collapse Toggle Safety News Handlers */
 window.refreshSafetyNews = function() {
   newsDisplayCount = 3;
+  updateNewsToggleBtnUI();
   if (S.newsList && S.newsList.length > 1) {
     for (let i = S.newsList.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -290,10 +291,29 @@ window.refreshSafetyNews = function() {
   renderSafetyNews();
 };
 
-window.loadMoreSafetyNews = function() {
-  newsDisplayCount += 3;
+window.toggleMoreSafetyNews = function() {
+  if (newsDisplayCount > 3) {
+    newsDisplayCount = 3; // Collapse back to 3 items
+  } else {
+    newsDisplayCount += 3; // Expand by 3 items
+  }
+  updateNewsToggleBtnUI();
   renderSafetyNews();
 };
+
+function updateNewsToggleBtnUI() {
+  const iconEl = document.getElementById("btnToggleNewsIcon");
+  const textEl = document.getElementById("btnToggleNewsText");
+  if (iconEl && textEl) {
+    if (newsDisplayCount > 3) {
+      iconEl.textContent = "➖";
+      textEl.textContent = "접기 (3건 보기)";
+    } else {
+      iconEl.textContent = "➕";
+      textEl.textContent = "더보기";
+    }
+  }
+}
 
 /* Render 8-Factor Severe Weather Disaster News with Date-Driven Smart Matching */
 function renderSafetyNews() {
@@ -704,6 +724,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dateInput.onchange = e => {
       S.planDate = e.target.value;
       newsDisplayCount = 3; // Reset display count on date change
+      updateNewsToggleBtnUI();
       const dateStrEl = document.getElementById("currentDateStr");
       if (dateStrEl) dateStrEl.textContent = `${S.planDate}`;
       recomputeAll();
