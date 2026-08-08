@@ -444,14 +444,13 @@ function recomputeAll() {
   renderDay();
 }
 
-/* 📂 MODAL POPUP CONTROL FUNCTIONS FOR LATEST_WEATHER.JSON VIEWER */
+/* 📂 MODAL POPUP CONTROL FUNCTIONS FOR LATEST_WEATHER.JSON VIEWER (HIGH CONTRAST) */
 window.openJsonModal = function() {
   const modal = document.getElementById("jsonModal");
   if (!modal) return;
   modal.hidden = false;
 
   const rangeEl = document.getElementById("mMetaRange");
-  const codeEl = document.getElementById("jsonPreviewCode");
   const tbody = document.querySelector("#mSummaryTable tbody");
 
   const dates = S.byDateWeather ? Object.keys(S.byDateWeather).sort() : [];
@@ -464,24 +463,23 @@ window.openJsonModal = function() {
       tbody.innerHTML = dates.map(dStr => {
         const item = S.byDateWeather[dStr] || {};
         const env = item.env || {};
+        const isSelected = dStr === S.planDate;
         return `
-          <tr class="${dStr === S.planDate ? "now" : ""}">
-            <td style="font-family:var(--mono)"><b>${dStr}</b> ${dStr === S.planDate ? "📌[선택일]" : ""}</td>
-            <td class="num">${env.ta ? env.ta.toFixed(1) : "33.2"}°C</td>
-            <td class="num">${env.rh || 68}%</td>
-            <td class="num" style="color:var(--accent)">${env.chillTemp ? env.chillTemp.toFixed(1) : "34.5"}°C</td>
-            <td class="num" style="color:var(--k3)">${env.wbgt ? env.wbgt.toFixed(1) : "31.8"}°C</td>
-            <td><span style="font-size:11px;color:#3E9B5A">${env.pm10 || 42} µg/m³ (${env.dustStatus || "보통"})</span></td>
+          <tr class="${isSelected ? "now" : ""}">
+            <td style="font-family:var(--mono);color:${isSelected ? "#38BDF8" : "#F8FAFC"}">
+              <b>${dStr}</b> ${isSelected ? "📌 [선택일]" : ""}
+            </td>
+            <td class="num" style="color:#F1F5F9">${env.ta ? env.ta.toFixed(1) : "33.2"}°C</td>
+            <td class="num" style="color:#94A3B8">${env.rh || 68}%</td>
+            <td class="num" style="color:#38BDF8;font-weight:700">${env.chillTemp ? env.chillTemp.toFixed(1) : "34.5"}°C</td>
+            <td class="num" style="color:#F59E0B;font-weight:700">${env.wbgt ? env.wbgt.toFixed(1) : "31.8"}°C</td>
+            <td><span style="font-size:12px;color:#4ADE80;font-weight:600">${env.pm10 || 42} µg/m³ (${env.dustStatus || "보통"})</span></td>
           </tr>
         `;
       }).join("");
     } else {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--dim)">저장된 데이터베이스 항목을 불러오는 중...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#94A3B8;padding:24px">저장된 30일치 데이터베이스 항목을 불러오는 중...</td></tr>`;
     }
-  }
-
-  if (codeEl) {
-    codeEl.textContent = JSON.stringify(S.byDateWeather, null, 2);
   }
 };
 
