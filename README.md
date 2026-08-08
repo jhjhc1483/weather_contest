@@ -16,7 +16,7 @@
 
 ### 1. ⚡ 30일간 기상 예보 데이터 사전 수집 & 파이프라인 (Python Automation)
 - **30-Day Multi-Date Dataset**: 오늘 기준 +30일치(31개 일자)의 05:00~21:00 시각별 8대 기상 데이터를 사전 수집 및 `data/latest_weather.json` 저장.
-- **GitHub Actions 연동**: 상단 Header **`[⚡ GitHub Actions 날씨 수집]`** 버튼 또는 3시간 주기 Cron 자동화로 원격 백그라운드 데이터 수집.
+- **자동 데이터 연동**: 상단 Header **`[⚡ 날씨 수집 (+10일치)]`** 버튼 또는 3시간 주기 Cron 자동화로 원격 백그라운드 데이터 수집.
 - **📂 30일 DB 현황 한눈에 보기 (고대비 모달)**: 수집된 31개 일자의 기상 요약 데이터를 선명한 Sticky Table Header 모달 팝업으로 한눈에 파악.
 
 ### 2. 🧮 0초 반응형 실시간 정밀 위험도 & 식수 소요 산출 (Zero-click Reactive UX)
@@ -55,27 +55,10 @@
 - **Frontend**: Vanilla HTML5, Modern CSS (Glassmorphism, Dark Aesthetics), Pure JavaScript ES6+
 - **Data Engine**: Python 3.11 (`scripts/fetch_data.py`), Naver News Open API
 - **Backend / Serverless**: Vercel Serverless Functions (`api/weather.js`, `api/trigger-action.js`)
-- **Automation / CI/CD**: GitHub Actions (`.github/workflows/fetch_weather.yml`)
+- **Automation / CI/CD**: 자동 데이터 수집 파이프라인 (`.github/workflows/fetch_weather.yml`)
 
 ---
 
-## 💻 실행 및 배포 방법 (Getting Started)
-
-### 로컬 실행
-```bash
-# 1. 환경 변수 (.env) 설정
-NAVER_CLIENT_ID="your_naver_id"
-NAVER_CLIENT_SECRET="your_naver_secret"
-
-# 2. 데이터 파이프라인 스크립트 실행 (30일 예보 & 뉴스 수집)
-python scripts/fetch_data.py
-
-# 3. 웹 서버 실행 (Python Simple Server 또는 Live Server)
-python -m http.server 8000
-```
-웹 브라우저에서 `http://localhost:8000` 접속.
-
----
 
 ## 📄 라이선스 & 권장사항 (Notice)
 - 본 시스템은 부대 훈련 사전 계획 수립용입니다.

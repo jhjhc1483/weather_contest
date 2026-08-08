@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({
         success: true,
         triggered: true,
-        message: `🚀 GitHub Action (fetch_weather.yml) 트리거 성공! https://github.com/${owner}/${repo}/actions 에서 구동 중입니다.`,
+        message: `🚀 기상 데이터 수집 파이프라인 트리거 성공! 데이터 연동이 진행 중입니다.`,
         timestamp: new Date().toISOString()
       });
     } else {
@@ -51,7 +51,7 @@ module.exports = async function handler(req, res) {
         triggered: false,
         status: response.status,
         error: "GITHUB_API_ERROR",
-        message: `GitHub API 응답 에러 (HTTP ${response.status}): ${errorText}`,
+        message: `데이터 연동 응답 에러 (HTTP ${response.status}): ${errorText}`,
         details: "토큰에 오타/따옴표가 들어갔는지 또는 토큰 생성이 완료되었는지 확인해 주세요."
       });
     }

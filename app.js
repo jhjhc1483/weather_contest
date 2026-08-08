@@ -265,7 +265,7 @@ function renderComparison(D) {
 
   compBox.innerHTML = `
     <div class="comp-col legacy">
-      <span class="comp-title">📋 현 국방부 규정 (계획 시간대 피크 시각 ${pad(n.h)}:00 기준)</span>
+      <span class="comp-title">📋 현 규정 (계획 시간대 피크 시각 ${pad(n.h)}:00 기준)</span>
       <div class="comp-card">
         <div class="head">
           <span>${legacy.status} (단순 WBGT ${peakW.toFixed(1)}°C)</span>
@@ -676,7 +676,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeJsonModal();
 });
 
-/* ⚡ TOP HEADER BUTTON: FETCH 30-DAY WEATHER FORECAST DATA VIA GITHUB ACTIONS */
+/* ⚡ TOP HEADER BUTTON: FETCH WEATHER FORECAST DATA VIA DATA PIPELINE */
 window.triggerGitHubActionPipeline = async function() {
   const toast = document.getElementById("ghToast");
   const toastTitle = document.getElementById("ghToastTitle");
@@ -684,11 +684,11 @@ window.triggerGitHubActionPipeline = async function() {
   const ghBadge = document.getElementById("ghBadge");
 
   if (toast) toast.hidden = false;
-  if (toastTitle) toastTitle.textContent = "🚀 GitHub Actions 파이프라인 (fetch_weather.yml) 실행 요청 중...";
+  if (toastTitle) toastTitle.textContent = "🚀 기상 데이터 수집 파이프라인 실행 요청 중...";
   if (toastText) toastText.textContent = `오늘 기준 +한 달간의 날씨 예보 데이터를 수집 및 저장하고 있습니다.`;
   
   if (ghBadge) {
-    ghBadge.textContent = '● GitHub Actions Pipeline: Running...';
+    ghBadge.textContent = '● 데이터 수집 중...';
     ghBadge.className = 'badge warn';
   }
 
@@ -710,18 +710,18 @@ window.triggerGitHubActionPipeline = async function() {
     if (json.triggered) {
       if (toastText) toastText.textContent = `✅ ${json.message}`;
       if (ghBadge) {
-        ghBadge.textContent = '● GitHub Actions: TRIGGERED & ACTIVE';
+        ghBadge.textContent = '● 데이터 연동 완료';
         ghBadge.className = 'badge live';
       }
     } else {
       if (toastText) toastText.textContent = `ℹ️ ${json.message}`;
       if (ghBadge) {
-        ghBadge.textContent = `● GitHub Actions: ${json.error || 'Standby'}`;
+        ghBadge.textContent = `● 데이터 연동: ${json.error || '대기중'}`;
         ghBadge.className = 'badge warn';
       }
     }
   } catch (e) {
-    console.log('GitHub Actions trigger note:', e.message);
+    console.log('데이터 연동 trigger note:', e.message);
   }
 
   setTimeout(() => {
