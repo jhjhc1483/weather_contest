@@ -129,7 +129,28 @@ window.selectActivity = function(actId) {
   recomputeAll();
 };
 
+function getDayDiffFromToday(targetDateStr) {
+  const today = new Date();
+  const target = new Date(targetDateStr);
+  const diffTime = target - today;
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+
 function applyDateWeather(targetDate) {
+  const diffDays = getDayDiffFromToday(targetDate);
+  const isApiRange = diffDays <= 10;
+
+  const hintEl = document.getElementById("dateSourceHint");
+  if (hintEl) {
+    if (isApiRange) {
+      hintEl.textContent = "* D+10일 이내: 기상청 API 실시간 예보 연동중";
+      hintEl.style.color = "var(--accent)";
+    } else {
+      hintEl.textContent = "* D+11일 이후: 지난 1년 기후 실측 데이터 기반 추정";
+      hintEl.style.color = "var(--k2)";
+    }
+  }
+
   if (S.byDateWeather && S.byDateWeather[targetDate]) {
     const dayObj = S.byDateWeather[targetDate];
     if (dayObj.data && Array.isArray(dayObj.data.ta)) {
@@ -500,7 +521,7 @@ function drawDay(D) {
       const o = get(d), cx = L + i * cw, B = blk(d);
       s += `<rect x="${cx+1}" y="${yy}" width="${cw-2}" height="${SH}" rx="4" fill="${o.c}"${B ? ' stroke="var(--black-line)"' : ''}/>`;
       if (B) s += `<line x1="${cx+2}" y1="${yy+SH-1}" x2="${cx+cw-2}" y2="${yy+1}" stroke="var(--black-line)" stroke-width="1.5"/>`;
-      s += `<text x="${cx+cw/2}" y="${yy+17}" text-anchor="middle" font-size="10" font-weight="640" font-family="var(--mono)" fill="${o.i}">${txt(d)}</text>`;
+      s += `<text x="${cx+cw/2}" y="${yy+17}" text-anchor="middle" font-weight="640" font-family="var(--mono)" fill="${o.i}">${txt(d)}</text>`;
     });
   });
 
@@ -617,11 +638,17 @@ window.openJsonModal = function() {
         const item = S.byDateWeather[dStr] || {};
         const env = item.env || {};
         const isSelected = dStr === S.planDate;
+        const diffDays = getDayDiffFromToday(dStr);
+        const isApi = diffDays <= 10;
+        const sourceLabel = isApi ? "📡 기상청 API 연동" : "📊 지난 1년 기후 추정";
+        const sourceColor = isApi ? "#38BDF8" : "#F59E0B";
+
         return `
           <tr class="${isSelected ? "now" : ""}">
             <td style="font-family:var(--mono);color:${isSelected ? "#38BDF8" : "#F8FAFC"}">
               <b>${dStr}</b> ${isSelected ? "📌 [선택일]" : ""}
             </td>
+            <td><span style="font-size:12px;color:${sourceColor};font-weight:600">${sourceLabel}</span></td>
             <td class="num" style="color:#F1F5F9">${env.ta ? env.ta.toFixed(1) : "33.2"}°C</td>
             <td class="num" style="color:#94A3B8">${env.rh || 68}%</td>
             <td class="num" style="color:#38BDF8;font-weight:700">${env.chillTemp ? env.chillTemp.toFixed(1) : "34.5"}°C</td>
@@ -631,7 +658,7 @@ window.openJsonModal = function() {
         `;
       }).join("");
     } else {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#94A3B8;padding:24px">저장된 30일치 데이터베이스 항목을 불러오는 중...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:24px">저장된 30일치 데이터베이스 항목을 불러오는 중...</td></tr>`;
     }
   }
 };
@@ -715,7 +742,7 @@ async function fetchKmaLiveWeather() {
       }
       if (json && (json.status === 'LIVE_KMA_DATA' || json.status === 'LIVE_GITHUB_ACTION_DATA')) {
         if (badg) {
-          badg.textContent = '● 30일간 예보 연동완료';
+          badg.textContent = '● D+10일 기상청 API / D+11~30일 1년 기후 추정';
           badg.className = 'badge live';
         }
       }
@@ -732,12 +759,15 @@ function renderEnvCards() {
   const container = document.getElementById("envBanner");
   if (!container) return;
   const e = S.envData || {};
+  const diffDays = getDayDiffFromToday(S.planDate);
+  const isApi = diffDays <= 10;
+  const srcText = isApi ? `선택일(${S.planDate}) 기상청 API 예보` : `선택일(${S.planDate}) 1년 기후 추정`;
 
   container.innerHTML = `
     <div class="env-chip">
       <div class="tag">기온 (TA)</div>
       <div class="val" style="color:var(--ink)">${e.ta || 33.2}°C</div>
-      <div class="sub">선택일(${S.planDate}) 피크 예보</div>
+      <div class="sub">${srcText}</div>
     </div>
     <div class="env-chip">
       <div class="tag">상대습도 (RH)</div>

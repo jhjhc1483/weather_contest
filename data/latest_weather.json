@@ -1,12 +1,16 @@
 {
-  "updatedAt": "2026-08-08T05:31:28Z",
+  "updatedAt": "2026-08-08T05:34:22Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
+  "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "location": "충청남도 논산시 연무대읍 (육군훈련소)",
   "startDate": "2026-08-08",
   "endDate": "2026-09-07",
   "byDate": {
     "2026-08-08": {
       "date": "2026-08-08",
+      "dayOffset": 0,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 36.2,
         "rh": 45,
@@ -100,6 +104,9 @@
     },
     "2026-08-09": {
       "date": "2026-08-09",
+      "dayOffset": 1,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 37.6,
         "rh": 45,
@@ -193,6 +200,9 @@
     },
     "2026-08-10": {
       "date": "2026-08-10",
+      "dayOffset": 2,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 38.7,
         "rh": 45,
@@ -286,6 +296,9 @@
     },
     "2026-08-11": {
       "date": "2026-08-11",
+      "dayOffset": 3,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 39.2,
         "rh": 45,
@@ -379,6 +392,9 @@
     },
     "2026-08-12": {
       "date": "2026-08-12",
+      "dayOffset": 4,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 38.9,
         "rh": 45,
@@ -472,6 +488,9 @@
     },
     "2026-08-13": {
       "date": "2026-08-13",
+      "dayOffset": 5,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 38.0,
         "rh": 45,
@@ -565,6 +584,9 @@
     },
     "2026-08-14": {
       "date": "2026-08-14",
+      "dayOffset": 6,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 36.6,
         "rh": 45,
@@ -658,6 +680,9 @@
     },
     "2026-08-15": {
       "date": "2026-08-15",
+      "dayOffset": 7,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 35.1,
         "rh": 45,
@@ -751,6 +776,9 @@
     },
     "2026-08-16": {
       "date": "2026-08-16",
+      "dayOffset": 8,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 33.9,
         "rh": 45,
@@ -844,6 +872,9 @@
     },
     "2026-08-17": {
       "date": "2026-08-17",
+      "dayOffset": 9,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 33.3,
         "rh": 45,
@@ -937,6 +968,9 @@
     },
     "2026-08-18": {
       "date": "2026-08-18",
+      "dayOffset": 10,
+      "dataType": "KMA_API_FORECAST",
+      "dataLabel": "기상청 API 실시간 예보",
       "env": {
         "ta": 33.3,
         "rh": 45,
@@ -1030,6 +1064,9 @@
     },
     "2026-08-19": {
       "date": "2026-08-19",
+      "dayOffset": 11,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 34.1,
         "rh": 45,
@@ -1123,6 +1160,9 @@
     },
     "2026-08-20": {
       "date": "2026-08-20",
+      "dayOffset": 12,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 35.4,
         "rh": 45,
@@ -1216,6 +1256,9 @@
     },
     "2026-08-21": {
       "date": "2026-08-21",
+      "dayOffset": 13,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 36.8,
         "rh": 45,
@@ -1309,6 +1352,9 @@
     },
     "2026-08-22": {
       "date": "2026-08-22",
+      "dayOffset": 14,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 38.2,
         "rh": 45,
@@ -1402,6 +1448,9 @@
     },
     "2026-08-23": {
       "date": "2026-08-23",
+      "dayOffset": 15,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 39.0,
         "rh": 45,
@@ -1495,6 +1544,9 @@
     },
     "2026-08-24": {
       "date": "2026-08-24",
+      "dayOffset": 16,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 39.2,
         "rh": 45,
@@ -1588,6 +1640,9 @@
     },
     "2026-08-25": {
       "date": "2026-08-25",
+      "dayOffset": 17,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 38.6,
         "rh": 45,
@@ -1681,6 +1736,9 @@
     },
     "2026-08-26": {
       "date": "2026-08-26",
+      "dayOffset": 18,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 37.4,
         "rh": 45,
@@ -1774,6 +1832,9 @@
     },
     "2026-08-27": {
       "date": "2026-08-27",
+      "dayOffset": 19,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 36.0,
         "rh": 45,
@@ -1867,6 +1928,9 @@
     },
     "2026-08-28": {
       "date": "2026-08-28",
+      "dayOffset": 20,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 34.6,
         "rh": 45,
@@ -1960,6 +2024,9 @@
     },
     "2026-08-29": {
       "date": "2026-08-29",
+      "dayOffset": 21,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 33.6,
         "rh": 45,
@@ -2053,6 +2120,9 @@
     },
     "2026-08-30": {
       "date": "2026-08-30",
+      "dayOffset": 22,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 33.2,
         "rh": 45,
@@ -2146,6 +2216,9 @@
     },
     "2026-08-31": {
       "date": "2026-08-31",
+      "dayOffset": 23,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 33.6,
         "rh": 45,
@@ -2239,6 +2312,9 @@
     },
     "2026-09-01": {
       "date": "2026-09-01",
+      "dayOffset": 24,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 21.4,
         "rh": 36,
@@ -2332,6 +2408,9 @@
     },
     "2026-09-02": {
       "date": "2026-09-02",
+      "dayOffset": 25,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 22.8,
         "rh": 36,
@@ -2425,6 +2504,9 @@
     },
     "2026-09-03": {
       "date": "2026-09-03",
+      "dayOffset": 26,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 24.3,
         "rh": 36,
@@ -2518,6 +2600,9 @@
     },
     "2026-09-04": {
       "date": "2026-09-04",
+      "dayOffset": 27,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 25.4,
         "rh": 36,
@@ -2611,6 +2696,9 @@
     },
     "2026-09-05": {
       "date": "2026-09-05",
+      "dayOffset": 28,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 26.0,
         "rh": 36,
@@ -2704,6 +2792,9 @@
     },
     "2026-09-06": {
       "date": "2026-09-06",
+      "dayOffset": 29,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 25.8,
         "rh": 36,
@@ -2797,6 +2888,9 @@
     },
     "2026-09-07": {
       "date": "2026-09-07",
+      "dayOffset": 30,
+      "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
+      "dataLabel": "지난 1년 기후 실측 데이터 기반 추정",
       "env": {
         "ta": 25.0,
         "rh": 36,

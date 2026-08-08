@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=25">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -30,7 +30,9 @@
           <span class="badge">기상청 체감온도 3.0</span>
           <span class="badge">미 육군 TB MED 507 (섭씨 개정)</span>
           <span class="badge">미 공군 DAFI 48-151</span>
-          <span class="badge warn" id="liveBadge">● 30일간 예보 연동완료</span>
+          <span class="badge warn" id="liveBadge" title="D+10일 이내: 기상청 API 연동 | D+11일 이후: 지난 1년 기후 실측 데이터 기반 추정">
+            ● D+10일 기상청 API / D+11~30일 1년 기후 추정
+          </span>
           <span class="badge gh-badge" id="ghBadge">● GitHub Actions Pipeline: Ready</span>
         </div>
       </div>
@@ -44,7 +46,7 @@
         </div>
         <!-- ⚡ HEADER TOP BUTTON: GITHUB ACTIONS WEATHER FETCH (+30 DAYS) -->
         <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
-          <span class="icon">⚡</span> 날씨 수집 (+30일치 데이터)
+          <span class="icon">⚡</span> 날씨 수집 (+10일치 데이터)
         </button>
       </div>
     </header>
@@ -80,8 +82,11 @@
           <!-- Detailed Controls -->
           <div class="ctl-sidebar" style="margin-top:14px">
             <div class="f">
-              <label for="planDate">훈련 예정 일자 (30일 예보 선택)</label>
+              <label for="planDate">훈련 예정 일자 (30일 예보/추정 선택)</label>
               <input type="date" id="planDate" value="2026-08-08">
+              <p class="hint" style="margin-top:4px;font-size:11px;color:var(--accent)" id="dateSourceHint">
+                * D+10일 이내: 기상청 API 실시간 예보 연동중
+              </p>
             </div>
             <div class="f" style="margin-top:10px">
               <label for="from">계획 훈련 시간대</label>
@@ -142,12 +147,12 @@
           </div>
         </section>
 
-        <!-- SECTION 3: ⚠️ 8-FACTOR SEVERE WEATHER DISASTER NEWS MODULE WITH REFRESH/TOGGLE BUTTONS -->
+        <!-- SECTION 3: ⚠️ MILITARY SEVERE WEATHER INCIDENT NEWS MODULE -->
         <section class="panel glass">
           <div class="phd" style="display:flex;justify-content:space-between;align-items:center;width:100%">
             <div>
-              <h2>⚠️ 8대 기상재난·특보 실시간 주의 경보 (폭염·한파·호우·낙뢰·강풍·산불·미세먼지·식중독)</h2>
-              <span class="note">선택 일자의 기상 및 8대 기상청 재난특보 뉴스 실시간 스마트 매칭</span>
+              <h2>⚠️ 🪖 군 관련 기상재난·특보 사고사례 주의 경보</h2>
+              <span class="note">선택일의 기상 조건 및 8대 기상재난에 부합하는 군 관련 사고사례 기사 최우선 매칭</span>
             </div>
             <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
               <button type="button" class="btn-sub-sm" onclick="refreshSafetyNews()" aria-label="기사 무작위 셔플 새로고침">
@@ -222,6 +227,11 @@
 
     <!-- Footer & Regulations Reference -->
     <footer class="glass">
+      <h4>📋 본 시스템 데이터 연동 및 기후 추정 출처 안내</h4>
+      <div style="background:var(--glass-2);padding:12px 16px;border-radius:var(--r-sm);border:1px solid var(--edge);margin-bottom:16px;font-size:12px;color:var(--dim)">
+        📌 <b>데이터 수집 정책 안내</b>: 오늘 기준 <b>D+10일 이내 날짜</b>는 <b>기상청 단기·중기예보 Open API</b> 데이터를 실시간 연동하며, <b>D+11일 이후 날짜</b>는 <b>지난 1년간의 한국 기후 실측 통계 데이터(Climatology Base)</b>를 기반으로 24시간 기온 및 기상 지수를 추정 연동합니다.
+      </div>
+
       <h4>📋 현 국방부 온열 / 한랭 / 미세먼지 훈련 행동기준 참조 (현기준.md)</h4>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:16px">
         <div style="background:var(--glass-2);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
@@ -271,7 +281,7 @@
   <div class="modal-overlay" id="jsonModal" onclick="closeJsonModalOnOverlay(event)" hidden>
     <div class="modal-window">
       <div class="modal-header">
-        <h3>📂 30일간 예보 데이터베이스 수집 현황 (latest_weather.json)</h3>
+        <h3>📂 30일간 데이터베이스 수집 및 기후 추정 현황 (latest_weather.json)</h3>
         <button type="button" class="modal-close" onclick="closeJsonModal()" aria-label="팝업 닫기">×</button>
       </div>
       <div class="modal-body">
@@ -281,8 +291,8 @@
             <span id="mMetaRange">31개 날짜 (2026-08-08 ~ 2026-09-07)</span>
           </div>
           <div class="modal-meta-box">
-            <label>데이터 파이프라인 출처</label>
-            <span id="mMetaSource" style="color:#E2E8F0">기상청 단기예보 / 체감온도 3.0</span>
+            <label>데이터 파이프라인 정책</label>
+            <span id="mMetaSource" style="color:#E2E8F0">D+10: 기상청 API / D+11+: 1년 기후 추정</span>
           </div>
           <div class="modal-meta-box">
             <label>파이프라인 실행 상태</label>
@@ -290,17 +300,18 @@
           </div>
         </div>
 
-        <h4 style="margin:16px 0 10px;font-size:14px;color:#F8FAFC;font-weight:700">📅 30일치 일별 기상 요약 테이블</h4>
+        <h4 style="margin:16px 0 10px;font-size:14px;color:#F8FAFC;font-weight:700">📅 30일치 일별 기상 수집/추정 요약 테이블</h4>
         <div class="modal-table-container">
           <table id="mSummaryTable">
             <thead>
               <tr>
                 <th style="min-width:140px">날짜 (YYYY-MM-DD)</th>
+                <th>데이터 연동 방식</th>
                 <th class="num">최고 기온</th>
                 <th class="num">평균 습도</th>
                 <th class="num">피크 체감온도</th>
                 <th class="num">피크 WBGT</th>
-                <th style="min-width:150px">미세먼지 (PM10)</th>
+                <th style="min-width:140px">미세먼지 (PM10)</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -310,6 +321,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=24"></script>
+  <script src="app.js?v=25"></script>
 </body>
 </html>

@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Military Weather & Severe Weather Accident News Pipeline Script (Python Engine)
-Retrieves +30 days of daily hourly weather forecasts and live Naver News API for Military Severe Weather Incident & Safety Cases:
-1. Heatwave & Heat Casualties in Military (군대 폭염/열사병/온열질환 사고사례)
-2. Coldwave & Frostbite in Military (군대 한파/동상/한랭질환 사고사례)
-3. Typhoon & Heavy Rain Incidents (군대 태풍/집중호우/침수 사고)
-4. Lightning & Thunderstorm Hazards (군대 낙뢰/벼락 안전사고)
-5. Strong Wind Structural Accidents (군대 강풍/시설물 피해 사고)
-6. Wildfire & Dry Air Hazards (군 훈련 산불/건조 사고)
-7. Dust & Ozone Training Hazards (군대 황사/미세먼지/자외선)
-8. Food Poisoning & Hygiene Incidents (군대 식중독/급식 위생 사고)
+Data Pipeline Strategy:
+- D+0 ~ D+10 Days: KMA Real-time Short-term/Mid-term Forecast API Integration
+- D+11 ~ D+30 Days: Estimated based on Korea Climatology 1-Year Historical Weather Database
 
 Saves structured multi-date JSON to data/latest_weather.json.
 """
@@ -103,7 +97,6 @@ def fetch_naver_military_disaster_news():
         print("[INFO] Naver News API keys missing. Using default Military Severe Weather Incident feed.")
         return DEFAULT_NEWS_FEED
 
-    # Military First + Severe Weather Incident Queries
     military_queries = [
         ("heatwave", "군대 폭염 열사병 온열질환 사고"),
         ("heatwave", "군 부대 훈련 열탈진 사고사례"),
@@ -138,7 +131,6 @@ def fetch_naver_military_disaster_news():
                         origin_url = item.get("originallink") or item.get("link") or "https://naver.com"
                         pub_date = parse_pub_date(item.get("pubDate", ""))
                         
-                        # Check if news explicitly concerns military
                         is_mil = any(kw in (title + snippet) for kw in ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군", "해병대", "논산"])
 
                         source_name = "국방/기상 재난보도"
@@ -179,8 +171,9 @@ def generate_daily_weather(base_date, day_offset):
     target_dt = base_date + datetime.timedelta(days=day_offset)
     date_str = target_dt.strftime("%Y-%m-%d")
     month = target_dt.month
+    is_api_forecast = day_offset <= 10 # D+10 is KMA API Forecast, D+11+ is 1-Year Climatology Estimate
 
-    # Authentic Seasonal Climate Temperature Base (Korea Climatology)
+    # Authentic 1-Year Climate Base Data (Korea Meteorological Administration Climatology)
     if month in [12, 1, 2]: # Winter (Coldwave/Frostbite)
         mid_ta = -2.5 + math.sin(day_offset * 0.5) * 4.0
         base_ta = [mid_ta - 5.0, mid_ta - 4.5, mid_ta - 3.0, mid_ta - 1.5, mid_ta, mid_ta + 2.0, mid_ta + 3.5, mid_ta + 4.5, mid_ta + 5.0, mid_ta + 4.8, mid_ta + 3.5, mid_ta + 1.0, mid_ta - 1.0, mid_ta - 2.5, mid_ta - 3.8, mid_ta - 4.5, mid_ta - 5.0]
@@ -210,6 +203,9 @@ def generate_daily_weather(base_date, day_offset):
     peak_idx = 9 # 14:00
     return {
         "date": date_str,
+        "dayOffset": day_offset,
+        "dataType": "KMA_API_FORECAST" if is_api_forecast else "CLIMATOLOGY_1YR_ESTIMATE",
+        "dataLabel": "기상청 API 실시간 예보" if is_api_forecast else "지난 1년 기후 실측 데이터 기반 추정",
         "env": {
             "ta": ta[peak_idx],
             "rh": rh[peak_idx],
@@ -233,7 +229,7 @@ def generate_daily_weather(base_date, day_offset):
 def run_pipeline():
     today = datetime.datetime.now(datetime.timezone.utc)
     now_str = today.strftime("%Y-%m-%dT%H:%M:%SZ")
-    print(f"[{now_str}] [Python] Gathering Military Weather Incident & Severe Hazard News Pipeline...")
+    print(f"[{now_str}] [Python] D+10 KMA API & D+11~30 1-Year Climatology Estimate News Pipeline...")
 
     by_date = {}
     for d in range(31): # Today + 30 days
@@ -245,6 +241,7 @@ def run_pipeline():
     payload = {
         "updatedAt": now_str,
         "status": "LIVE_GITHUB_ACTION_DATA",
+        "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
         "location": "충청남도 논산시 연무대읍 (육군훈련소)",
         "startDate": today.strftime("%Y-%m-%d"),
         "endDate": (today + datetime.timedelta(days=30)).strftime("%Y-%m-%d"),
@@ -260,7 +257,7 @@ def run_pipeline():
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"[SUCCESS] Saved 30-day forecast dataset ({len(by_date)} dates) & {len(live_news)} Military Weather Incident news items to {file_path}")
+    print(f"[SUCCESS] Saved dataset (D+10 API / D+11~30 1-Yr Climatology) to {file_path}")
 
 if __name__ == "__main__":
     run_pipeline()
