@@ -9,18 +9,18 @@ let BASE = [24.0,24.5,25.8,27.2,28.6,29.8,30.8,31.5,32.0,32.3,32.0,31.2,30.0,28.
 
 /* 8 Core Military Activity Master Database */
 const UNIT_ACTIVITIES = [
-  { id: "act_range", name: "🎯 사격 훈련", task: "easy", gear: "iba", pax: 240, desc: "방탄복/전투조끼 착용 사격술 및 영점사격" },
-  { id: "act_fitness", name: "🏃 체력 측정", task: "vhard", gear: "scu", pax: 300, desc: "체육복 착용 3km 뜀걸음 및 훈련 (복장 보정 +0°C, 고강도 800W)" },
-  { id: "act_march10", name: "🎒 10km 급속행군", task: "heavy", gear: "iba", pax: 450, desc: "전술 부하 행군 (중작업 600W, 방탄/군장 +2.8°C)" },
-  { id: "act_march40", name: "⚔️ 40km 전술행군", task: "heavy", gear: "iba", pax: 600, desc: "45lb 완전군장 행군 (고부하 야외 노출, 방탄/군장 +2.8°C)" },
-  { id: "act_gaekae", name: "💥 각개전투 / 포복", task: "mod", gear: "iba", pax: 350, desc: "장애물 극복 및 전술 포복 (중등작업 425W)" },
-  { id: "act_cbrn", name: "☣️ 화생방 제독", task: "mod", gear: "cbrn", pax: 180, desc: "MOPP 4단계 완전 보호의 착용 (+11.1°C 가산)" },
-  { id: "act_obstacle", name: "🧗 유격 / 장애물", task: "vhard", gear: "scu", pax: 280, desc: "코스 장애물 극복 및 극기 훈련 (고강도 800W)" },
+  { id: "act_range", name: "🎯 사격 훈련", task: "easy", gear: "single", pax: 240, desc: "단독군장(전투복·방탄헬멧) 착용 영점/사격술 (+1.5°C 가산, 경작업 250W)" },
+  { id: "act_fitness", name: "🏃 체력 측정", task: "vhard", gear: "pt", pax: 300, desc: "체육복/PT복 착용 3km 뜀걸음 및 훈련 (통풍 우수 -1.0°C 보정, 고강도 800W)" },
+  { id: "act_march10", name: "🎒 10km 급속행군", task: "heavy", gear: "single", pax: 450, desc: "단독군장 전술 부하 행군 (중작업 600W, 단독군장 +1.5°C)" },
+  { id: "act_march40", name: "⚔️ 40km 전술행군", task: "heavy", gear: "iba", pax: 600, desc: "45lb 완전군장 행군 (고부하 야외 노출, 완전군장/방탄복 +2.8°C)" },
+  { id: "act_gaekae", name: "💥 각개전투 / 포복", task: "mod", gear: "single", pax: 350, desc: "장애물 극복 및 단독군장 전술 포복 (중등작업 425W, +1.5°C)" },
+  { id: "act_cbrn", name: "☣️ 화생방 제독", task: "mod", gear: "cbrn", pax: 180, desc: "MOPP 4단계 전신 보호의 착용 (+11.1°C 가산)" },
+  { id: "act_obstacle", name: "🧗 유격 / 장애물", task: "vhard", gear: "scu", pax: 280, desc: "전투복 착용 코스 장애물 극복 및 극기 훈련 (+0.0°C, 고강도 800W)" },
   /* 정적 과업 — 혹한기 한랭손상이 집중되는 과업군 (TB MED 508 표 3-1 Sedentary) */
-  { id: "act_sentry", name: "🥶 경계 · 보초 근무", task: "static", gear: "ecwcs", pax: 60, desc: "정적 노출 지속 (1 MET) · 혹한기 한랭손상 최다 발생 과업" },
+  { id: "act_sentry", name: "🥶 경계 · 보초 근무", task: "static", gear: "ecwcs", pax: 60, desc: "정적 노출 지속 (1 MET) · 혹한기 한랭손상 최다 발생 과업 (방한복 3.4 clo)" },
   { id: "act_gate", name: "🚧 위병소 근무", task: "static", gear: "ecwcs", pax: 20, desc: "정적 노출 지속 (1 MET) · 주야 교대 노출" },
   { id: "act_ambush", name: "🫥 매복 · 관측", task: "static", gear: "ecwcs", pax: 40, desc: "장시간 정적 자세 유지 (1 MET) · 말초 순환 저하로 동상 위험 가중" },
-  { id: "act_custom", name: "⚙️ 사용자 직접설정", task: "heavy", gear: "iba", pax: 240, desc: "과업 및 복장 직접 선택" }
+  { id: "act_custom", name: "⚙️ 사용자 직접설정", task: "heavy", gear: "single", pax: 240, desc: "과업 및 복장 직접 선택" }
 ];
 
 /* Military Task Metabolic Rates & Gear Adjustments (Celsius Basis)
@@ -48,14 +48,18 @@ const TASKS = [
 /* clo: TB MED 508 표 3-2 「Insulation value of different pieces of Army clothing」
    ※ 원문 주의: 개별 clo 값의 단순 합산은 층간 압축으로 총 단열값을 과대평가한다. */
 const GEARS = [
-  { id: "scu",  name: "전투복 / 체육복", adj: () => 0,   clo: 1.15,
-    src: "기준 복장 (보정 없음 +0.0°C) · BDU 1.15 clo" },
-  { id: "iba",  name: "방탄복·군장",   adj: () => 2.8,   clo: 1.40,
-    src: "DAFI 48-151 · +2.8°C 가산 (+5°F) · 전투복 기준 1.15 clo + 피복층" },
-  { id: "cbrn", name: "화생방 보호의", adj: t => (t === "easy" || t === "static") ? 5.6 : 11.1, clo: 1.60,
-    src: "TB MED 507 표 3-2 주7 · +5.6 / +11.1°C 가산" },
-  { id: "ecwcs", name: "방한복 (ECWCS)", adj: () => 3.4, clo: 3.40,
-    src: "TB MED 508 표 3-2 Total ECWCS 3.4 clo · 혹서기에는 과열 위험" }
+  { id: "pt",     name: "체육복 / PT복",      adj: () => -1.0,  clo: 0.60,
+    src: "체육복 (통풍 우수 -1.0°C 보정) · 0.60 clo" },
+  { id: "scu",    name: "전투복",             adj: () => 0.0,   clo: 1.15,
+    src: "기준 복장 (전투복 보정 없음 +0.0°C) · BDU 1.15 clo" },
+  { id: "single", name: "단독군장",           adj: () => 1.5,   clo: 1.25,
+    src: "단독군장 (전투복+방탄헬멧+전투조끼 +1.5°C 가산) · 1.25 clo" },
+  { id: "iba",    name: "완전군장 / 방탄복",   adj: () => 2.8,   clo: 1.40,
+    src: "완전군장 (방탄복+45lb 군장 +2.8°C 가산) · 1.40 clo" },
+  { id: "cbrn",   name: "화생방 보호의",      adj: t => (t === "easy" || t === "static") ? 5.6 : 11.1, clo: 1.60,
+    src: "TB MED 507 표 3-2 주7 · MOPP 4단계 전신 보호의 (+11.1°C 가산)" },
+  { id: "ecwcs",  name: "방한복 (ECWCS)",     adj: () => 3.4,   clo: 3.40,
+    src: "TB MED 508 표 3-2 Total ECWCS 3.40 clo · 혹한기 다층 단열" }
 ];
 
 /* ══════════ 한랭 요구 단열값 (TB MED 508 그림 3-2) ══════════
