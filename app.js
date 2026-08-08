@@ -73,10 +73,37 @@ const catOfC = c => (isNaN(c) || c < 25.6) ? 0 : c < 27.8 ? 1 : c < 29.4 ? 2 : c
 const kmaLv = app => (isNaN(app) || app < 31.0) ? 0 : app < 33.0 ? 1 : app < 35.0 ? 2 : app < 38.0 ? 3 : 4;
 const pad = n => String(n).padStart(2, "0");
 
+/* ═══════════ REGION (지역) DATABASE ═══════════ */
+const REGIONS = {
+  nonsan: {
+    id: "nonsan",
+    name: "논산 육군훈련소",
+    short: "논산",
+    icon: "🏕️",
+    location: "충청남도 논산시 연무대읍 (육군훈련소)",
+    lat: 36.1133, lon: 127.0989,
+    kmaGridX: 68, kmaGridY: 95,   // 기상청 격자 좌표
+    fallbackTA: [26.1,26.5,27.8,29.5,31.2,32.8,34.1,35.0,35.8,36.2,35.9,35.0,33.6,31.8,30.0,28.6,27.6],
+    fallbackRH: [82,80,76,70,63,57,52,48,45,44,45,48,53,59,66,72,77]
+  },
+  yangpyeong: {
+    id: "yangpyeong",
+    name: "양평 지역",
+    short: "양평",
+    icon: "⛰️",
+    location: "경기도 양평군",
+    lat: 37.4917, lon: 127.4875,
+    kmaGridX: 69, kmaGridY: 133,
+    fallbackTA: [24.8,25.2,26.5,28.3,30.0,31.6,32.8,33.5,34.2,34.5,34.2,33.3,31.8,30.1,28.5,27.1,26.0],
+    fallbackRH: [85,83,79,73,66,60,55,51,48,46,48,51,56,62,69,75,80]
+  }
+};
+
 /* ═══════════ APP STATE ═══════════ */
 let newsDisplayCount = 3;
 
 const S = {
+  region: "nonsan",
   planDate: "2026-08-08",
   activeActivityId: "act_march40",
   task: "heavy", gear: "iba", pax: 600, from: 8, to: 12,
@@ -126,6 +153,44 @@ window.selectActivity = function(actId) {
     seg("gear", GEARS, "gear", "gearHint", () => { const g = GEARS.find(x => x.id === S.gear); return g ? g.src : ''; }, () => recomputeAll());
   }
   renderActivityPresets();
+  recomputeAll();
+};
+
+/* ═══════════ REGION SELECTOR ═══════════ */
+function renderRegionSelector() {
+  const container = document.getElementById("regionSelector");
+  if (!container) return;
+  container.innerHTML = Object.values(REGIONS).map(r => `
+    <button type="button" class="region-btn ${S.region === r.id ? 'active' : ''}" onclick="switchRegion('${r.id}')">
+      <span class="region-icon">${r.icon}</span>
+      <span class="region-name">${r.short}</span>
+    </button>
+  `).join("");
+}
+
+window.switchRegion = function(regionId) {
+  if (!REGIONS[regionId] || S.region === regionId) return;
+  S.region = regionId;
+  const r = REGIONS[regionId];
+
+  // Update fallback data arrays
+  TA = [...r.fallbackTA];
+  RH = [...r.fallbackRH];
+  APP = TA.map((t, i) => +(t + (RH[i] > 60 ? (RH[i] - 60) * 0.08 : 0)).toFixed(1));
+  BASE = TA.map((t, i) => +(t * 0.7 + (RH[i] / 100) * 8.5 + 2.0).toFixed(1));
+
+  // Update header location text
+  const subEl = document.querySelector(".sub");
+  if (subEl) {
+    const dateStr = document.getElementById("currentDateStr");
+    subEl.innerHTML = `${r.location} · <span id="currentDateStr">${dateStr ? dateStr.textContent : S.planDate}</span>`;
+  }
+
+  // Re-render region buttons
+  renderRegionSelector();
+
+  // Re-apply weather data for current date & recompute
+  applyDateWeather(S.planDate);
   recomputeAll();
 };
 
@@ -677,18 +742,24 @@ document.addEventListener("keydown", e => {
 });
 
 /* ⚡ TOP HEADER BUTTON: FETCH WEATHER FORECAST DATA VIA DATA PIPELINE */
+let _pipelinePolling = null; // polling interval reference
+
 window.triggerGitHubActionPipeline = async function() {
   const toast = document.getElementById("ghToast");
   const toastTitle = document.getElementById("ghToastTitle");
   const toastText = document.getElementById("ghToastText");
   const ghBadge = document.getElementById("ghBadge");
+  const btn = document.getElementById("btnFetchWeather");
+
+  // Disable button during pipeline
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
 
   if (toast) toast.hidden = false;
-  if (toastTitle) toastTitle.textContent = "🚀 기상 데이터 수집 파이프라인 실행 요청 중...";
-  if (toastText) toastText.textContent = `오늘 기준 +한 달간의 날씨 예보 데이터를 수집 및 저장하고 있습니다.`;
+  if (toastTitle) toastTitle.textContent = "🚀 기상 데이터 수집 요청 중...";
+  if (toastText) toastText.textContent = "파이프라인 트리거를 전송하고 있습니다.";
   
   if (ghBadge) {
-    ghBadge.textContent = '● 데이터 수집 중...';
+    ghBadge.textContent = '● 수집 요청 중...';
     ghBadge.className = 'badge warn';
   }
 
@@ -708,27 +779,128 @@ window.triggerGitHubActionPipeline = async function() {
     console.log("Trigger API Response:", json);
 
     if (json.triggered) {
-      if (toastText) toastText.textContent = `✅ ${json.message}`;
+      if (toastTitle) toastTitle.textContent = "🔄 데이터 수집 파이프라인 가동됨";
+      if (toastText) toastText.textContent = "수집 상태를 실시간 확인 중입니다... (약 1~3분 소요)";
       if (ghBadge) {
-        ghBadge.textContent = '● 데이터 연동 완료';
-        ghBadge.className = 'badge live';
-      }
-    } else {
-      if (toastText) toastText.textContent = `ℹ️ ${json.message}`;
-      if (ghBadge) {
-        ghBadge.textContent = `● 데이터 연동: ${json.error || '대기중'}`;
+        ghBadge.textContent = '● ⏳ 수집 대기열 등록됨';
         ghBadge.className = 'badge warn';
       }
+      // Start polling for status
+      startPipelineStatusPolling();
+    } else {
+      if (toastTitle) toastTitle.textContent = "ℹ️ 수집 요청 실패";
+      if (toastText) toastText.textContent = json.message || '알 수 없는 오류';
+      if (ghBadge) {
+        ghBadge.textContent = `● 연동 실패: ${json.error || '오류'}`;
+        ghBadge.className = 'badge warn';
+      }
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+      setTimeout(() => { if (toast) toast.hidden = true; }, 4000);
     }
   } catch (e) {
     console.log('데이터 연동 trigger note:', e.message);
+    if (toastTitle) toastTitle.textContent = "⚠️ 네트워크 오류";
+    if (toastText) toastText.textContent = e.message;
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    setTimeout(() => { if (toast) toast.hidden = true; }, 4000);
+  }
+};
+
+/* 🔄 Pipeline Status Polling — 15초 간격으로 수집 상태 확인 */
+function startPipelineStatusPolling() {
+  if (_pipelinePolling) clearInterval(_pipelinePolling);
+
+  let pollCount = 0;
+  const maxPolls = 30; // 최대 7.5분 (15s × 30)
+
+  // 첫 폴링은 10초 뒤 (GitHub Actions 큐 등록 시간 고려)
+  setTimeout(() => {
+    checkPipelineStatus();
+    _pipelinePolling = setInterval(() => {
+      pollCount++;
+      if (pollCount >= maxPolls) {
+        stopPipelinePolling('timeout');
+        return;
+      }
+      checkPipelineStatus();
+    }, 15000);
+  }, 10000);
+}
+
+async function checkPipelineStatus() {
+  const toast = document.getElementById("ghToast");
+  const toastTitle = document.getElementById("ghToastTitle");
+  const toastText = document.getElementById("ghToastText");
+  const ghBadge = document.getElementById("ghBadge");
+
+  try {
+    const res = await fetch('/api/action-status');
+    const data = await res.json();
+    console.log("Pipeline status:", data);
+
+    if (data.status === 'queued') {
+      if (toastTitle) toastTitle.textContent = "⏳ 수집 대기열 대기 중";
+      if (toastText) toastText.textContent = "파이프라인이 실행 순서를 기다리고 있습니다...";
+      if (ghBadge) { ghBadge.textContent = '● ⏳ 수집 대기 중'; ghBadge.className = 'badge warn'; }
+
+    } else if (data.status === 'running') {
+      if (toastTitle) toastTitle.textContent = "🔄 데이터 수집 진행 중...";
+      if (toastText) toastText.textContent = "기상청 API에서 날씨 데이터를 수집하고 있습니다. 잠시만 기다려주세요.";
+      if (ghBadge) { ghBadge.textContent = '● 🔄 수집 중...'; ghBadge.className = 'badge warn'; }
+
+    } else if (data.status === 'success') {
+      stopPipelinePolling('success');
+
+    } else if (data.status === 'failed') {
+      stopPipelinePolling('failed');
+
+    } else if (data.status === 'cancelled') {
+      stopPipelinePolling('cancelled');
+    }
+  } catch (e) {
+    console.log('Status poll error:', e.message);
+  }
+}
+
+function stopPipelinePolling(reason) {
+  if (_pipelinePolling) { clearInterval(_pipelinePolling); _pipelinePolling = null; }
+
+  const toast = document.getElementById("ghToast");
+  const toastTitle = document.getElementById("ghToastTitle");
+  const toastText = document.getElementById("ghToastText");
+  const ghBadge = document.getElementById("ghBadge");
+  const btn = document.getElementById("btnFetchWeather");
+
+  if (reason === 'success') {
+    if (toastTitle) toastTitle.textContent = "✅ 데이터 수집 완료!";
+    if (toastText) toastText.textContent = "날씨 DB가 최신 데이터로 업데이트되었습니다. 자동으로 반영합니다.";
+    if (ghBadge) { ghBadge.textContent = '● ✅ 수집 완료'; ghBadge.className = 'badge live'; }
+    // 자동으로 최신 날씨 데이터 새로고침
+    setTimeout(() => { fetchKmaLiveWeather(); }, 1500);
+    setTimeout(() => { if (toast) toast.hidden = true; }, 5000);
+
+  } else if (reason === 'failed') {
+    if (toastTitle) toastTitle.textContent = "❌ 데이터 수집 실패";
+    if (toastText) toastText.textContent = "파이프라인 실행 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+    if (ghBadge) { ghBadge.textContent = '● ❌ 수집 실패'; ghBadge.className = 'badge warn'; }
+    setTimeout(() => { if (toast) toast.hidden = true; }, 5000);
+
+  } else if (reason === 'cancelled') {
+    if (toastTitle) toastTitle.textContent = "⚠️ 수집 취소됨";
+    if (toastText) toastText.textContent = "파이프라인이 취소되었습니다.";
+    if (ghBadge) { ghBadge.textContent = '● ⚠️ 수집 취소'; ghBadge.className = 'badge warn'; }
+    setTimeout(() => { if (toast) toast.hidden = true; }, 4000);
+
+  } else { // timeout
+    if (toastTitle) toastTitle.textContent = "⏱️ 상태 확인 시간 초과";
+    if (toastText) toastText.textContent = "수집이 아직 진행 중일 수 있습니다. 잠시 후 새로고침해주세요.";
+    if (ghBadge) { ghBadge.textContent = '● ⏱️ 확인 시간 초과'; ghBadge.className = 'badge warn'; }
+    setTimeout(() => { if (toast) toast.hidden = true; }, 4000);
   }
 
-  setTimeout(() => {
-    if (toast) toast.hidden = true;
-    fetchKmaLiveWeather();
-  }, 2200);
-};
+  // Re-enable button
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+}
 
 async function fetchKmaLiveWeather() {
   try {
@@ -808,6 +980,7 @@ function renderEnvCards() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  renderRegionSelector();
   renderActivityPresets();
 
   const dateInput = document.getElementById("planDate");

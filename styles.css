@@ -174,6 +174,28 @@ h1 {
 .env-chip .val { font-family: var(--mono); font-size: 20px; font-weight: 700; margin: 2px 0; letter-spacing: -0.02em; }
 .env-chip .sub { font-size: 11px; color: var(--dim); }
 
+/* Region Selector Buttons */
+.region-selector {
+  display: flex; gap: 8px; margin-bottom: 8px;
+}
+.region-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+  background: var(--glass-2); border: 2px solid var(--edge); color: var(--dim);
+  font-family: var(--sans); font-size: 13px; font-weight: 600; padding: 10px 14px;
+  border-radius: var(--r-sm); cursor: pointer; transition: all 0.2s ease;
+}
+.region-btn:hover {
+  color: var(--ink); border-color: var(--edge-hi);
+  transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.region-btn.active {
+  background: linear-gradient(135deg, rgba(56,189,248,.12), rgba(99,102,241,.12));
+  border-color: var(--accent); color: var(--accent); font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--accent), 0 2px 10px rgba(56,189,248,.15);
+}
+.region-icon { font-size: 18px; }
+.region-name { letter-spacing: .03em; }
+
 /* Preset Unit Activity Buttons Grid */
 .act-presets {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 6px; margin-bottom: 10px;

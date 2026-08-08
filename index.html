@@ -23,7 +23,7 @@
     <!-- HEADER (TOP BAR WITH DATA FETCH BUTTON & JSON DB VIEW BUTTON) -->
     <header class="glass">
       <div>
-        <p class="eyebrow">국방 특화 온열/환경위험 예측 · 부대활동 사전 계획 지원 시스템</p>
+        <p class="eyebrow">육군 특화 온열/환경위험 예측 · 부대활동 사전 계획 지원 시스템</p>
         <h1>부대활동 온열·환경위험 지휘 통제 대시보드</h1>
         <p class="sub">육군훈련소(논산 연무대) 신병 및 부대 훈련 사전 위험도 자동 예측 · <span id="currentDateStr">2026-08-08</span></p>
         <div class="badges">
@@ -73,6 +73,14 @@
           <span class="note">⚡ 변경 시 100% 즉시 실시간 자동 연산</span>
         </div>
         <div class="pbd">
+          <!-- Region Selector -->
+          <p class="hint" style="margin-bottom:8px;font-size:12.5px;color:var(--dim);font-weight:600">
+            📍 훈련 지역 선택
+          </p>
+          <div class="region-selector" id="regionSelector"></div>
+
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0">
+
           <!-- Preset Unit Activity Buttons (8 Core Activities) -->
           <p class="hint" style="margin-bottom:10px;font-size:12.5px;color:var(--dim);font-weight:600">
             🎯 8대 핵심 부대활동 빠른 선택
