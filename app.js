@@ -276,13 +276,22 @@ window.highlightHour = function(hour) {
   }
 };
 
+/* Render Seasonal Weather News (Summer: Heatwave, Winter: Coldwave, Spring/Autumn: Wildfire/Dust) */
 function renderSafetyNews() {
   const container = document.getElementById("newsBox");
   if (!container) return;
 
-  const currentActId = S.activeActivityId;
-  let matchedNews = S.newsList.filter(n => n.category === currentActId || n.category === 'all');
-  if (matchedNews.length === 0) matchedNews = S.newsList;
+  // Determine season from selected planDate (YYYY-MM-DD)
+  const dParts = (S.planDate || "").split("-");
+  const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
+
+  let seasonCat = "summer";
+  if (month >= 6 && month <= 8) seasonCat = "summer";
+  else if (month === 12 || month === 1 || month === 2) seasonCat = "winter";
+  else seasonCat = "spring_autumn";
+
+  let matchedNews = (S.newsList || []).filter(n => n.category === seasonCat);
+  if (!matchedNews.length) matchedNews = S.newsList || [];
 
   container.innerHTML = matchedNews.slice(0, 3).map(n => `
     <div class="news-card">
@@ -291,7 +300,7 @@ function renderSafetyNews() {
         <span class="news-tag">${n.source}</span>
       </div>
       <p class="news-snippet">${n.snippet}</p>
-      <div class="news-meta">보도 일자: ${n.date} · [지휘관 필수 숙지 사례]</div>
+      <div class="news-meta">보도 일자: ${n.date} · [실시간 기상 특보 연동]</div>
     </div>
   `).join("");
 }

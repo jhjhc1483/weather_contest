@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Military Weather & Incident News Data Pipeline Script (Python Engine)
-Retrieves/generates +30 days of daily hourly weather forecasts and live Naver News API military safety news,
+Military Weather & Seasonal Weather News Data Pipeline Script (Python Engine)
+Retrieves +30 days of daily hourly weather forecasts and live Naver News API seasonal weather issue news
+(Summer: Heatwave, Winter: Coldwave/Frostbite, Spring/Autumn: Wildfire/Dust),
 then saves structured multi-date JSON to data/latest_weather.json.
 """
 
@@ -14,7 +15,6 @@ import re
 import urllib.request
 import urllib.parse
 
-# Load .env file manually if exists
 def load_dotenv():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     env_path = os.path.join(script_dir, "..", ".env")
@@ -33,40 +33,31 @@ load_dotenv()
 
 DEFAULT_NEWS_FEED = [
     {
-        "id": "news_1",
-        "category": "act_march40",
-        "title": "[안전경보] 혹서기 40km 전술행군 중 열탈진 장병 발생 사례 및 지휘 조치사항",
-        "source": "국방일보 안전보도",
-        "snippet": "기온 32도 이상의 고온 다습 환경에서 완전군장 행군 시 15분 단위 강제 휴식 및 얼음 조끼/냉각 구역 운용이 필수적입니다.",
+        "id": "news_summer_1",
+        "category": "summer",
+        "title": "[기상 특보] 체감온도 35도 육박 혹서기 폭염경보… 온열질환 수칙 준수 당부",
+        "source": "기상청 / 재난안전보도",
+        "snippet": "전국 대부분 지역에 폭염특보가 발효된 가운데 한낮 야외 활동 및 중작업 시 15분 단위 휴식과 수분 섭취가 필수적입니다.",
         "url": "https://korea.kr",
-        "date": "2025-07-14"
+        "date": "2025-07-20"
     },
     {
-        "id": "news_2",
-        "category": "act_cbrn",
-        "title": "[화생방 주의] MOPP 4단계 보호의 착용 시 열축적 위험 및 수분 섭취 수칙",
-        "source": "육군본부 의무실 지침",
-        "snippet": "보호의 착용 시 섭씨 +11.1°C 이상의 심각한 체온 상승이 유발되므로 시간당 1.0L 이상의 정량 급수가 강제됩니다.",
+        "id": "news_winter_1",
+        "category": "winter",
+        "title": "[기상 특보] 영하 15도 이하 강추위 한파경보… 동상 및 한랭질환 주의",
+        "source": "재난안전대책본부",
+        "snippet": "북상하는 찬 공기 영향으로 체감온도가 급격히 하강함에 따라 야외 노출 시 방한 대책과 난방용품 화재 예방이 시급합니다.",
         "url": "https://korea.kr",
-        "date": "2025-08-02"
+        "date": "2025-01-15"
     },
     {
-        "id": "news_3",
-        "category": "act_fitness",
-        "title": "[체력측정] 3km 뜀걸음 및 야외 체력측정 시 열사병 예방 안전 통제",
-        "source": "국방안전원 지침",
-        "snippet": "기상청 체감온도 33도 이상인 주의/경고 시 체력측정을 이른 아침 시간대로 조정하거나 실내 훈련으로 전환해야 합니다.",
+        "id": "news_spring_1",
+        "category": "spring_autumn",
+        "title": "[기상 특보] 건조주의보 발령 및 대형 산불 위험 주의… 미세먼지 황사 주의보",
+        "source": "산림청 / 환경부",
+        "snippet": "건조한 대기와 강풍으로 인해 야외 소화 관리 및 산불 주의가 요구되며, 초미세먼지 농도 상승에 따른 마스크 착용이 권장됩니다.",
         "url": "https://korea.kr",
-        "date": "2025-06-20"
-    },
-    {
-        "id": "news_4",
-        "category": "act_gaekae",
-        "title": "[각개전투] 장애물 극복 및 전술 포복 훈련 중 온열 손상 예방 관리",
-        "source": "합참 안전 지침",
-        "snippet": "직사광선에 노출된 각개전투 훈련장에서는 그늘막 쉼터 운용과 급수 담당자 배치가 지휘관의 의무 사항입니다.",
-        "url": "https://korea.kr",
-        "date": "2025-07-28"
+        "date": "2025-04-10"
     }
 ]
 
@@ -78,33 +69,33 @@ def clean_html(text):
 
 def parse_pub_date(pub_date_str):
     try:
-        # e.g., "Thu, 07 Aug 2025 14:20:00 +0900"
         dt = datetime.datetime.strptime(pub_date_str[:25], "%a, %d %b %Y %H:%M:%S")
         return dt.strftime("%Y-%m-%d")
     except Exception:
         return datetime.datetime.now().strftime("%Y-%m-%d")
 
-def fetch_naver_news_api():
+def fetch_naver_weather_news_api():
     client_id = os.environ.get("NAVER_CLIENT_ID")
     client_secret = os.environ.get("NAVER_CLIENT_SECRET")
 
     if not client_id or not client_secret:
-        print("[INFO] Naver News API keys missing. Using default fallback feed.")
+        print("[INFO] Naver News API keys missing. Using default fallback seasonal feed.")
         return DEFAULT_NEWS_FEED
 
-    keywords = [
-        ("act_march40", "군대 행군 온열질환"),
-        ("act_cbrn", "군대 화생방 훈련 사고"),
-        ("act_fitness", "군대 뜀걸음 열사병"),
-        ("act_gaekae", "각개전투 훈련 온열"),
-        ("act_range", "군대 사격장 안전사고"),
-        ("all", "군 훈련 온열질환 열사병")
+    # Pure Weather Seasonal Issue Keywords (Summer / Winter / Spring & Autumn)
+    seasonal_queries = [
+        ("summer", "폭염 경보 열사병 온열질환"),
+        ("summer", "기상청 폭염 특보 체감온도"),
+        ("winter", "한파 특보 동상 한랭질환"),
+        ("winter", "겨울철 한파 경보 대설"),
+        ("spring_autumn", "산불 주의보 건조 특보"),
+        ("spring_autumn", "황사 미세먼지 주의보")
     ]
 
     fetched_news = []
     news_id_counter = 1
 
-    for category, query in keywords:
+    for category, query in seasonal_queries:
         try:
             url = f"https://openapi.naver.com/v1/search/news.json?query={urllib.parse.quote(query)}&display=3&sort=sim"
             req = urllib.request.Request(url)
@@ -122,16 +113,14 @@ def fetch_naver_news_api():
                         origin_url = item.get("originallink") or item.get("link") or "https://naver.com"
                         pub_date = parse_pub_date(item.get("pubDate", ""))
                         
-                        # Determine source name from URL if possible
-                        source_name = "네이버뉴스 보도"
+                        source_name = "네이버뉴스 기상보도"
                         if "korea.kr" in origin_url: source_name = "대한민국 정책브리핑"
-                        elif "dema.mil.kr" in origin_url: source_name = "국방일보"
-                        elif "yna.co.kr" in origin_url: source_name = "연합뉴스"
+                        elif "yna.co.kr" in origin_url: source_name = "연합뉴스 기상"
                         elif "news1.kr" in origin_url: source_name = "뉴스1"
                         elif "newsis.com" in origin_url: source_name = "뉴시스"
 
                         fetched_news.append({
-                            "id": f"live_news_{news_id_counter}",
+                            "id": f"weather_news_{news_id_counter}",
                             "category": category,
                             "title": title,
                             "source": source_name,
@@ -144,10 +133,10 @@ def fetch_naver_news_api():
             print(f"[WARN] Failed fetching Naver News for query '{query}': {e}")
 
     if fetched_news:
-        print(f"[SUCCESS] Fetched {len(fetched_news)} live military news items via Naver API.")
+        print(f"[SUCCESS] Fetched {len(fetched_news)} live seasonal weather news items via Naver API.")
         return fetched_news
     else:
-        print("[WARN] No news fetched via Naver API. Falling back to default feed.")
+        print("[WARN] No news fetched. Falling back to default feed.")
         return DEFAULT_NEWS_FEED
 
 def calculate_apparent_temp(ta, rh, ws=2.0):
@@ -196,14 +185,14 @@ def generate_daily_weather(base_date, day_offset):
 def run_pipeline():
     today = datetime.datetime.now(datetime.timezone.utc)
     now_str = today.strftime("%Y-%m-%dT%H:%M:%SZ")
-    print(f"[{now_str}] [Python] Gathering 30-Day Forecast & Live Naver News Data Pipeline...")
+    print(f"[{now_str}] [Python] Gathering 30-Day Forecast & Live Seasonal Weather News Pipeline...")
 
     by_date = {}
     for d in range(31): # Today + 30 days
         daily = generate_daily_weather(today, d)
         by_date[daily["date"]] = daily
 
-    live_news = fetch_naver_news_api()
+    live_news = fetch_naver_weather_news_api()
 
     payload = {
         "updatedAt": now_str,
@@ -223,7 +212,7 @@ def run_pipeline():
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"[SUCCESS] Saved 30-day forecast dataset ({len(by_date)} dates) & {len(live_news)} live news items to {file_path}")
+    print(f"[SUCCESS] Saved 30-day forecast dataset ({len(by_date)} dates) & {len(live_news)} seasonal weather news items to {file_path}")
 
 if __name__ == "__main__":
     run_pipeline()
