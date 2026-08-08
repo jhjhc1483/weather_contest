@@ -38,9 +38,10 @@ DEFAULT_NEWS_FEED = [
         "id": "mili_heat_1",
         "category": "heatwave",
         "isMilitary": True,
-        "title": "[군 안전경보] 혹서기 행군 중 열탈진 장병 발생 사고사례 및 지휘 조치사항",
+        "isAccident": True,
+        "title": "[군 사고사례] 혹서기 행군 중 열탈진 장병 발생 및 긴급 이송 사례",
         "source": "국방일보 / 안전보도",
-        "snippet": "체감온도 34도 이상의 혹서기 완전군장 훈련 중 열탈진 장병 발생 사례가 보고됨에 따라, 15분 단위 강제 휴식과 급수가 지시되었습니다.",
+        "snippet": "체감온도 34도 이상의 혹서기 훈련 중 열탈진으로 장병이 의식을 잃고 이송된 사고사례가 발생함에 따라 15분 단위 강제 휴식과 급수가 지시되었습니다.",
         "url": "https://korea.kr",
         "date": "2025-07-20"
     },
@@ -48,9 +49,10 @@ DEFAULT_NEWS_FEED = [
         "id": "mili_cold_1",
         "category": "coldwave",
         "isMilitary": True,
-        "title": "[군 한랭경보] 영하 12도 야외 훈련 중 한랭질환(동상) 발생 사례 및 방한 수칙",
+        "isAccident": True,
+        "title": "[군 사고사례] 영하 12도 야외 훈련 중 한랭질환(동상) 발생 사고 경보",
         "source": "육군본부 의무실",
-        "snippet": "야간 야영 및 경계 작전 노출 장병의 동상 사고 예방을 위해 방한 용품 불출과 체감온도 -15도 이하 시 야외 훈련 전환이 강제됩니다.",
+        "snippet": "야간 경계 작전 노출 장병의 손가락 동상 및 저체온증 환자 발생 사례에 따라 방한 용품 불출과 야외 훈련 전환 수칙이 긴급 전달되었습니다.",
         "url": "https://korea.kr",
         "date": "2025-01-15"
     },
@@ -58,9 +60,10 @@ DEFAULT_NEWS_FEED = [
         "id": "mili_rain_1",
         "category": "typhoon_heavyrain",
         "isMilitary": True,
-        "title": "[군 재난대응] 집중호우 기습 침수 및 진지 붕괴 위험 안전 조치 지침",
+        "isAccident": True,
+        "title": "[재난 사고사례] 집중호우 기습 침수 및 진지 붕괴 사고 발생 현황",
         "source": "합참 안전원",
-        "snippet": "시간당 40mm 이상의 기습 집중호우로 인한 진지 붕괴 및 저지대 침수 사고를 방지하기 위해 야외 노지 훈련이 긴급 중지되었습니다.",
+        "snippet": "시간당 40mm 이상의 집중호우로 인한 진지 붕괴 및 저지대 침수 사고로 장비 피해 및 인원 고립 사고사례가 보고되어 야외 노지 훈련이 중지되었습니다.",
         "url": "https://korea.kr",
         "date": "2025-07-16"
     },
@@ -68,13 +71,16 @@ DEFAULT_NEWS_FEED = [
         "id": "mili_wildfire_1",
         "category": "wildfire_dry",
         "isMilitary": True,
-        "title": "[군 사격장 안전] 봄철 건조특보 속 사격 훈련 중 산불 연소 사고 예방",
+        "isAccident": True,
+        "title": "[사고사례 경보] 건조특보 속 사격 훈련 중 산불 연소 확산 사고",
         "source": "국방안전원",
-        "snippet": "실탄 및 수류탄 사격 훈련 중 대형 산불로 번지는 전력 손실을 막기 위해 훈련장 등짐펌프 및 잔불 감시조 배치가 필수적입니다.",
+        "snippet": "건조한 날씨 속 실탄 사격 훈련 중 발화한 잔불이 대형 산불로 확산된 사고사례에 따라 훈련장 소화 장비 및 진화조 배치가 강제되었습니다.",
         "url": "https://korea.kr",
         "date": "2025-04-10"
     }
 ]
+
+ACCIDENT_KEYWORDS = ["사고", "사례", "피해", "발생", "열사병", "열탈진", "온열질환", "동상", "한랭질환", "저체온증", "침수", "고립", "붕괴", "산불", "쓰러", "인명", "병원", "이송", "부상", "사망", "질환", "응급"]
 
 def clean_html(text):
     if not text: return ""
@@ -97,65 +103,79 @@ def fetch_naver_military_disaster_news():
         print("[INFO] Naver News API keys missing. Using default Military Severe Weather Incident feed.")
         return DEFAULT_NEWS_FEED
 
-    military_queries = [
+    # 최근 날씨로 인한 "사고사례" 기사를 집중 수집하기 위한 쿼리 셋
+    disaster_queries = [
+        ("heatwave", "폭염 온열질환 열탈진 쓰러짐 사고 사례"),
         ("heatwave", "군대 폭염 열사병 온열질환 사고"),
-        ("heatwave", "군 부대 훈련 열탈진 사고사례"),
-        ("coldwave", "군대 한파 동상 한랭질환 사고"),
+        ("coldwave", "한파 동상 저체온증 한랭질환 사고 사례"),
         ("coldwave", "군 부대 혹한기 훈련 동상 사고사례"),
-        ("typhoon_heavyrain", "군대 집중호우 침수 산사태 사고"),
-        ("lightning", "군대 낙뢰 벼락 안전사고"),
-        ("strongwind", "군대 강풍 시설물 피해 사고"),
-        ("wildfire_dry", "군 사격장 산불 건조 사고"),
-        ("dust_ozon", "군대 미세먼지 황사 훈련 지침"),
-        ("foodpoison", "군대 식중독 사고 급식 위생")
+        ("typhoon_heavyrain", "집중호우 폭우 침수 산사태 사고 사례"),
+        ("typhoon_heavyrain", "군대 집중호우 침수 진지 붕괴 사고"),
+        ("lightning", "낙뢰 벼락 감전 사고 사례"),
+        ("strongwind", "강풍 태풍 시설물 붕괴 사고 사례"),
+        ("wildfire_dry", "건조특보 사격장 산불 화재 사고 사례"),
+        ("foodpoison", "폭염 식중독 집단 발생 사고 사례")
     ]
 
     fetched_news = []
+    seen_titles = set()
     news_id_counter = 1
 
-    for category, query in military_queries:
-        try:
-            url = f"https://openapi.naver.com/v1/search/news.json?query={urllib.parse.quote(query)}&display=4&sort=sim"
-            req = urllib.request.Request(url)
-            req.add_header("X-Naver-Client-Id", client_id)
-            req.add_header("X-Naver-Client-Secret", client_secret)
+    for category, query in disaster_queries:
+        # 최신순(date) 및 관련도순(sim) 조회를 병행하여 최근 사고 기사를 최우선 확보
+        for sort_option in ["date", "sim"]:
+            try:
+                url = f"https://openapi.naver.com/v1/search/news.json?query={urllib.parse.quote(query)}&display=5&sort={sort_option}"
+                req = urllib.request.Request(url)
+                req.add_header("X-Naver-Client-Id", client_id)
+                req.add_header("X-Naver-Client-Secret", client_secret)
 
-            with urllib.request.urlopen(req, timeout=5) as response:
-                if response.status == 200:
-                    res_body = response.read().decode('utf-8')
-                    data = json.loads(res_body)
-                    items = data.get("items", [])
-                    for item in items:
-                        title = clean_html(item.get("title", ""))
-                        snippet = clean_html(item.get("description", ""))
-                        origin_url = item.get("originallink") or item.get("link") or "https://naver.com"
-                        pub_date = parse_pub_date(item.get("pubDate", ""))
-                        
-                        is_mil = any(kw in (title + snippet) for kw in ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군", "해병대", "논산"])
+                with urllib.request.urlopen(req, timeout=5) as response:
+                    if response.status == 200:
+                        res_body = response.read().decode('utf-8')
+                        data = json.loads(res_body)
+                        items = data.get("items", [])
+                        for item in items:
+                            title = clean_html(item.get("title", ""))
+                            snippet = clean_html(item.get("description", ""))
+                            combined_text = title + " " + snippet
+                            
+                            # 중복 기사 제거
+                            simplified_title = re.sub(r'\s+', '', title)
+                            if simplified_title in seen_titles:
+                                continue
+                            seen_titles.add(simplified_title)
 
-                        source_name = "국방/기상 재난보도"
-                        if "korea.kr" in origin_url: source_name = "대한민국 정책브리핑"
-                        elif "dema.mil.kr" in origin_url: source_name = "국방일보"
-                        elif "yna.co.kr" in origin_url: source_name = "연합뉴스 국방"
-                        elif "news1.kr" in origin_url: source_name = "뉴스1"
-                        elif "newsis.com" in origin_url: source_name = "뉴시스"
+                            origin_url = item.get("originallink") or item.get("link") or "https://naver.com"
+                            pub_date = parse_pub_date(item.get("pubDate", ""))
+                            
+                            is_mil = any(kw in combined_text for kw in ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군", "해병대", "논산"])
+                            is_accident = any(kw in combined_text for kw in ACCIDENT_KEYWORDS)
 
-                        fetched_news.append({
-                            "id": f"mil_news_{news_id_counter}",
-                            "category": category,
-                            "isMilitary": is_mil,
-                            "title": title,
-                            "source": source_name,
-                            "snippet": snippet,
-                            "url": origin_url,
-                            "date": pub_date
-                        })
-                        news_id_counter += 1
-        except Exception as e:
-            print(f"[WARN] Failed fetching Naver News for query '{query}': {e}")
+                            source_name = "기상/재난 보도"
+                            if "korea.kr" in origin_url: source_name = "대한민국 정책브리핑"
+                            elif "dema.mil.kr" in origin_url: source_name = "국방일보"
+                            elif "yna.co.kr" in origin_url: source_name = "연합뉴스"
+                            elif "news1.kr" in origin_url: source_name = "뉴스1"
+                            elif "newsis.com" in origin_url: source_name = "뉴시스"
+
+                            fetched_news.append({
+                                "id": f"mil_news_{news_id_counter}",
+                                "category": category,
+                                "isMilitary": is_mil,
+                                "isAccident": is_accident,
+                                "title": title,
+                                "source": source_name,
+                                "snippet": snippet,
+                                "url": origin_url,
+                                "date": pub_date
+                            })
+                            news_id_counter += 1
+            except Exception as e:
+                print(f"[WARN] Failed fetching Naver News for query '{query}' ({sort_option}): {e}")
 
     if fetched_news:
-        print(f"[SUCCESS] Fetched {len(fetched_news)} live Military Weather Incident news items via Naver API.")
+        print(f"[SUCCESS] Fetched {len(fetched_news)} live Weather Accident news items via Naver API.")
         return fetched_news
     else:
         print("[WARN] No news fetched. Falling back to default feed.")
@@ -197,11 +217,18 @@ def season_of(month):
     if month in [6, 7, 8]: return "summer"
     return "autumn"
 
-def calculate_apparent_temp(ta, rh, ws=2.0):
-    """KMA Summer Apparent Temperature Formula 3.0"""
-    tw = ta * math.atan(0.151977 * (rh + 8.313659)**0.5) + math.atan(ta + rh) - math.atan(rh - 1.676331) + 0.00391838 * (rh**1.5) * math.atan(0.023101 * rh) - 4.686035
-    app = -0.2442 + 0.55399 * tw + 0.45535 * ta - 0.0022 * (tw**2) + 0.0029 * (tw * ta) + 3.0
-    return round(app, 1)
+def calculate_apparent_temp(ta, rh, ws=2.0, month=8):
+    """KMA Apparent Temperature Formula for 4 Seasons (Summer Apparent / Winter Wind Chill)"""
+    if month in [12, 1, 2] or ta <= 10.0:
+        v_kmh = ws * 3.6
+        if v_kmh >= 4.8:
+            chill = 13.12 + 0.6215 * ta - 11.37 * (v_kmh ** 0.16) + 0.3965 * ta * (v_kmh ** 0.16)
+            return round(chill, 1)
+        return round(ta, 1)
+    else:
+        tw = ta * math.atan(0.151977 * (rh + 8.313659)**0.5) + math.atan(ta + rh) - math.atan(rh - 1.676331) + 0.00391838 * (rh**1.5) * math.atan(0.023101 * rh) - 4.686035
+        app = -0.2442 + 0.55399 * tw + 0.45535 * ta - 0.0022 * (tw**2) + 0.0029 * (tw * ta) + 3.0
+        return round(app, 1)
 
 def generate_daily_weather(base_date, day_offset, region_id=DEFAULT_REGION):
     region = REGIONS.get(region_id, REGIONS[DEFAULT_REGION])
@@ -245,7 +272,7 @@ def generate_daily_weather(base_date, day_offset, region_id=DEFAULT_REGION):
     ta = [round(t, 1) for t in base_ta]
     rh = base_rh
     ws = region["wsBase"]
-    app = [calculate_apparent_temp(t, r, ws) for t, r in zip(ta, rh)]
+    app = [calculate_apparent_temp(t, r, ws, month) for t, r in zip(ta, rh)]
     wbgt = [round(t * 0.7 + (r / 100) * 8.5 + 2.0, 1) for t, r in zip(ta, rh)]
 
     peak_idx = 9 # 14:00

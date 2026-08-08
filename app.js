@@ -295,24 +295,172 @@ function fill() {
   return { series: out, src, any: true };
 }
 
+/* ══════════ 4-SEASON ALL-WEATHER HAZARD ENGINE ══════════ */
+function calculateWindChill(ta, ws) {
+  const vKmh = (ws || 2.0) * 3.6;
+  if (ta <= 10.0 && vKmh >= 4.8) {
+    const chill = 13.12 + 0.6215 * ta - 11.37 * Math.pow(vKmh, 0.16) + 0.3965 * ta * Math.pow(vKmh, 0.16);
+    return +chill.toFixed(1);
+  }
+  return +ta.toFixed(1);
+}
+
+function computeSeasonalRisk(ta, rh, ws, pm10, pm25, wC, month) {
+  const chillTemp = calculateWindChill(ta, ws);
+  const isWinterSeason = month === 12 || month === 1 || month === 2 || ta <= 10.0;
+  const isDustSeason = (month >= 3 && month <= 5 || month >= 9 && month <= 11) && (pm10 > 80 || pm25 > 35);
+  
+  // 1. Winter Coldwave Risk Level (현기준.md 체감온도 지침)
+  let winterLv = 0;
+  let winterStatus = "정상";
+  let winterDesc = "정상 야외훈련 실시 가능";
+  let winterAction = "방한 용품 불출 및 장병 체온 관리";
+
+  if (chillTemp <= -24.1) {
+    winterLv = 5;
+    winterStatus = "혹한 중지";
+    winterDesc = "야외훈련 중지 및 주둔지 훈련 전면 대체";
+    winterAction = "야외훈련을 중지하고 주둔지/실내 훈련으로 대체 (방한대책 구비 부대 제외).";
+  } else if (chillTemp <= -18.1) {
+    winterLv = 3;
+    winterStatus = "혹한 제한";
+    winterDesc = "야외훈련 실시 가능 (주둔지 훈련 전환 검토)";
+    winterAction = "야외훈련 내용과 시간 조정, 주둔지 훈련 전환 검토 및 방한장구 착용.";
+  } else if (chillTemp <= -10.1) {
+    winterLv = 2;
+    winterStatus = "혹한 주의";
+    winterDesc = "정상 야외훈련 가능 (훈련 내용/시간 조정)";
+    winterAction = "야외훈련 내용과 시간 조정 실시, 동상 위험 부위 지속 점검.";
+  } else if (chillTemp <= 0.0) {
+    winterLv = 1;
+    winterStatus = "혹한 관심";
+    winterDesc = "정상 야외훈련 가능";
+    winterAction = "방한용품 착용 상태 점검 및 야외 활동 시 체온 유지 관찰.";
+  }
+
+  // 2. Dust/PM Air Quality Risk Level (현기준.md 미세먼지/황사 지침)
+  let dustLv = 0;
+  let dustStatus = "좋음/보통";
+  let dustDesc = "정상 야외훈련 실시";
+  let dustAction = "일반 야외 훈련 진행";
+
+  if (pm10 > 300 || pm25 > 180) {
+    dustLv = 5;
+    dustStatus = "미세먼지 경보";
+    dustDesc = "실내 훈련/교육 전면 전환";
+    dustAction = "야외 훈련 금지 및 실내 교육 전면 전환. 무리한 야외 뜀걸음/행군 금지.";
+  } else if (pm10 > 150 || pm25 > 75) {
+    dustLv = 4;
+    dustStatus = "미세먼지 주의보";
+    dustDesc = "야외훈련 단축 및 실내 전환 검토";
+    dustAction = "지휘관 판단 하 훈련시간 단축 및 실내훈련 전환. 야외 행군/뜀걸음 최소화.";
+  } else if (pm10 > 80 || pm25 > 35) {
+    dustLv = 2;
+    dustStatus = "미세먼지 나쁨";
+    dustDesc = "안전대책 강구 후 훈련 조정";
+    dustAction = "미세먼지 마스크 불출 및 착용. 실시간 농도 고려 훈련장소, 시간, 방법 조정.";
+  }
+
+  // 3. Summer Heatwave Risk Level (TB MED 507 & 현기준.md 온열지수 지침)
+  const summerCat = catOfC(wC);
+  let summerLv = summerCat;
+  let summerStatus = "정상";
+  let summerDesc = "정상 야외훈련 가능";
+  let summerAction = "급수 및 그늘 휴식지 운용";
+
+  if (wC >= 32.0) {
+    summerStatus = "온열 중지";
+    summerDesc = "옥외 훈련 중지 (필수 활동만 실시)";
+    summerAction = "경계작전 등 필수 활동만 실시하고 아침·저녁 서늘한 시간대 최대 활용.";
+  } else if (wC >= 31.0) {
+    summerStatus = "온열 제한";
+    summerDesc = "옥외 훈련 제한 및 중지";
+    summerAction = "1일 6시간 이내 제한된 활동만 가능, 직사광선 노출 과업 최소화.";
+  } else if (wC >= 29.5) {
+    summerStatus = "온열 부분제한";
+    summerDesc = "과중한 훈련 지양 및 조정";
+    summerAction = "뜀걸음, 행군 등 과중한 훈련 지양, 옥외훈련 조정 시행.";
+  } else if (wC >= 26.5) {
+    summerStatus = "온열 주의";
+    summerDesc = "미숙련자 주의 및 그늘 휴식";
+    summerAction = "양성교육 및 야외훈련 시 미숙련자 주의 관찰, 그늘 휴식지 개설.";
+  }
+
+  // Select Active Season Risk Engine Mode
+  let activeSeason = "SUMMER";
+  let seasonIcon = "☀️";
+  let seasonLabel = "혹서기 온열 위험 평가 모드";
+  let activeLv = summerLv;
+  let activeStatus = summerStatus;
+  let activeDesc = summerDesc;
+  let activeAction = summerAction;
+
+  if (isWinterSeason && winterLv >= summerLv) {
+    activeSeason = "WINTER";
+    seasonIcon = "❄️";
+    seasonLabel = "혹한기 한랭/동상 위험 평가 모드";
+    activeLv = winterLv;
+    activeStatus = winterStatus;
+    activeDesc = winterDesc;
+    activeAction = winterAction;
+  } else if (isDustSeason && dustLv > summerLv && dustLv > winterLv) {
+    activeSeason = "DUST";
+    seasonIcon = "😷";
+    seasonLabel = "미세먼지/황사 위험 평가 모드";
+    activeLv = dustLv;
+    activeStatus = dustStatus;
+    activeDesc = dustDesc;
+    activeAction = dustAction;
+  }
+
+  return {
+    activeSeason,
+    seasonIcon,
+    seasonLabel,
+    chillTemp,
+    activeLv,
+    activeStatus,
+    activeDesc,
+    activeAction,
+    summerLv,
+    winterLv,
+    dustLv,
+    summerCat
+  };
+}
+
 function computeDay() {
   applyDateWeather(S.planDate);
+  const dParts = (S.planDate || "").split("-");
+  const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
+  const env = S.envData || {};
+
   const g = GEARS.find(x => x.id === S.gear) || GEARS[0];
   const adjC = g.adj ? g.adj(S.task) : 0;
   const f = fill();
+
   return HOURS.map((h, i) => {
     const wRaw = typeof f.series[i] === 'number' && !isNaN(f.series[i]) ? f.series[i] : (BASE[i] || 25.0);
     const wC = wRaw + adjC;
-    const cat = catOfC(wC);
+    const taVal = TA[i] || 25.0;
+    const rhVal = RH[i] || 60;
+    const wsVal = env.ws || 2.0;
+    const pm10Val = env.pm10 || 40;
+    const pm25Val = env.pm25 || 20;
+
+    const seasonal = computeSeasonalRisk(taVal, rhVal, wsVal, pm10Val, pm25Val, wC, month);
+    const cat = seasonal.summerCat;
     const appVal = typeof APP[i] === 'number' && !isNaN(APP[i]) ? APP[i] : 28.0;
     const kl = kmaLv(appVal);
-    const lv = Math.max(kl, cat);
+    const lv = Math.max(kl, seasonal.activeLv);
     const safeCatIndex = Math.min(5, Math.max(1, cat));
     const ruleObj = WR[safeCatIndex] || WR[1];
     const rule = ruleObj[S.task] || ["제한 없음", 0.50];
+
     return {
-      h, ta: TA[i] || 25.0, rh: RH[i] || 60, app: appVal, wRaw, wC, cat, kl, lv, src: f.src[i] || "기준",
-      wr: cat === 0 ? "제한 없음" : rule[0], qt: cat === 0 ? 0.5 : rule[1]
+      h, ta: taVal, rh: rhVal, app: appVal, wRaw, wC, cat, kl, lv, seasonal, src: f.src[i] || "기준",
+      wr: (cat === 0 && seasonal.activeSeason === "SUMMER") ? "제한 없음" : rule[0],
+      qt: (cat === 0 && seasonal.activeSeason === "SUMMER") ? 0.5 : rule[1]
     };
   });
 }
@@ -321,15 +469,20 @@ function computeDay() {
 function getSelectedWindowPeakData(D) {
   const inWindow = D.filter(d => d.h >= S.from && d.h <= S.to);
   if (!inWindow.length) return D[0];
-  return inWindow.reduce((max, cur) => cur.wC > max.wC ? cur : max, inWindow[0]);
+  return inWindow.reduce((max, cur) => cur.lv > max.lv ? cur : cur.wC > max.wC ? cur : max, inWindow[0]);
 }
 
-function getLegacyVerdict(peakW) {
-  if (peakW < 26.5) return { status: "정상", class: "p-low", desc: "정상 야외훈련 실시 가능" };
-  if (peakW < 29.5) return { status: "주의", class: "p-low", desc: "양성교육 및 야외훈련 시 미숙련자 주의" };
-  if (peakW < 31.0) return { status: "부분제한", class: "p-mid", desc: "뜀걸음, 행군 등 과중한 훈련 지양, 옥외훈련 조정 시행" };
-  if (peakW < 32.0) return { status: "제한", class: "p-high", desc: "옥외훈련 제한 및 중지 (1일 6시간 이내 제한 활동)" };
-  return { status: "중지", class: "p-high", desc: "경계작전 등 필수 활동만 실시 (아침/저녁시간 최대 활용)" };
+function getLegacyVerdict(peakData) {
+  const s = peakData.seasonal;
+  if (!s) {
+    return { status: "정상", class: "p-low", desc: "정상 야외훈련 실시 가능" };
+  }
+  const badgeClass = s.activeLv >= 4 ? "p-high" : s.activeLv >= 2 ? "p-mid" : "p-low";
+  return {
+    status: `${s.activeStatus} (${s.seasonIcon} ${s.seasonLabel.split(" ")[0]})`,
+    class: badgeClass,
+    desc: s.activeDesc
+  };
 }
 
 function renderComparison(D) {
@@ -338,37 +491,40 @@ function renderComparison(D) {
 
   const n = getSelectedWindowPeakData(D);
   const peakW = n.wRaw;
-  const legacy = getLegacyVerdict(peakW);
+  const legacy = getLegacyVerdict(n);
   const proposedCat = n.cat;
+  const seasonal = n.seasonal || {};
   const proposedLv = LV[n.lv] || LV[0];
   const gearObj = GEARS.find(g => g.id === S.gear) || GEARS[0];
 
+  const seasonBadgeText = seasonal.seasonLabel || "4계절 기후 위험 평가";
+
   compBox.innerHTML = `
     <div class="comp-col legacy">
-      <span class="comp-title">📋 현 규정 (계획 시간대 피크 시각 ${pad(n.h)}:00 기준)</span>
+      <span class="comp-title">📋 현 규정 (계획 시간대 ${pad(n.h)}:00 ${seasonal.seasonIcon || ''} 계절 지침 기준)</span>
       <div class="comp-card">
         <div class="head">
-          <span>${legacy.status} (단순 WBGT ${peakW.toFixed(1)}°C)</span>
-          <span class="p-badge ${legacy.class}">${legacy.status}</span>
+          <span>${legacy.status}</span>
+          <span class="p-badge ${legacy.class}">${legacy.status.split(" ")[0]}</span>
         </div>
         <div class="desc">
           ${legacy.desc}<br>
-          <small style="color:var(--faint)">* 단점: 장병의 과업 강도(행군/포복) 및 전투복/방탄복/보호의 착용 보정 미반영</small>
+          <small style="color:var(--faint)">* 단점: 전투복/방탄복/보호의 복장 보정 및 과업 대사량 미반영</small>
         </div>
       </div>
     </div>
 
     <div class="comp-col proposed">
-      <span class="comp-title">🪖 본 시스템 (${pad(n.h)}:00 피크 기준 TB MED 507 섭씨 보정)</span>
+      <span class="comp-title">🪖 본 시스템 (${pad(n.h)}:00 ${seasonal.seasonIcon || ''} ${seasonBadgeText} TB MED 507 보정)</span>
       <div class="comp-card" style="border-color:var(--accent);background:var(--accent-bg)">
         <div class="head">
-          <span style="color:var(--accent)">${proposedLv.n} (보정 WBGT ${n.wC.toFixed(1)}°C / CAT ${proposedCat})</span>
-          <span class="p-badge p-high">위험 보정 반영</span>
+          <span style="color:var(--accent)">${seasonal.activeStatus || proposedLv.n} (체감/보정 ${seasonal.activeSeason === 'WINTER' ? '체감' + seasonal.chillTemp + '°C' : 'WBGT ' + n.wC.toFixed(1) + '°C'})</span>
+          <span class="p-badge p-high">4계절 복합 보정</span>
         </div>
         <div class="desc">
-          <b>권장 조치</b>: ${proposedLv.a}<br>
+          <b>권장 조치</b>: ${seasonal.activeAction || proposedLv.a}<br>
           <b>작업/휴식</b>: ${n.wr} | <b>1인 시간당 급수</b>: ${(n.qt * QT).toFixed(2)}L<br>
-          <small style="color:var(--accent)">* 강점: 복장 보정(${gearObj.name} ${gearObj.src}) 및 과업 대사량 반영</small>
+          <small style="color:var(--accent)">* 강점: 4계절 기후(${seasonal.seasonLabel}) + 복장 보정(${gearObj.name} ${gearObj.src}) 대사량 정밀 산정</small>
         </div>
       </div>
     </div>
@@ -381,14 +537,18 @@ function renderTimelineGrid(D) {
 
   container.innerHTML = D.map(d => {
     const l = LV[d.lv] || LV[0];
+    const s = d.seasonal || {};
+    const isWinter = s.activeSeason === "WINTER";
     const bgCol = l.c === "var(--c0)" ? "var(--glass-2)" : l.c;
     const txtCol = l.i || "var(--ink)";
+    const tempLabel = isWinter ? `체감 ${s.chillTemp}°C` : `WBGT ${d.wC.toFixed(1)}°C`;
+    const statusText = s.activeStatus || l.n;
 
     return `
       <div class="time-card" style="cursor:pointer" onclick="highlightHour(${d.h})">
-        <div class="t-hour">${pad(d.h)}:00</div>
-        <div class="t-lvl" style="background:${bgCol};color:${txtCol}">${l.n} (${d.lv}단계)</div>
-        <div class="t-sub">WBGT ${d.wC.toFixed(1)}°C</div>
+        <div class="t-hour">${pad(d.h)}:00 ${s.seasonIcon || ''}</div>
+        <div class="t-lvl" style="background:${bgCol};color:${txtCol}">${statusText} (${d.lv}단계)</div>
+        <div class="t-sub">${tempLabel}</div>
         <div class="t-sub" style="color:var(--accent)">${d.wr}</div>
       </div>
     `;
@@ -470,17 +630,25 @@ function renderSafetyNews(forceShuffle = false) {
     return kws.some(kw => str.includes(kw));
   }
 
+  const accidentKws = ["사고", "사례", "피해", "발생", "열사병", "열탈진", "온열질환", "동상", "한랭질환", "저체온증", "침수", "고립", "붕괴", "산불", "쓰러", "인명", "병원", "이송", "부상", "사망", "질환", "응급"];
+
   const scoredNews = newsList.map((item, idx) => {
     let score = 0;
     const cat = item.category;
     const isMilitary = item.isMilitary || anyKw(item.title + item.snippet, ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군"]);
+    const isAccident = item.isAccident || anyKw(item.title + item.snippet, accidentKws);
 
-    // 1. MILITARY PRIORITY FIRST: Massive score boost for military incident news (+500 points)
-    if (isMilitary) {
-      score += 500;
+    // 1. ACCIDENT PRIORITY FIRST: Massive score boost for recent weather accident/incident news (+400 points)
+    if (isAccident) {
+      score += 400;
     }
 
-    // 2. STRICT HARD EXCLUSION: Physical impossibility rules
+    // 2. MILITARY PRIORITY: Additional score boost for military related incident news (+300 points)
+    if (isMilitary) {
+      score += 300;
+    }
+
+    // 3. STRICT HARD EXCLUSION: Physical impossibility rules
     if ((month === 12 || month === 1 || month === 2) && (cat === "heatwave" || cat === "foodpoison")) {
       return { item, finalScore: -99999 }; // Never show heatwave in winter
     }
@@ -488,7 +656,7 @@ function renderSafetyNews(forceShuffle = false) {
       return { item, finalScore: -99999 }; // Never show coldwave in summer
     }
 
-    // 3. DATE WEATHER HAZARD MATCHING WEIGHTS (+150 ~ +300 points)
+    // 4. DATE WEATHER HAZARD MATCHING WEIGHTS (+150 ~ +300 points)
     if ((month === 12 || month === 1 || month === 2) && (cat === "coldwave" || cat === "strongwind")) {
       score += 300;
     } else if ((month >= 6 && month <= 8) && (cat === "heatwave" || cat === "foodpoison" || cat === "lightning" || cat === "typhoon_heavyrain")) {
@@ -503,21 +671,21 @@ function renderSafetyNews(forceShuffle = false) {
     if (env.pm10 >= 80 && cat === "dust_ozon") score += 100;
     if (env.ws >= 4.0 && cat === "strongwind") score += 80;
 
-    // 4. Per-Date Pseudo-random offset for unique date variations
+    // 5. Per-Date Pseudo-random offset for unique date variations
     const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 40;
     const finalScore = score + pseudoRandom;
 
-    return { item, finalScore, isMilitary };
+    return { item, finalScore, isMilitary, isAccident };
   });
 
-  // Filter out hard excluded items (-99999) and sort descending (Military First + Date Weather Match)
+  // Filter out hard excluded items (-99999) and sort descending (Accident & Military First + Date Weather Match)
   const validScored = scoredNews.filter(s => s.finalScore > -9000);
   validScored.sort((a, b) => b.finalScore - a.finalScore);
 
   const listToRender = validScored.map(s => s.item).slice(0, newsDisplayCount);
 
   if (!listToRender.length) {
-    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">선택하신 날짜(${dateStr}) 계절 조건에 맞는 군 관련 기상 재난 사고 기사가 없습니다.</p>`;
+    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">선택하신 날짜(${dateStr}) 계절 조건에 맞는 기상 재난 사고 기사가 없습니다.</p>`;
     return;
   }
 
@@ -534,20 +702,24 @@ function renderSafetyNews(forceShuffle = false) {
 
   container.innerHTML = listToRender.map(n => {
     const isMil = n.isMilitary || anyKw(n.title + n.snippet, ["군", "군대", "장병", "부대", "훈련", "국방"]);
+    const isAcc = n.isAccident || anyKw(n.title + n.snippet, accidentKws);
     const pubDateStr = n.date ? `보도일자: ${n.date}` : "최신 보도";
+    const borderStyle = isAcc && isMil ? 'border-left:3.5px solid var(--accent);background:var(--glass-2)' : isAcc ? 'border-left:3.5px solid #ff4d4f;background:var(--glass-2)' : '';
+    
     return `
-      <div class="news-card" style="${isMil ? 'border-left:3.5px solid var(--accent);background:var(--glass-2)' : ''}">
+      <div class="news-card" style="${borderStyle}">
         <div class="hdr">
           <a href="${n.url}" target="_blank" rel="noopener" class="news-title">
-            ${isMil ? '🪖' : '⚠️'} ${n.title}
+            ${isMil ? '🪖' : '🚨'} ${n.title}
           </a>
-          <span class="news-tag" style="${isMil ? 'background:var(--accent);color:#fff' : ''}">${n.source}</span>
+          <span class="news-tag" style="${isMil ? 'background:var(--accent);color:#fff' : 'background:#ff4d4f;color:#fff'}">${n.source}</span>
         </div>
         <p class="news-snippet">${n.snippet}</p>
-        <div class="news-meta">${pubDateStr} · [${catNames[n.category] || "8대 기상재난"}] ${isMil ? '★ 군 사고사례 우선배치' : ''}</div>
+        <div class="news-meta">${pubDateStr} · [${catNames[n.category] || "8대 기상재난"}] ${isAcc ? '🚨 사고사례 우선배치' : ''} ${isMil ? '★ 군 관련' : ''}</div>
       </div>
     `;
   }).join("");
+}
 }
 
 function drawDay(D) {
