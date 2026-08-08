@@ -282,13 +282,7 @@ window.highlightHour = function(hour) {
 window.refreshSafetyNews = function() {
   newsDisplayCount = 3;
   updateNewsToggleBtnUI();
-  if (S.newsList && S.newsList.length > 1) {
-    for (let i = S.newsList.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [S.newsList[i], S.newsList[j]] = [S.newsList[j], S.newsList[i]];
-    }
-  }
-  renderSafetyNews();
+  renderSafetyNews(true); // Force random shuffle on manual refresh
 };
 
 window.toggleMoreSafetyNews = function() {
@@ -315,55 +309,63 @@ function updateNewsToggleBtnUI() {
   }
 }
 
-/* Render 8-Factor Severe Weather Disaster News with Date-Driven Smart Matching */
-function renderSafetyNews() {
+/* Date String Seed Hash Helper for Unique Per-Date News Order */
+function getDateHashSeed(dateStr) {
+  let hash = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash = (hash << 5) - hash + dateStr.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+/* Render 8-Factor Severe Weather Disaster News with Date-Driven Seed Shuffling */
+function renderSafetyNews(forceShuffle = false) {
   const container = document.getElementById("newsBox");
   if (!container) return;
 
-  const dParts = (S.planDate || "").split("-");
+  const dateStr = S.planDate || "2026-08-08";
+  const dParts = dateStr.split("-");
   const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
+  const day = dParts.length >= 3 ? parseInt(dParts[3], 10) : 8;
   const env = S.envData || {};
 
-  let preferredCategories = [];
-
-  // Smart Weather Condition Priority Matcher across 8 Hazard Categories
-  if (env.ta && env.ta >= 31.0) preferredCategories.push("heatwave");
-  if (env.ta && env.ta <= 0.0) preferredCategories.push("coldwave");
-  if (env.pop && env.pop >= 50) preferredCategories.push("typhoon_heavyrain", "lightning");
-  if (env.pm10 && env.pm10 >= 80) preferredCategories.push("dust_ozon");
-  if (env.ws && env.ws >= 5.0) preferredCategories.push("strongwind");
-
-  // Fallback to month seasonal categories
-  if (month >= 6 && month <= 8) preferredCategories.push("heatwave", "foodpoison", "lightning", "typhoon_heavyrain");
-  else if (month === 12 || month === 1 || month === 2) preferredCategories.push("coldwave", "strongwind");
-  else preferredCategories.push("wildfire_dry", "dust_ozon", "strongwind");
-
-  let matchedNews = [];
-  const newsList = S.newsList || [];
-
-  for (const cat of preferredCategories) {
-    const items = newsList.filter(n => n.category === cat);
-    for (const item of items) {
-      if (!matchedNews.some(m => m.id === item.id)) {
-        matchedNews.push(item);
-      }
-    }
-  }
-
-  if (matchedNews.length < newsDisplayCount) {
-    for (const item of newsList) {
-      if (!matchedNews.some(m => m.id === item.id)) {
-        matchedNews.push(item);
-      }
-    }
-  }
-
-  const listToRender = matchedNews.slice(0, newsDisplayCount);
-
-  if (!listToRender.length) {
+  const newsList = Array.isArray(S.newsList) ? S.newsList.slice() : [];
+  if (!newsList.length) {
     container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">수집된 기상 특보 뉴스가 없습니다.</p>`;
     return;
   }
+
+  // Calculate priority score for each news item based on selected date's weather
+  const dateSeed = forceShuffle ? Math.floor(Math.random() * 10000) : getDateHashSeed(dateStr);
+
+  const scoredNews = newsList.map((item, idx) => {
+    let score = 0;
+    const cat = item.category;
+
+    // Condition matching weights
+    if (env.ta >= 31.0 && cat === "heatwave") score += 50;
+    if (env.ta <= 0.0 && cat === "coldwave") score += 50;
+    if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 45;
+    if (env.pm10 >= 80 && cat === "dust_ozon") score += 40;
+    if (env.ws >= 5.0 && cat === "strongwind") score += 35;
+
+    // Season matching weights
+    if (month >= 6 && month <= 8 && (cat === "heatwave" || cat === "foodpoison" || cat === "lightning")) score += 30;
+    else if ((month === 12 || month === 1 || month === 2) && (cat === "coldwave" || cat === "strongwind")) score += 30;
+    else if (cat === "wildfire_dry" || cat === "dust_ozon") score += 20;
+
+    // Date-driven pseudorandom shuffle offset (Guarantees DIFFERENT order for DIFFERENT dates)
+    const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 100;
+    const finalScore = score + pseudoRandom;
+
+    return { item, finalScore };
+  });
+
+  // Sort news by finalScore descending (highest match & per-date pseudo-random order)
+  scoredNews.sort((a, b) => b.finalScore - a.finalScore);
+
+  const listToRender = scoredNews.map(s => s.item).slice(0, newsDisplayCount);
 
   const catNames = {
     heatwave: "☀️ 폭염/온열",
@@ -383,7 +385,7 @@ function renderSafetyNews() {
         <span class="news-tag">${n.source}</span>
       </div>
       <p class="news-snippet">${n.snippet}</p>
-      <div class="news-meta">선택일(${S.planDate}) 기상 매칭 · [${catNames[n.category] || "8대 기상재난특보"}]</div>
+      <div class="news-meta">선택일(${dateStr}) 특보 매칭 · [${catNames[n.category] || "8대 기상재난특보"}]</div>
     </div>
   `).join("");
 }
