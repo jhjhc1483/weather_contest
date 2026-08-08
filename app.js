@@ -715,11 +715,9 @@ function renderSafetyNews(forceShuffle = false) {
           <span class="news-tag" style="${isMil ? 'background:var(--accent);color:#fff' : 'background:#ff4d4f;color:#fff'}">${n.source}</span>
         </div>
         <p class="news-snippet">${n.snippet}</p>
-        <div class="news-meta">${pubDateStr} · [${catNames[n.category] || "8대 기상재난"}] ${isAcc ? '🚨 사고사례 우선배치' : ''} ${isMil ? '★ 군 관련' : ''}</div>
       </div>
     `;
   }).join("");
-}
 }
 
 function drawDay(D) {
