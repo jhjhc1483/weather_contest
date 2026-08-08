@@ -1,15 +1,18 @@
 /* Cloudflare Pages Function: /api/trigger-action */
 export async function onRequestPost(context) {
   try {
-    const ghToken = context.env.GH_PAT_TOKEN || context.env.GITHUB_TOKEN;
+    const ghToken = context.env.GITHUB_TOKEN || context.env.GH_PAT_TOKEN;
+    const ghOwner = context.env.GITHUB_OWNER || 'jhjhc1483';
+    const ghRepo = context.env.GITHUB_REPO || 'weather_contest';
+
     if (!ghToken) {
       return new Response(JSON.stringify({
         triggered: false,
-        message: 'GitHub Token이 설정되지 않았습니다. Cloudflare Pages 환경 변수(GH_PAT_TOKEN)를 등록해 주세요.'
+        message: 'GitHub Token이 설정되지 않았습니다. Cloudflare Pages 환경 변수(GITHUB_TOKEN)를 등록해 주세요.'
       }), { headers: { 'Content-Type': 'application/json' }, status: 400 });
     }
 
-    const res = await fetch('https://api.github.com/repos/jhjhc1483/weather_contest/actions/workflows/fetch_weather.yml/dispatches', {
+    const res = await fetch(`https://api.github.com/repos/${ghOwner}/${ghRepo}/actions/workflows/fetch_weather.yml/dispatches`, {
       method: 'POST',
       headers: {
         'Accept': 'application/vnd.github+json',

@@ -1,14 +1,17 @@
 /* Cloudflare Pages Function: /api/action-status */
 export async function onRequestGet(context) {
   try {
-    const ghToken = context.env.GH_PAT_TOKEN || context.env.GITHUB_TOKEN;
+    const ghToken = context.env.GITHUB_TOKEN || context.env.GH_PAT_TOKEN;
+    const ghOwner = context.env.GITHUB_OWNER || 'jhjhc1483';
+    const ghRepo = context.env.GITHUB_REPO || 'weather_contest';
+
     const headers = {
       'Accept': 'application/vnd.github+json',
       'User-Agent': 'Cloudflare-Pages-App'
     };
     if (ghToken) headers['Authorization'] = `Bearer ${ghToken}`;
 
-    const res = await fetch('https://api.github.com/repos/jhjhc1483/weather_contest/actions/workflows/fetch_weather.yml/runs?per_page=1', { headers });
+    const res = await fetch(`https://api.github.com/repos/${ghOwner}/${ghRepo}/actions/workflows/fetch_weather.yml/runs?per_page=1`, { headers });
 
     if (res.ok) {
       const data = await res.json();
