@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-08T15:50:55Z",
+  "updatedAt": "2026-08-08T16:46:26Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9256,61 +9256,6 @@
       "category": "coldwave",
       "isMilitary": false,
       "isAccident": true,
-      "title": "[슬기로운 보험생활] 폭염에 위협받는 일상과 생계…기후보험 역할 커진...",
-      "source": "기상/재난 보도",
-      "snippet": "겨울철 한파로 인한 한랭질환(동상·저체온증 등) 중 하나에 진단받을 경우 10만원의 진단비를 지급한다.... 대표적인 사례가 경기도와 제주도다. 경기도는 지난해 전국 최초로 모든 도민을 대상으로 기후보험을 도입했다....",
-      "url": "http://www.opinionnews.co.kr/news/articleView.html?idxno=142765",
-      "date": "2026-08-08"
-    },
-    {
-      "id": "mil_news_10",
-      "category": "coldwave",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "[오늘의 ABC 뉴스룸] \"폭락장에도 코스피 1만2천 간다\" 월가의 충격 전망...",
-      "source": "기상/재난 보도",
-      "snippet": "다가올 겨울 한파로 인한 동상과 저체온증 등 한랭질환 피해는 물론 기후 관련 감염병 진단비도 보장합니다. 특히, 개인이 별도로 가입한 다른 보험과 관계없이 중복 청구가 가능하며 사고일로부터 3년 이내에 신청할...",
-      "url": "https://www.ajunews.com/view/20260807163427513",
-      "date": "2026-08-07"
-    },
-    {
-      "id": "mil_news_11",
-      "category": "coldwave",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "“대상 여부 꼭 확인하세요” 1440만 명에 최대 30만 원 지급하는 '이것...",
-      "source": "기상/재난 보도",
-      "snippet": "올해 보험 기간은 지난 4월 11일부터 내년 4월 10일까지이며, 사고나 진단을 받은 날로부터 3년 안에는 언제든... 반대로 겨울철 동상이나 저체온증 같은 한랭질환을 진단받아도 마찬가지로 15만원을 받을 수 있다.병원...",
-      "url": "https://www.wikitree.co.kr/articles/1150996",
-      "date": "2026-08-07"
-    },
-    {
-      "id": "mil_news_12",
-      "category": "coldwave",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "“폭염·한파까지 보험으로”…생·손보 ‘기후리스크’ 보장 넓힌다",
-      "source": "기상/재난 보도",
-      "snippet": "지역별 기후 특성과 보험사고 간 연관성을 상품 개발에 활용하기 위해서다. 최근에는 생보도 기후 관련 보장에 가세하는 흐름이다. 동양생명은 열사병·열탈진과 동상·저체온증 등 온열·한랭질환을 보장하는 1년 만기...",
-      "url": "https://www.viva100.com/article/20260804500824",
-      "date": "2026-08-04"
-    },
-    {
-      "id": "mil_news_13",
-      "category": "coldwave",
-      "isMilitary": true,
-      "isAccident": true,
-      "title": "[지자체 포커스] 가평군, 야간·응급 의료서비스 등 알아두면 유용해",
-      "source": "기상/재난 보도",
-      "snippet": "가평군에 따르면 군민들은 '경기 기후보험' 자동 가입으로 겨울철 동상, 저체온증 등 한랭질환 진단 시는... 받으면 사고 위로금으로 30만원을 받는다. 한파주의보 발령일에 입은 빙판길 사고처럼 날씨와 직접 관련된...",
-      "url": "http://www.queen.co.kr/news/articleView.html?idxno=450559",
-      "date": "2026-01-30"
-    },
-    {
-      "id": "mil_news_14",
-      "category": "coldwave",
-      "isMilitary": false,
-      "isAccident": true,
       "title": "[웰빙·건강]장기간 한파 지속…추운 날씨 속 한랭질환 위험 커 외출할...",
       "source": "기상/재난 보도",
       "snippet": "저체온증 비율이 높았고 젊은 연령층에서는 동상, 동창 비율이 상대적으로 높은 경향을 보인다. 지난 5년간 한랭질환은 총 1,914건, 이 중 60세 이상 한랭질환은 1,071건(56%)이다. 동반질환으로 치매가 신고된 사례는 총 234건...",
@@ -9318,7 +9263,7 @@
       "date": "2026-01-27"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_10",
       "category": "coldwave",
       "isMilitary": true,
       "isAccident": false,
@@ -9329,18 +9274,7 @@
       "date": "2023-03-29"
     },
     {
-      "id": "mil_news_16",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "[비바100] 단순 보상 넘어 빠른 일상 복귀로…기후위기 시대, 기후보험...",
-      "source": "기상/재난 보도",
-      "snippet": "기후위기로 폭염·폭우·산불 등 기상재난이 상시화되면서 피해 규모가 커지고 있다. 단발성 지원만으로는... 리스크가 집중되는 데다, 지역별 피해 편차도 크다. 침수와 산사태, 폭염, 산불 같은 재난이 반복되지만, 이를...",
-      "url": "https://www.viva100.com/article/20260804501346",
-      "date": "2026-08-06"
-    },
-    {
-      "id": "mil_news_17",
+      "id": "mil_news_11",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9351,7 +9285,7 @@
       "date": "2026-07-31"
     },
     {
-      "id": "mil_news_18",
+      "id": "mil_news_12",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9362,7 +9296,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_19",
+      "id": "mil_news_13",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9373,7 +9307,7 @@
       "date": "2026-07-23"
     },
     {
-      "id": "mil_news_20",
+      "id": "mil_news_14",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9384,7 +9318,7 @@
       "date": "2026-07-22"
     },
     {
-      "id": "mil_news_21",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9395,7 +9329,7 @@
       "date": "2026-07-19"
     },
     {
-      "id": "mil_news_22",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9406,7 +9340,7 @@
       "date": "2026-07-09"
     },
     {
-      "id": "mil_news_23",
+      "id": "mil_news_17",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9417,7 +9351,7 @@
       "date": "2026-07-09"
     },
     {
-      "id": "mil_news_24",
+      "id": "mil_news_18",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9428,7 +9362,7 @@
       "date": "2026-07-22"
     },
     {
-      "id": "mil_news_25",
+      "id": "mil_news_19",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9439,7 +9373,7 @@
       "date": "2026-07-08"
     },
     {
-      "id": "mil_news_26",
+      "id": "mil_news_20",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9450,7 +9384,7 @@
       "date": "2024-07-16"
     },
     {
-      "id": "mil_news_27",
+      "id": "mil_news_21",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9461,7 +9395,7 @@
       "date": "2024-07-07"
     },
     {
-      "id": "mil_news_28",
+      "id": "mil_news_22",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9472,7 +9406,7 @@
       "date": "2024-06-20"
     },
     {
-      "id": "mil_news_29",
+      "id": "mil_news_23",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9483,7 +9417,7 @@
       "date": "2023-07-24"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_24",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9428,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_25",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9439,7 @@
       "date": "2026-06-01"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_26",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9450,7 @@
       "date": "2026-05-31"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_27",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9527,7 +9461,7 @@
       "date": "2025-06-19"
     },
     {
-      "id": "mil_news_34",
+      "id": "mil_news_28",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9538,7 +9472,7 @@
       "date": "2024-07-04"
     },
     {
-      "id": "mil_news_35",
+      "id": "mil_news_29",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9549,7 +9483,7 @@
       "date": "2023-08-10"
     },
     {
-      "id": "mil_news_36",
+      "id": "mil_news_30",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,7 +9494,7 @@
       "date": "2023-05-04"
     },
     {
-      "id": "mil_news_37",
+      "id": "mil_news_31",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9571,7 +9505,7 @@
       "date": "2026-08-06"
     },
     {
-      "id": "mil_news_38",
+      "id": "mil_news_32",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9582,7 +9516,7 @@
       "date": "2026-08-04"
     },
     {
-      "id": "mil_news_39",
+      "id": "mil_news_33",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9593,7 +9527,7 @@
       "date": "2026-08-02"
     },
     {
-      "id": "mil_news_40",
+      "id": "mil_news_34",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9604,7 +9538,7 @@
       "date": "2026-07-27"
     },
     {
-      "id": "mil_news_41",
+      "id": "mil_news_35",
       "category": "foodpoison",
       "isMilitary": true,
       "isAccident": true,
@@ -9615,7 +9549,7 @@
       "date": "2026-07-15"
     },
     {
-      "id": "mil_news_42",
+      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
