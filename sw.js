@@ -6,6 +6,8 @@ const ASSETS_TO_CACHE = [
   '/styles.css',
   '/app.js',
   '/manifest.json',
+  '/manifest-icon-192.png',
+  '/manifest-icon-512.png',
   '/data/latest_weather.json',
   'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap',
   'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css'
