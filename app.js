@@ -141,6 +141,36 @@ function applyDateWeather(targetDate) {
     if (dayObj.env) {
       S.envData = dayObj.env;
     }
+  } else {
+    // Authentic Seasonal Fallback Generator based on Month
+    const dParts = (targetDate || "").split("-");
+    const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
+
+    if (month in [12, 1, 2]) { // Winter
+      TA = [-5.0, -4.5, -3.0, -1.5, 0.0, 2.0, 3.5, 4.5, 5.0, 4.8, 3.5, 1.0, -1.0, -2.5, -3.8, -4.5, -5.0];
+      RH = [65, 62, 58, 52, 45, 40, 38, 35, 33, 34, 38, 42, 48, 55, 60, 63, 65];
+      APP = TA.map(t => t - 3.0);
+      BASE = TA.map(t => t * 0.7 + 3.0);
+      S.envData = { ta: 5.0, rh: 33, ws: 3.5, chillTemp: 1.2, wbgt: 6.5, pm10: 55, pm25: 32, dustStatus: "보통", uvIndex: 3, pop: 10 };
+    } else if (month in [3, 4, 5]) { // Spring
+      TA = [10.0, 11.0, 13.0, 15.5, 17.5, 19.5, 21.0, 22.0, 22.5, 22.0, 20.5, 18.0, 16.0, 14.0, 12.5, 11.0, 10.0];
+      RH = [55, 50, 45, 38, 32, 28, 25, 23, 22, 23, 26, 30, 36, 42, 48, 52, 55];
+      APP = TA.map(t => t + 0.5);
+      BASE = TA.map(t => t * 0.7 + 4.0);
+      S.envData = { ta: 22.5, rh: 22, ws: 2.8, chillTemp: 22.8, wbgt: 19.5, pm10: 88, pm25: 48, dustStatus: "나쁨", uvIndex: 6, pop: 10 };
+    } else if (month in [6, 7, 8]) { // Summer
+      TA = [26.1,26.5,27.8,29.5,31.2,32.8,34.1,35.0,35.8,36.2,35.9,35.0,33.6,31.8,30.0,28.6,27.6];
+      RH = [82,80,76,70,63,57,52,48,45,44,45,48,53,59,66,72,77];
+      APP = [28.0,28.5,30.1,32.0,33.9,35.4,36.6,37.4,38.1,38.5,38.2,37.4,36.1,34.3,32.5,30.9,29.6];
+      BASE = [24.0,24.5,25.8,27.2,28.6,29.8,30.8,31.5,32.0,32.3,32.0,31.2,30.0,28.4,26.8,25.5,24.6];
+      S.envData = { ta: 36.2, rh: 44, ws: 2.1, chillTemp: 38.5, wbgt: 32.3, pm10: 42, pm25: 22, dustStatus: "보통", uvIndex: 9, pop: 20 };
+    } else { // Autumn
+      TA = [12.5, 13.5, 15.5, 17.5, 19.5, 21.0, 22.2, 23.0, 23.3, 23.0, 21.5, 19.2, 17.0, 15.5, 14.0, 13.0, 12.5];
+      RH = [68, 64, 59, 53, 46, 41, 38, 36, 35, 36, 39, 44, 50, 56, 61, 65, 68];
+      APP = TA.map(t => t + 0.2);
+      BASE = TA.map(t => t * 0.7 + 3.5);
+      S.envData = { ta: 23.3, rh: 35, ws: 2.2, chillTemp: 23.5, wbgt: 20.0, pm10: 40, pm25: 20, dustStatus: "좋음", uvIndex: 5, pop: 10 };
+    }
   }
 }
 
@@ -317,7 +347,7 @@ function getDateHashSeed(dateStr) {
   return Math.abs(hash);
 }
 
-/* Render 8-Factor Severe Weather Disaster News with Date-Driven Seed Shuffling */
+/* Render 8-Factor Severe Weather Disaster News with STRICT Seasonal Exclusion Rules */
 function renderSafetyNews(forceShuffle = false) {
   const container = document.getElementById("newsBox");
   if (!container) return;
@@ -339,24 +369,46 @@ function renderSafetyNews(forceShuffle = false) {
     let score = 0;
     const cat = item.category;
 
-    if (env.ta >= 31.0 && cat === "heatwave") score += 50;
-    if (env.ta <= 0.0 && cat === "coldwave") score += 50;
-    if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 45;
-    if (env.pm10 >= 80 && cat === "dust_ozon") score += 40;
-    if (env.ws >= 5.0 && cat === "strongwind") score += 35;
+    // STRICT HARD EXCLUSION: Prevent Heatwave in Winter, Prevent Coldwave in Summer
+    if ((month === 12 || month === 1 || month === 2) && (cat === "heatwave" || cat === "foodpoison")) {
+      return { item, finalScore: -99999 }; // NEVER SHOW HEATWAVE IN WINTER
+    }
+    if ((month >= 6 && month <= 8) && (cat === "coldwave")) {
+      return { item, finalScore: -99999 }; // NEVER SHOW COLDWAVE IN SUMMER
+    }
 
-    if (month >= 6 && month <= 8 && (cat === "heatwave" || cat === "foodpoison" || cat === "lightning")) score += 30;
-    else if ((month === 12 || month === 1 || month === 2) && (cat === "coldwave" || cat === "strongwind")) score += 30;
-    else if (cat === "wildfire_dry" || cat === "dust_ozon") score += 20;
+    // Condition matching weights
+    if (env.ta >= 31.0 && cat === "heatwave") score += 100;
+    if (env.ta <= 5.0 && cat === "coldwave") score += 100;
+    if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 80;
+    if (env.pm10 >= 80 && cat === "dust_ozon") score += 70;
+    if (env.ws >= 4.0 && cat === "strongwind") score += 60;
 
-    const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 100;
+    // Strict Month Seasonal Matches
+    if ((month === 12 || month === 1 || month === 2) && (cat === "coldwave" || cat === "strongwind")) {
+      score += 150;
+    } else if ((month >= 6 && month <= 8) && (cat === "heatwave" || cat === "foodpoison" || cat === "lightning" || cat === "typhoon_heavyrain")) {
+      score += 150;
+    } else if ((month >= 3 && month <= 5 || month >= 9 && month <= 11) && (cat === "wildfire_dry" || cat === "dust_ozon" || cat === "lightning")) {
+      score += 150;
+    }
+
+    const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 30;
     const finalScore = score + pseudoRandom;
 
     return { item, finalScore };
   });
 
-  scoredNews.sort((a, b) => b.finalScore - a.finalScore);
-  const listToRender = scoredNews.map(s => s.item).slice(0, newsDisplayCount);
+  // Filter out hard excluded items (-99999) and sort descending
+  const validScored = scoredNews.filter(s => s.finalScore > -9000);
+  validScored.sort((a, b) => b.finalScore - a.finalScore);
+
+  const listToRender = validScored.map(s => s.item).slice(0, newsDisplayCount);
+
+  if (!listToRender.length) {
+    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">선택하신 날짜(${dateStr}) 계절 조건에 맞는 기상 특보 뉴스가 없습니다.</p>`;
+    return;
+  }
 
   const catNames = {
     heatwave: "☀️ 폭염/온열",
@@ -376,7 +428,7 @@ function renderSafetyNews(forceShuffle = false) {
         <span class="news-tag">${n.source}</span>
       </div>
       <p class="news-snippet">${n.snippet}</p>
-      <div class="news-meta">선택일(${dateStr}) 특보 매칭 · [${catNames[n.category] || "8대 기상재난특보"}]</div>
+      <div class="news-meta">선택일(${dateStr}) 계절 기상 매칭 · [${catNames[n.category] || "8대 기상재난특보"}]</div>
     </div>
   `).join("");
 }
@@ -716,7 +768,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (dateInput) {
     dateInput.onchange = e => {
       S.planDate = e.target.value;
-      newsDisplayCount = 3; // Reset display count on date change
+      newsDisplayCount = 3;
       updateNewsToggleBtnUI();
       const dateStrEl = document.getElementById("currentDateStr");
       if (dateStrEl) dateStrEl.textContent = `${S.planDate}`;
