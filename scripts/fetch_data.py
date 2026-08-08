@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Military Weather & Incident News Data Pipeline Script (Python Engine)
-Retrieves/generates +30 days of daily hourly weather forecasts and military safety news,
+Retrieves/generates +30 days of daily hourly weather forecasts and live Naver News API military safety news,
 then saves structured multi-date JSON to data/latest_weather.json.
 """
 
@@ -10,6 +10,26 @@ import os
 import sys
 import datetime
 import math
+import re
+import urllib.request
+import urllib.parse
+
+# Load .env file manually if exists
+def load_dotenv():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    env_path = os.path.join(script_dir, "..", ".env")
+    if os.path.exists(env_path):
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip().strip("'\"")
+                    if k and not os.environ.get(k):
+                        os.environ[k] = v
+
+load_dotenv()
 
 DEFAULT_NEWS_FEED = [
     {
@@ -49,6 +69,86 @@ DEFAULT_NEWS_FEED = [
         "date": "2025-07-28"
     }
 ]
+
+def clean_html(text):
+    if not text: return ""
+    clean = re.sub(r'<[^>]+>', '', text)
+    clean = clean.replace("&quot;", '"').replace("&amp;", '&').replace("&lt;", '<').replace("&gt;", '>').replace("&apos;", "'")
+    return clean.strip()
+
+def parse_pub_date(pub_date_str):
+    try:
+        # e.g., "Thu, 07 Aug 2025 14:20:00 +0900"
+        dt = datetime.datetime.strptime(pub_date_str[:25], "%a, %d %b %Y %H:%M:%S")
+        return dt.strftime("%Y-%m-%d")
+    except Exception:
+        return datetime.datetime.now().strftime("%Y-%m-%d")
+
+def fetch_naver_news_api():
+    client_id = os.environ.get("NAVER_CLIENT_ID")
+    client_secret = os.environ.get("NAVER_CLIENT_SECRET")
+
+    if not client_id or not client_secret:
+        print("[INFO] Naver News API keys missing. Using default fallback feed.")
+        return DEFAULT_NEWS_FEED
+
+    keywords = [
+        ("act_march40", "군대 행군 온열질환"),
+        ("act_cbrn", "군대 화생방 훈련 사고"),
+        ("act_fitness", "군대 뜀걸음 열사병"),
+        ("act_gaekae", "각개전투 훈련 온열"),
+        ("act_range", "군대 사격장 안전사고"),
+        ("all", "군 훈련 온열질환 열사병")
+    ]
+
+    fetched_news = []
+    news_id_counter = 1
+
+    for category, query in keywords:
+        try:
+            url = f"https://openapi.naver.com/v1/search/news.json?query={urllib.parse.quote(query)}&display=3&sort=sim"
+            req = urllib.request.Request(url)
+            req.add_header("X-Naver-Client-Id", client_id)
+            req.add_header("X-Naver-Client-Secret", client_secret)
+
+            with urllib.request.urlopen(req, timeout=5) as response:
+                if response.status == 200:
+                    res_body = response.read().decode('utf-8')
+                    data = json.loads(res_body)
+                    items = data.get("items", [])
+                    for item in items:
+                        title = clean_html(item.get("title", ""))
+                        snippet = clean_html(item.get("description", ""))
+                        origin_url = item.get("originallink") or item.get("link") or "https://naver.com"
+                        pub_date = parse_pub_date(item.get("pubDate", ""))
+                        
+                        # Determine source name from URL if possible
+                        source_name = "네이버뉴스 보도"
+                        if "korea.kr" in origin_url: source_name = "대한민국 정책브리핑"
+                        elif "dema.mil.kr" in origin_url: source_name = "국방일보"
+                        elif "yna.co.kr" in origin_url: source_name = "연합뉴스"
+                        elif "news1.kr" in origin_url: source_name = "뉴스1"
+                        elif "newsis.com" in origin_url: source_name = "뉴시스"
+
+                        fetched_news.append({
+                            "id": f"live_news_{news_id_counter}",
+                            "category": category,
+                            "title": title,
+                            "source": source_name,
+                            "snippet": snippet,
+                            "url": origin_url,
+                            "date": pub_date
+                        })
+                        news_id_counter += 1
+        except Exception as e:
+            print(f"[WARN] Failed fetching Naver News for query '{query}': {e}")
+
+    if fetched_news:
+        print(f"[SUCCESS] Fetched {len(fetched_news)} live military news items via Naver API.")
+        return fetched_news
+    else:
+        print("[WARN] No news fetched via Naver API. Falling back to default feed.")
+        return DEFAULT_NEWS_FEED
 
 def calculate_apparent_temp(ta, rh, ws=2.0):
     """KMA Summer Apparent Temperature Formula 3.0"""
@@ -96,12 +196,14 @@ def generate_daily_weather(base_date, day_offset):
 def run_pipeline():
     today = datetime.datetime.now(datetime.timezone.utc)
     now_str = today.strftime("%Y-%m-%dT%H:%M:%SZ")
-    print(f"[{now_str}] [Python] Gathering 30-Day Forecast Data Pipeline...")
+    print(f"[{now_str}] [Python] Gathering 30-Day Forecast & Live Naver News Data Pipeline...")
 
     by_date = {}
     for d in range(31): # Today + 30 days
         daily = generate_daily_weather(today, d)
         by_date[daily["date"]] = daily
+
+    live_news = fetch_naver_news_api()
 
     payload = {
         "updatedAt": now_str,
@@ -110,7 +212,7 @@ def run_pipeline():
         "startDate": today.strftime("%Y-%m-%d"),
         "endDate": (today + datetime.timedelta(days=30)).strftime("%Y-%m-%d"),
         "byDate": by_date,
-        "news": DEFAULT_NEWS_FEED
+        "news": live_news
     }
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -121,7 +223,7 @@ def run_pipeline():
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"[SUCCESS] Saved 30-day forecast dataset ({len(by_date)} dates) to {file_path}")
+    print(f"[SUCCESS] Saved 30-day forecast dataset ({len(by_date)} dates) & {len(live_news)} live news items to {file_path}")
 
 if __name__ == "__main__":
     run_pipeline()
