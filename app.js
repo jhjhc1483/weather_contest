@@ -295,7 +295,7 @@ window.loadMoreSafetyNews = function() {
   renderSafetyNews();
 };
 
-/* Render 8-Factor Severe Weather Disaster News with Smart Condition Matching & Pagination */
+/* Render 8-Factor Severe Weather Disaster News with Date-Driven Smart Matching */
 function renderSafetyNews() {
   const container = document.getElementById("newsBox");
   if (!container) return;
@@ -345,6 +345,17 @@ function renderSafetyNews() {
     return;
   }
 
+  const catNames = {
+    heatwave: "☀️ 폭염/온열",
+    coldwave: "❄️ 한파/동상",
+    typhoon_heavyrain: "🌧️ 태풍/호우",
+    lightning: "⚡ 낙뢰/벼락",
+    strongwind: "💨 강풍/시설물",
+    wildfire_dry: "🌲 건조/산불",
+    dust_ozon: "😷 미세먼지/황사",
+    foodpoison: "🍱 식중독/위생"
+  };
+
   container.innerHTML = listToRender.map(n => `
     <div class="news-card">
       <div class="hdr">
@@ -352,7 +363,7 @@ function renderSafetyNews() {
         <span class="news-tag">${n.source}</span>
       </div>
       <p class="news-snippet">${n.snippet}</p>
-      <div class="news-meta">보도 일자: ${n.date} · [8대 실시간 기상재난특보 연동]</div>
+      <div class="news-meta">선택일(${S.planDate}) 기상 매칭 · [${catNames[n.category] || "8대 기상재난특보"}]</div>
     </div>
   `).join("");
 }
@@ -692,6 +703,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (dateInput) {
     dateInput.onchange = e => {
       S.planDate = e.target.value;
+      newsDisplayCount = 3; // Reset display count on date change
       const dateStrEl = document.getElementById("currentDateStr");
       if (dateStrEl) dateStrEl.textContent = `${S.planDate}`;
       recomputeAll();
