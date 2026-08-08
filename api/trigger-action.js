@@ -12,9 +12,12 @@ module.exports = async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const githubToken = process.env.GITHUB_TOKEN || process.env.GH_PAT;
-  const owner = process.env.VERCEL_GIT_REPO_OWNER || process.env.GITHUB_OWNER || "your-username";
+  // Explicitly bound to user repository: jhjhc1483 / weather_contest
+  const owner = process.env.VERCEL_GIT_REPO_OWNER || process.env.GITHUB_OWNER || "jhjhc1483";
   const repo = process.env.VERCEL_GIT_REPO_SLUG || process.env.GITHUB_REPO || "weather_contest";
+  const githubToken = process.env.GITHUB_TOKEN || process.env.GH_PAT;
+
+  console.log(`Triggering GitHub Actions for repo: ${owner}/${repo}`);
 
   if (githubToken) {
     try {
@@ -31,16 +34,20 @@ module.exports = async function handler(req, res) {
       if (response.ok || response.status === 204) {
         return res.status(200).json({
           success: true,
-          message: "🚀 GitHub Action workflow_dispatch successfully triggered!",
+          triggered: true,
+          message: `🚀 GitHub Action workflow_dispatch successfully triggered on https://github.com/${owner}/${repo}/actions!`,
           timestamp: new Date().toISOString()
         });
+      } else {
+        const errorText = await response.text();
+        console.error("GitHub API Response Not OK:", response.status, errorText);
       }
     } catch (e) {
       console.error("GitHub API dispatch error:", e.message);
     }
   }
 
-  /* Fallback Simulation for Local / Demo Mode */
+  /* Local / Client Fallback Response when Token is not yet present */
   let latestData = null;
   try {
     const dataPath = path.join(process.cwd(), 'data', 'latest_weather.json');
@@ -54,7 +61,9 @@ module.exports = async function handler(req, res) {
 
   return res.status(200).json({
     success: true,
-    message: "⚡ GitHub Actions Pipeline executed (Data Refreshed & Calculated)",
+    triggered: false,
+    reason: "GITHUB_TOKEN_REQUIRED",
+    message: `⚡ Calculated using latest parsed dataset. (To run live Actions on GitHub, please set GITHUB_TOKEN in Vercel Environment Variables)`,
     env: latestData ? latestData.env : null,
     news: latestData ? latestData.news : null,
     timestamp: new Date().toISOString()
