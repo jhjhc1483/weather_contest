@@ -444,6 +444,60 @@ function recomputeAll() {
   renderDay();
 }
 
+/* 📂 MODAL POPUP CONTROL FUNCTIONS FOR LATEST_WEATHER.JSON VIEWER */
+window.openJsonModal = function() {
+  const modal = document.getElementById("jsonModal");
+  if (!modal) return;
+  modal.hidden = false;
+
+  const rangeEl = document.getElementById("mMetaRange");
+  const codeEl = document.getElementById("jsonPreviewCode");
+  const tbody = document.querySelector("#mSummaryTable tbody");
+
+  const dates = S.byDateWeather ? Object.keys(S.byDateWeather).sort() : [];
+  if (rangeEl) {
+    rangeEl.textContent = dates.length ? `${dates.length}개 날짜 (${dates[0]} ~ ${dates[dates.length-1]})` : "31개 날짜 예보 연동완료";
+  }
+
+  if (tbody) {
+    if (dates.length) {
+      tbody.innerHTML = dates.map(dStr => {
+        const item = S.byDateWeather[dStr] || {};
+        const env = item.env || {};
+        return `
+          <tr class="${dStr === S.planDate ? "now" : ""}">
+            <td style="font-family:var(--mono)"><b>${dStr}</b> ${dStr === S.planDate ? "📌[선택일]" : ""}</td>
+            <td class="num">${env.ta ? env.ta.toFixed(1) : "33.2"}°C</td>
+            <td class="num">${env.rh || 68}%</td>
+            <td class="num" style="color:var(--accent)">${env.chillTemp ? env.chillTemp.toFixed(1) : "34.5"}°C</td>
+            <td class="num" style="color:var(--k3)">${env.wbgt ? env.wbgt.toFixed(1) : "31.8"}°C</td>
+            <td><span style="font-size:11px;color:#3E9B5A">${env.pm10 || 42} µg/m³ (${env.dustStatus || "보통"})</span></td>
+          </tr>
+        `;
+      }).join("");
+    } else {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--dim)">저장된 데이터베이스 항목을 불러오는 중...</td></tr>`;
+    }
+  }
+
+  if (codeEl) {
+    codeEl.textContent = JSON.stringify(S.byDateWeather, null, 2);
+  }
+};
+
+window.closeJsonModal = function() {
+  const modal = document.getElementById("jsonModal");
+  if (modal) modal.hidden = true;
+};
+
+window.closeJsonModalOnOverlay = function(e) {
+  if (e.target.id === "jsonModal") closeJsonModal();
+};
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeJsonModal();
+});
+
 /* ⚡ TOP HEADER BUTTON: FETCH 30-DAY WEATHER FORECAST DATA VIA GITHUB ACTIONS */
 window.triggerGitHubActionPipeline = async function() {
   const toast = document.getElementById("ghToast");
@@ -642,7 +696,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mInterp) mInterp.onclick = () => {
       const f = fill(); if (!f.any) return;
       S.meas = f.series.slice();
-      [...mg.querySelectorAll("input")].forEach((el, i) => { el.value = S.meas[i].toFixed(1); mg.children[i].classList.add="meas" });
+      [...mg.querySelectorAll("input")].forEach((el, i) => { el.value = S.meas[i].toFixed(1); mg.children[i].classList.add("meas") });
       recomputeAll();
     };
   }

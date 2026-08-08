@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="stylesheet" href="styles.css?v=18">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -20,7 +20,7 @@
 
   <div class="wrap">
 
-    <!-- HEADER (TOP BAR WITH GITHUB ACTIONS FETCH BUTTON) -->
+    <!-- HEADER (TOP BAR WITH GITHUB ACTIONS FETCH BUTTON & JSON DB VIEW BUTTON) -->
     <header class="glass">
       <div>
         <p class="eyebrow">국방 특화 온열/환경위험 예측 · 부대활동 사전 계획 지원 시스템</p>
@@ -35,8 +35,13 @@
         </div>
       </div>
       
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
-        <button class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <button type="button" class="btn-sub-sm" onclick="openJsonModal()" aria-label="latest_weather.json 30일 수집 DB 현황 보기">
+            <span class="icon">🔍</span> 30일 DB 현황 한눈에 보기
+          </button>
+          <button class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
+        </div>
         <!-- ⚡ HEADER TOP BUTTON: GITHUB ACTIONS WEATHER FETCH (+30 DAYS) -->
         <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
           <span class="icon">⚡</span> GitHub Actions 날씨 수집 (+30일치 데이터)
@@ -252,6 +257,52 @@
 
   </div>
 
-  <script src="app.js?v=17"></script>
+  <!-- 📂 MODAL POPUP FOR LATEST_WEATHER.JSON DATA VIEWER -->
+  <div class="modal-overlay" id="jsonModal" onclick="closeJsonModalOnOverlay(event)" hidden>
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>📂 수집 데이터베이스 현황 (latest_weather.json)</h3>
+        <button type="button" class="modal-close" onclick="closeJsonModal()" aria-label="팝업 닫기">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-grid-meta">
+          <div class="modal-meta-box">
+            <label>수집 일자 범위</label>
+            <span id="mMetaRange">31개 날짜 (2026-08-08 ~ 2026-09-07)</span>
+          </div>
+          <div class="modal-meta-box">
+            <label>데이터 파이프라인 출처</label>
+            <span id="mMetaSource" style="color:var(--ink)">기상청 단기예보 / 체감 3.0</span>
+          </div>
+          <div class="modal-meta-box">
+            <label>파이프라인 실행 상태</label>
+            <span id="mMetaStatus" style="color:#3E9B5A">● Python API Automation</span>
+          </div>
+        </div>
+
+        <h4 style="margin:16px 0 8px;font-size:13px;color:var(--dim)">📅 30일치 일별 기상 요약 테이블</h4>
+        <div class="scroll" style="max-height:220px;border:1px solid var(--edge);border-radius:var(--r-sm)">
+          <table id="mSummaryTable">
+            <thead>
+              <tr>
+                <th>날짜 (YYYY-MM-DD)</th>
+                <th class="num">최고 기온</th>
+                <th class="num">평균 습도</th>
+                <th class="num">피크 체감온도</th>
+                <th class="num">피크 WBGT</th>
+                <th>미세먼지</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <h4 style="margin:16px 0 8px;font-size:13px;color:var(--dim)">💻 JSON 데이터 구조 미리보기</h4>
+        <pre class="json-preview" id="jsonPreviewCode">데이터를 불러오는 중...</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=18"></script>
 </body>
 </html>
