@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=16">
+  <link rel="stylesheet" href="styles.css?v=17">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -39,7 +39,7 @@
         <button class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
         <!-- ⚡ HEADER TOP BUTTON: GITHUB ACTIONS WEATHER FETCH (+30 DAYS) -->
         <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
-          <span class="icon">⚡</span> 날씨 수집 (+30일치 데이터)
+          <span class="icon">⚡</span> GitHub Actions 날씨 수집 (+30일치 데이터)
         </button>
       </div>
     </header>
@@ -116,7 +116,10 @@
             <!-- STATS & WATER REQUIREMENT GRID -->
             <div class="g2" style="margin-top:16px">
               <div class="card-inner glass" style="padding:0">
-                <div class="phd"><h2>14:00 기준 현 시각 판정</h2><span class="note">피크 시간대 기준</span></div>
+                <div class="phd">
+                  <h2>계획 시간대 피크 위험 판정</h2>
+                  <span class="note" id="peakTimeNote">선택 시간대 피크 기준</span>
+                </div>
                 <div class="verdict" id="verdict"></div>
                 <div class="stat"><div class="k">권장 작업 / 휴식 주기</div><div class="v" id="wr"></div><div class="d" id="wrDesc"></div></div>
                 <div class="stat"><div class="k">1인 시간당 권장 급수량</div><div class="v" id="water"></div>
@@ -249,6 +252,6 @@
 
   </div>
 
-  <script src="app.js?v=16"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>

@@ -186,6 +186,13 @@ function computeDay() {
   });
 }
 
+/* Find Peak Hour in Selected Time Window [S.from ~ S.to] */
+function getSelectedWindowPeakData(D) {
+  const inWindow = D.filter(d => d.h >= S.from && d.h <= S.to);
+  if (!inWindow.length) return D[0];
+  return inWindow.reduce((max, cur) => cur.wC > max.wC ? cur : max, inWindow[0]);
+}
+
 function getLegacyVerdict(peakW) {
   if (peakW < 26.5) return { status: "정상", class: "p-low", desc: "정상 야외훈련 실시 가능" };
   if (peakW < 29.5) return { status: "주의", class: "p-low", desc: "양성교육 및 야외훈련 시 미숙련자 주의" };
@@ -198,7 +205,7 @@ function renderComparison(D) {
   const compBox = document.getElementById("compBox");
   if (!compBox) return;
 
-  const n = D[HOURS.indexOf(14)] || D[0];
+  const n = getSelectedWindowPeakData(D);
   const peakW = n.wRaw;
   const legacy = getLegacyVerdict(peakW);
   const proposedCat = n.cat;
@@ -207,10 +214,10 @@ function renderComparison(D) {
 
   compBox.innerHTML = `
     <div class="comp-col legacy">
-      <span class="comp-title">📋 현 국방부 규정 (단순 온도지수 기준)</span>
+      <span class="comp-title">📋 현 국방부 규정 (계획 시간대 피크 시각 ${pad(n.h)}:00 기준)</span>
       <div class="comp-card">
         <div class="head">
-          <span>${legacy.status} (WBGT ${peakW.toFixed(1)}°C)</span>
+          <span>${legacy.status} (단순 WBGT ${peakW.toFixed(1)}°C)</span>
           <span class="p-badge ${legacy.class}">${legacy.status}</span>
         </div>
         <div class="desc">
@@ -221,7 +228,7 @@ function renderComparison(D) {
     </div>
 
     <div class="comp-col proposed">
-      <span class="comp-title">🪖 본 시스템 (TB MED 507 + 착의/과업 섭씨 확장 보정)</span>
+      <span class="comp-title">🪖 본 시스템 (${pad(n.h)}:00 피크 기준 TB MED 507 섭씨 보정)</span>
       <div class="comp-card" style="border-color:var(--accent);background:var(--accent-bg)">
         <div class="head">
           <span style="color:var(--accent)">${proposedLv.n} (보정 WBGT ${n.wC.toFixed(1)}°C / CAT ${proposedCat})</span>
@@ -361,8 +368,13 @@ function renderDay() {
   renderTimelineGrid(D);
   renderSafetyNews();
 
-  const n = D[HOURS.indexOf(14)] || D[0];
+  const n = getSelectedWindowPeakData(D);
   const l = LV[n.lv] || LV[0];
+
+  const peakTimeNote = document.getElementById("peakTimeNote");
+  if (peakTimeNote) {
+    peakTimeNote.textContent = `계획 구간 (${pad(S.from)}:00~${pad(S.to)}:00) 중 최악 피크 시각 [${pad(n.h)}:00] 기준`;
+  }
   
   const vEl = document.getElementById("verdict");
   if (vEl) {
@@ -370,7 +382,7 @@ function renderDay() {
     const catLabel = CAT[n.cat] ? CAT[n.cat].l : "—";
     vEl.innerHTML =
       `<div class="chip ${n.lv===5?"hatch":""}" style="${n.lv===5?"":`background:${l.c};color:${l.i}`}">${n.lv}</div>
-       <div><h3>${l.n}</h3><p>${l.a}<br><span style="color:var(--faint)">기상청 ${kmaLabel} · 미군 ${catLabel} → 높은 쪽 채택</span></p></div>`;
+       <div><h3>${l.n} (피크 시각 ${pad(n.h)}:00)</h3><p>${l.a}<br><span style="color:var(--faint)">기상청 ${kmaLabel} · 미군 ${catLabel} → 높은 쪽 채택</span></p></div>`;
   }
   
   const wrEl = document.getElementById("wr");
@@ -415,9 +427,10 @@ function renderDay() {
       const kmaText = KMA[d.kl] ? KMA[d.kl].l : "—";
       const catText = CAT[d.cat] ? CAT[d.cat].l : "—";
       const lvText = LV[d.lv] ? LV[d.lv].n : "—";
+      const isPeakInWindow = d.h === n.h;
       return `
-        <tr class="${d.h===14?"now":""}">
-          <td style="font-family:var(--mono)">${pad(d.h)}:00</td>
+        <tr class="${isPeakInWindow ? "now" : ""}">
+          <td style="font-family:var(--mono)">${pad(d.h)}:00 ${isPeakInWindow ? "🔥 [피크]" : ""}</td>
           <td class="num">${d.ta.toFixed(1)}</td><td class="num">${d.rh}</td><td class="num">${d.app.toFixed(1)}</td>
           <td style="color:${kmaColor}">${kmaText}</td>
           <td class="num">${d.wC.toFixed(1)}°C</td><td>${catText}</td>
@@ -629,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mInterp) mInterp.onclick = () => {
       const f = fill(); if (!f.any) return;
       S.meas = f.series.slice();
-      [...mg.querySelectorAll("input")].forEach((el, i) => { el.value = S.meas[i].toFixed(1); mg.children[i].classList.add("meas") });
+      [...mg.querySelectorAll("input")].forEach((el, i) => { el.value = S.meas[i].toFixed(1); mg.children[i].classList.add="meas" });
       recomputeAll();
     };
   }
