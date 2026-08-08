@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -52,150 +52,162 @@
     <!-- 8-Factor Environmental Weather Chips Bar -->
     <div class="env-banner-8" id="envBanner"></div>
 
-    <!-- SECTION 1: Integrated Activity & Date Form -->
-    <section class="panel glass">
-      <div class="phd">
-        <h2>통합 부대활동 사전 계획 입력 (Command Input & Execution Controls)</h2>
-        <span class="note">1단계: GitHub Actions 날씨 수집 ➔ 2단계: 활동별 위험도 및 식수 산출</span>
-      </div>
-      <div class="pbd">
-        <!-- Preset Unit Activity Buttons -->
-        <p class="hint" style="margin-bottom:10px;font-size:13px;color:var(--dim);font-weight:600">
-          🎯 주요 10대 부대활동 빠른 선택 (복장 및 대사율 자동 반영)
-        </p>
-        <div class="act-presets" id="actPresets"></div>
-        
-        <!-- Detailed Controls -->
-        <div class="ctl" style="margin-top:16px">
-          <div class="f">
-            <label for="planDate">훈련 예정 일자</label>
-            <input type="date" id="planDate" value="2026-08-08">
-            <p class="hint">기상 예보 연동 기준일자</p>
-          </div>
-          <div class="f">
-            <label for="from">계획 훈련 시간대</label>
-            <div class="row"><select id="from"></select><span style="color:var(--faint)">–</span><select id="to"></select></div>
-            <p class="hint">집중 야외 훈련 구간</p>
-          </div>
-          <div class="f">
-            <label for="pax">훈련 인원 (명)</label>
-            <input type="number" id="pax" value="240" min="1" max="9999" step="10">
-            <p class="hint">급수 및 얼음 사전 산출 기준</p>
-          </div>
-          <div class="f"><label>훈련 과업 대사율</label><div class="seg" id="task"></div><p class="hint" id="taskHint"></p></div>
-          <div class="f"><label>착의 · 복장 보정</label><div class="seg" id="gear"></div><p class="hint" id="gearHint"></p></div>
-        </div>
+    <!-- MAIN DASHBOARD SPLIT LAYOUT (LEFT STICKY SIDEBAR + RIGHT CONTENT) -->
+    <div class="dashboard-main-grid">
 
-        <!-- TWO SEPARATE ACTION BUTTONS (STEP 1 & STEP 2) -->
-        <div class="action-btn-group" style="margin-top:22px">
-          <!-- BUTTON 1: FETCH WEATHER DATA (GITHUB ACTIONS) -->
-          <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
-            <span class="icon">⚡</span> 1단계: GitHub Actions 날씨 수집
-          </button>
+      <!-- LEFT STICKY SIDEBAR: Integrated Activity Form -->
+      <aside class="panel glass command-sidebar">
+        <div class="phd">
+          <h2>통합 부대활동 사전 계획 입력</h2>
+          <span class="note">📌 스크롤 반응 스티키 패널</span>
+        </div>
+        <div class="pbd">
+          <!-- Preset Unit Activity Buttons -->
+          <p class="hint" style="margin-bottom:10px;font-size:12.5px;color:var(--dim);font-weight:600">
+            🎯 10대 부대활동 빠른 선택
+          </p>
+          <div class="act-presets" id="actPresets"></div>
           
-          <!-- BUTTON 2: CALCULATE ACTIVITY RISK & WATER -->
-          <button type="button" class="btn-step-2" id="btnCalculateRisk" onclick="calculateActivityRisk()">
-            <span class="icon">🧮</span> 2단계: 활동별 위험도 & 식수 산출
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 2: SIDE-BY-SIDE COMPARISON & DECISION CARD -->
-    <section class="panel glass">
-      <div class="phd">
-        <h2>현 규정 vs 본 시스템 섭씨 보정 모델 1:1 비교 & 지휘관 결정 가이드</h2>
-        <span class="note">단순 WBGT 32°C 한계 극복 · 과업 대사량 및 방탄복/화생방 보호의 착의 보정 반영</span>
-      </div>
-      <div class="pbd" style="padding-top:14px">
-        <!-- SIDE-BY-SIDE COMPARISON BOX -->
-        <div class="comp-box" id="compBox" style="margin-top:0"></div>
-
-        <!-- STATS & WATER REQUIREMENT GRID -->
-        <div class="g2" style="margin-top:16px">
-          <div class="card-inner glass" style="padding:0">
-            <div class="phd"><h2>14:00 기준 현 시각 판정</h2><span class="note">피크 시간대 기준</span></div>
-            <div class="verdict" id="verdict"></div>
-            <div class="stat"><div class="k">권장 작업 / 휴식 주기</div><div class="v" id="wr"></div><div class="d" id="wrDesc"></div></div>
-            <div class="stat"><div class="k">1인 시간당 권장 급수량</div><div class="v" id="water"></div>
-              <div class="d">TB MED 507 표 3-2 기준 (시간당 1.4 L, 1일 11.4 L 초과금지)</div></div>
+          <!-- Detailed Controls -->
+          <div class="ctl-sidebar" style="margin-top:14px">
+            <div class="f">
+              <label for="planDate">훈련 예정 일자</label>
+              <input type="date" id="planDate" value="2026-08-08">
+            </div>
+            <div class="f" style="margin-top:10px">
+              <label for="from">계획 훈련 시간대</label>
+              <div class="row"><select id="from"></select><span style="color:var(--faint)">–</span><select id="to"></select></div>
+            </div>
+            <div class="f" style="margin-top:10px">
+              <label for="pax">훈련 인원 (명)</label>
+              <input type="number" id="pax" value="240" min="1" max="9999" step="10">
+            </div>
+            <div class="f" style="margin-top:10px">
+              <label>훈련 과업 대사율</label>
+              <div class="seg" id="task"></div>
+              <p class="hint" id="taskHint"></p>
+            </div>
+            <div class="f" style="margin-top:10px">
+              <label>착의 · 복장 보정</label>
+              <div class="seg" id="gear"></div>
+              <p class="hint" id="gearHint"></p>
+            </div>
           </div>
-          
-          <div class="card-inner glass" style="padding:0">
-            <div class="phd"><h2>계획 구간 총 물/얼음 소요 산출</h2><span class="note" id="planRange"></span></div>
-            <div class="stat"><div class="k">총 필요 식수량 (L)</div><div class="v" id="totalWater"></div><div class="d" id="totalWaterDesc"></div></div>
-            <div class="stat"><div class="k">안전 훈련 가능 시간창</div><div class="v" style="font-size:19px" id="safeWin"></div>
-              <div class="d">채택 등급 3단계(경고) 이하로 유지되는 최장 연속 시간대</div></div>
-            <div class="slots" id="slots"></div>
+
+          <!-- TWO SEPARATE ACTION BUTTONS (STEP 1 & STEP 2) -->
+          <div class="action-btn-group-vertical" style="margin-top:20px">
+            <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
+              <span class="icon">⚡</span> 1단계: Actions 날씨 수집
+            </button>
+            
+            <button type="button" class="btn-step-2" id="btnCalculateRisk" onclick="calculateActivityRisk()">
+              <span class="icon">🧮</span> 2단계: 활동 위험도 & 식수 산출
+            </button>
           </div>
         </div>
-      </div>
-    </section>
+      </aside>
 
-    <!-- SECTION 3: ⚠️ SAFETY INCIDENT NEWS TIMELINE MODULE -->
-    <section class="panel glass">
-      <div class="phd">
-        <h2>⚠️ 훈련 안전 주의 경보 (과거 1~2년 전 사건·사고 뉴스 이슈)</h2>
-        <span class="note">선택 부대활동 및 날짜 기준 군 온열/환경 사고 기사 자동 매칭</span>
-      </div>
-      <div class="pbd">
-        <div class="news-box" id="newsBox"></div>
-      </div>
-    </section>
+      <!-- RIGHT CONTENT AREA: Results & Detailed Modules -->
+      <main class="dashboard-content">
 
-    <!-- SECTION 4: HOURLY RISK TIMELINE CARDS -->
-    <section class="panel glass">
-      <div class="phd">
-        <h2>시간대별 (05시~21시) 위험도 타임라인 & 1:1 조치 지침</h2>
-        <span class="note">시간대 클릭 시 해당 시각 세부 데이터 하이라이트</span>
-      </div>
-      <div class="pbd">
-        <div class="timeline-grid" id="timelineGrid"></div>
-      </div>
-    </section>
+        <!-- SECTION 2: SIDE-BY-SIDE COMPARISON & DECISION CARD -->
+        <section class="panel glass">
+          <div class="phd">
+            <h2>현 규정 vs 본 시스템 섭씨 보정 모델 1:1 비교 & 지휘관 결정 가이드</h2>
+            <span class="note">단순 WBGT 32°C 한계 극복 · 과업 대사량 및 방탄복/화생방 보호의 착의 보정 반영</span>
+          </div>
+          <div class="pbd" style="padding-top:14px">
+            <!-- SIDE-BY-SIDE COMPARISON BOX -->
+            <div class="comp-box" id="compBox" style="margin-top:0"></div>
 
-    <!-- SECTION 5: Time Series SVG Chart -->
-    <section class="panel glass">
-      <div class="phd">
-        <h2>시간대별 온열 위험도 곡선 및 비교 스트립</h2>
-        <span class="note">기상청 예보 · 실측 병렬 표출 (높은 쪽 자동 채택)</span>
-      </div>
-      <div class="pbd">
-        <svg id="chart" viewBox="0 0 900 424" role="img" aria-label="시간대별 체감온도 및 WBGT 곡선과 위험 등급 스트립"></svg>
-        <div class="legend">
-          <span><i style="background:var(--k3)"></i>기상청 체감온도 (예보)</span>
-          <span><i style="background:var(--accent)"></i>WBGT + 군 섭씨 보정 (°C)</span>
-          <span><i class="dot" style="background:var(--accent)"></i>실측 입력값</span>
-          <span><i class="dot" style="background:transparent;border:1.5px solid var(--faint)"></i>직선 보간/기준값</span>
-        </div>
-      </div>
-    </section>
+            <!-- STATS & WATER REQUIREMENT GRID -->
+            <div class="g2" style="margin-top:16px">
+              <div class="card-inner glass" style="padding:0">
+                <div class="phd"><h2>14:00 기준 현 시각 판정</h2><span class="note">피크 시간대 기준</span></div>
+                <div class="verdict" id="verdict"></div>
+                <div class="stat"><div class="k">권장 작업 / 휴식 주기</div><div class="v" id="wr"></div><div class="d" id="wrDesc"></div></div>
+                <div class="stat"><div class="k">1인 시간당 권장 급수량</div><div class="v" id="water"></div>
+                  <div class="d">TB MED 507 표 3-2 기준 (시간당 1.4 L, 1일 11.4 L 초과금지)</div></div>
+              </div>
+              
+              <div class="card-inner glass" style="padding:0">
+                <div class="phd"><h2>계획 구간 총 물/얼음 소요 산출</h2><span class="note" id="planRange"></span></div>
+                <div class="stat"><div class="k">총 필요 식수량 (L)</div><div class="v" id="totalWater"></div><div class="d" id="totalWaterDesc"></div></div>
+                <div class="stat"><div class="k">안전 훈련 가능 시간창</div><div class="v" style="font-size:19px" id="safeWin"></div>
+                  <div class="d">채택 등급 3단계(경고) 이하로 유지되는 최장 연속 시간대</div></div>
+                <div class="slots" id="slots"></div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    <!-- SECTION 6: Measured WBGT Input Grid -->
-    <section class="panel glass">
-      <div class="phd"><h2>현장 실측 WBGT 시간별 입력 및 보간</h2><span class="note" id="measEcho"></span></div>
-      <div class="pbd">
-        <div class="tools">
-          <button type="button" id="mLoad">표본 기준값 불러오기</button>
-          <button type="button" id="mInterp">실측값 사이 직선 보간</button>
-          <button type="button" id="mClear">전체 지우기</button>
-        </div>
-        <div class="mgrid" id="mgrid"></div>
-        <p class="hint">측정한 시각만 수치로 입력하면 인접 실측값 사이를 직선 보간합니다. (단위: °C)</p>
-      </div>
-    </section>
+        <!-- SECTION 3: ⚠️ SAFETY INCIDENT NEWS TIMELINE MODULE -->
+        <section class="panel glass">
+          <div class="phd">
+            <h2>⚠️ 훈련 안전 주의 경보 (과거 1~2년 전 사건·사고 뉴스 이슈)</h2>
+            <span class="note">선택 부대활동 및 날짜 기준 군 온열/환경 사고 기사 자동 매칭</span>
+          </div>
+          <div class="pbd">
+            <div class="news-box" id="newsBox"></div>
+          </div>
+        </section>
 
-    <!-- SECTION 7: Detailed Data Table -->
-    <section class="panel glass">
-      <div class="phd"><h2>시간별 위험지수 및 등급 상세 데이터</h2></div>
-      <div class="scroll"><table id="tbl">
-        <thead><tr>
-          <th>시각</th><th class="num">기온(°C)</th><th class="num">습도(%)</th><th class="num">체감온도</th>
-          <th>기상청 단계</th><th class="num">WBGT(보정 °C)</th><th>미군 CAT</th><th>채택 등급</th><th>데이터 출처</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table></div>
-    </section>
+        <!-- SECTION 4: HOURLY RISK TIMELINE CARDS -->
+        <section class="panel glass">
+          <div class="phd">
+            <h2>시간대별 (05시~21시) 위험도 타임라인 & 1:1 조치 지침</h2>
+            <span class="note">시간대 클릭 시 해당 시각 세부 데이터 하이라이트</span>
+          </div>
+          <div class="pbd">
+            <div class="timeline-grid" id="timelineGrid"></div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: Time Series SVG Chart -->
+        <section class="panel glass">
+          <div class="phd">
+            <h2>시간대별 온열 위험도 곡선 및 비교 스트립</h2>
+            <span class="note">기상청 예보 · 실측 병렬 표출 (높은 쪽 자동 채택)</span>
+          </div>
+          <div class="pbd">
+            <svg id="chart" viewBox="0 0 900 424" role="img" aria-label="시간대별 체감온도 및 WBGT 곡선과 위험 등급 스트립"></svg>
+            <div class="legend">
+              <span><i style="background:var(--k3)"></i>기상청 체감온도 (예보)</span>
+              <span><i style="background:var(--accent)"></i>WBGT + 군 섭씨 보정 (°C)</span>
+              <span><i class="dot" style="background:var(--accent)"></i>실측 입력값</span>
+              <span><i class="dot" style="background:transparent;border:1.5px solid var(--faint)"></i>직선 보간/기준값</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6: Measured WBGT Input Grid -->
+        <section class="panel glass">
+          <div class="phd"><h2>현장 실측 WBGT 시간별 입력 및 보간</h2><span class="note" id="measEcho"></span></div>
+          <div class="pbd">
+            <div class="tools">
+              <button type="button" id="mLoad">표본 기준값 불러오기</button>
+              <button type="button" id="mInterp">실측값 사이 직선 보간</button>
+              <button type="button" id="mClear">전체 지우기</button>
+            </div>
+            <div class="mgrid" id="mgrid"></div>
+            <p class="hint">측정한 시각만 수치로 입력하면 인접 실측값 사이를 직선 보간합니다. (단위: °C)</p>
+          </div>
+        </section>
+
+        <!-- SECTION 7: Detailed Data Table -->
+        <section class="panel glass">
+          <div class="phd"><h2>시간별 위험지수 및 등급 상세 데이터</h2></div>
+          <div class="scroll"><table id="tbl">
+            <thead><tr>
+              <th>시각</th><th class="num">기온(°C)</th><th class="num">습도(%)</th><th class="num">체감온도</th>
+              <th>기상청 단계</th><th class="num">WBGT(보정 °C)</th><th>미군 CAT</th><th>채택 등급</th><th>데이터 출처</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </section>
+
+      </main>
+    </div>
 
     <!-- Footer & Regulations Reference -->
     <footer class="glass">
@@ -244,6 +256,6 @@
 
   </div>
 
-  <script src="app.js?v=12"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>
