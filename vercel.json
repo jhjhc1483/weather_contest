@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "rewrites": [
     { "source": "/api/weather", "destination": "/api/weather.js" },
     { "source": "/api/trigger-action", "destination": "/api/trigger-action.js" }
