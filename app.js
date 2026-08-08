@@ -7,7 +7,7 @@ let RH   = [82,80,76,70,63,57,52,48,45,44,45,48,53,59,66,72,77];
 let APP  = [28.0,28.5,30.1,32.0,33.9,35.4,36.6,37.4,38.1,38.5,38.2,37.4,36.1,34.3,32.5,30.9,29.6];
 let BASE = [24.0,24.5,25.8,27.2,28.6,29.8,30.8,31.5,32.0,32.3,32.0,31.2,30.0,28.4,26.8,25.5,24.6];
 
-/* 10 Major Military Activity Master Database */
+/* 8 Core Military Activity Master Database */
 const UNIT_ACTIVITIES = [
   { id: "act_range", name: "🎯 사격 훈련", task: "easy", gear: "iba", pax: 240, desc: "방탄복/전투조끼 착용 사격술 및 영점사격" },
   { id: "act_fitness", name: "🏃 체력 측정", task: "vhard", gear: "scu", pax: 300, desc: "체육복 착용 3km 뜀걸음 및 훈련 (복장 보정 +0°C, 고강도 800W)" },
@@ -16,8 +16,6 @@ const UNIT_ACTIVITIES = [
   { id: "act_gaekae", name: "💥 각개전투 / 포복", task: "mod", gear: "iba", pax: 350, desc: "장애물 극복 및 전술 포복 (중등작업 425W)" },
   { id: "act_cbrn", name: "☣️ 화생방 제독", task: "mod", gear: "cbrn", pax: 180, desc: "MOPP 4단계 완전 보호의 착용 (+11.1°C 가산)" },
   { id: "act_obstacle", name: "🧗 유격 / 장애물", task: "vhard", gear: "scu", pax: 280, desc: "코스 장애물 극복 및 극기 훈련 (고강도 800W)" },
-  { id: "act_grenade", name: "🔫 수류탄 투척", task: "easy", gear: "iba", pax: 320, desc: "야외 투척장 안전 통제 (방탄복/전투조끼 +2.8°C)" },
-  { id: "act_jesik", name: "🚶 제식 / 총기손질", task: "easy", gear: "scu", pax: 500, desc: "연병장 기본 제식 및 군기 훈련 (경작업 250W)" },
   { id: "act_custom", name: "⚙️ 사용자 직접설정", task: "heavy", gear: "iba", pax: 240, desc: "과업 및 복장 직접 선택" }
 ];
 
@@ -282,14 +280,14 @@ window.highlightHour = function(hour) {
 window.refreshSafetyNews = function() {
   newsDisplayCount = 3;
   updateNewsToggleBtnUI();
-  renderSafetyNews(true); // Force random shuffle on manual refresh
+  renderSafetyNews(true);
 };
 
 window.toggleMoreSafetyNews = function() {
   if (newsDisplayCount > 3) {
-    newsDisplayCount = 3; // Collapse back to 3 items
+    newsDisplayCount = 3;
   } else {
-    newsDisplayCount += 3; // Expand by 3 items
+    newsDisplayCount += 3;
   }
   updateNewsToggleBtnUI();
   renderSafetyNews();
@@ -327,7 +325,6 @@ function renderSafetyNews(forceShuffle = false) {
   const dateStr = S.planDate || "2026-08-08";
   const dParts = dateStr.split("-");
   const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
-  const day = dParts.length >= 3 ? parseInt(dParts[3], 10) : 8;
   const env = S.envData || {};
 
   const newsList = Array.isArray(S.newsList) ? S.newsList.slice() : [];
@@ -336,35 +333,29 @@ function renderSafetyNews(forceShuffle = false) {
     return;
   }
 
-  // Calculate priority score for each news item based on selected date's weather
   const dateSeed = forceShuffle ? Math.floor(Math.random() * 10000) : getDateHashSeed(dateStr);
 
   const scoredNews = newsList.map((item, idx) => {
     let score = 0;
     const cat = item.category;
 
-    // Condition matching weights
     if (env.ta >= 31.0 && cat === "heatwave") score += 50;
     if (env.ta <= 0.0 && cat === "coldwave") score += 50;
     if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 45;
     if (env.pm10 >= 80 && cat === "dust_ozon") score += 40;
     if (env.ws >= 5.0 && cat === "strongwind") score += 35;
 
-    // Season matching weights
     if (month >= 6 && month <= 8 && (cat === "heatwave" || cat === "foodpoison" || cat === "lightning")) score += 30;
     else if ((month === 12 || month === 1 || month === 2) && (cat === "coldwave" || cat === "strongwind")) score += 30;
     else if (cat === "wildfire_dry" || cat === "dust_ozon") score += 20;
 
-    // Date-driven pseudorandom shuffle offset (Guarantees DIFFERENT order for DIFFERENT dates)
     const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 100;
     const finalScore = score + pseudoRandom;
 
     return { item, finalScore };
   });
 
-  // Sort news by finalScore descending (highest match & per-date pseudo-random order)
   scoredNews.sort((a, b) => b.finalScore - a.finalScore);
-
   const listToRender = scoredNews.map(s => s.item).slice(0, newsDisplayCount);
 
   const catNames = {
