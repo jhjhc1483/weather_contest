@@ -76,6 +76,8 @@ const kmaLv = app => (isNaN(app) || app < 31.0) ? 0 : app < 33.0 ? 1 : app < 35.
 const pad = n => String(n).padStart(2, "0");
 
 /* ═══════════ APP STATE ═══════════ */
+let newsDisplayCount = 3;
+
 const S = {
   planDate: "2026-08-08",
   activeActivityId: "act_march40",
@@ -276,7 +278,24 @@ window.highlightHour = function(hour) {
   }
 };
 
-/* Render 8-Factor Severe Weather Disaster News with Smart Condition Matching */
+/* Refresh & Load More Safety News Handlers */
+window.refreshSafetyNews = function() {
+  newsDisplayCount = 3;
+  if (S.newsList && S.newsList.length > 1) {
+    for (let i = S.newsList.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [S.newsList[i], S.newsList[j]] = [S.newsList[j], S.newsList[i]];
+    }
+  }
+  renderSafetyNews();
+};
+
+window.loadMoreSafetyNews = function() {
+  newsDisplayCount += 3;
+  renderSafetyNews();
+};
+
+/* Render 8-Factor Severe Weather Disaster News with Smart Condition Matching & Pagination */
 function renderSafetyNews() {
   const container = document.getElementById("newsBox");
   if (!container) return;
@@ -311,7 +330,7 @@ function renderSafetyNews() {
     }
   }
 
-  if (matchedNews.length < 3) {
+  if (matchedNews.length < newsDisplayCount) {
     for (const item of newsList) {
       if (!matchedNews.some(m => m.id === item.id)) {
         matchedNews.push(item);
@@ -319,7 +338,14 @@ function renderSafetyNews() {
     }
   }
 
-  container.innerHTML = matchedNews.slice(0, 3).map(n => `
+  const listToRender = matchedNews.slice(0, newsDisplayCount);
+
+  if (!listToRender.length) {
+    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">수집된 기상 특보 뉴스가 없습니다.</p>`;
+    return;
+  }
+
+  container.innerHTML = listToRender.map(n => `
     <div class="news-card">
       <div class="hdr">
         <a href="${n.url}" target="_blank" rel="noopener" class="news-title">⚠️ ${n.title}</a>
