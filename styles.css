@@ -92,20 +92,34 @@ h1 {
 }
 .themeBtn:hover { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
 
-/* 🧮 MAIN CALCULATION SUBMIT BUTTON */
-.btn-calculate {
+/* TWO SEPARATE ACTION BUTTONS (STEP 1 & STEP 2) */
+.action-btn-group {
+  display: flex; gap: 14px; justify-content: flex-end; flex-wrap: wrap;
+}
+
+.btn-step-1 {
+  background: var(--glass-2); border: 1px solid var(--accent); color: var(--accent);
+  font-family: var(--sans); font-size: 14px; font-weight: 700; padding: 13px 20px;
+  border-radius: var(--r-sm); cursor: pointer; transition: all 0.15s ease;
+  display: inline-flex; align-items: center; gap: 8px; backdrop-filter: blur(10px);
+}
+.btn-step-1:hover {
+  background: var(--accent-bg); border-color: var(--accent); transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(79,214,193,0.25);
+}
+
+.btn-step-2 {
   background: linear-gradient(135deg, var(--accent) 0%, #30A894 100%);
-  color: #080C13; font-family: var(--sans); font-size: 15px; font-weight: 800;
-  padding: 14px 28px; border-radius: var(--r-sm); border: none; cursor: pointer;
-  display: inline-flex; align-items: center; gap: 10px; transition: all 0.16s ease;
+  color: #080C13; font-family: var(--sans); font-size: 14.5px; font-weight: 800;
+  padding: 13px 24px; border-radius: var(--r-sm); border: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; transition: all 0.16s ease;
   box-shadow: 0 4px 20px rgba(79,214,193,0.35); letter-spacing: -0.01em;
 }
-.btn-calculate:hover {
+.btn-step-2:hover {
   transform: translateY(-2px); box-shadow: 0 8px 28px rgba(79,214,193,0.55);
   filter: brightness(1.08);
 }
-.btn-calculate:active { transform: translateY(0); }
-.btn-calculate .icon { font-size: 17px; }
+.btn-step-2:active { transform: translateY(0); }
 
 .gh-toast {
   display: flex; align-items: center; gap: 14px; padding: 14px 20px; margin-bottom: 16px;
@@ -293,5 +307,7 @@ footer li { margin-bottom: 6px; }
 [hidden] { display: none !important; }
 @media (max-width: 820px) {
   .comp-box { grid-template-columns: 1fr; }
+  .action-btn-group { flex-direction: column; }
+  .btn-step-1, .btn-step-2 { width: 100%; justify-content: center; }
 }
 @media (max-width: 620px) { h1 { font-size: 21px; } .stat .v { font-size: 24px; } .wrap { padding: 16px 12px 52px; } header { flex-direction: column; } }

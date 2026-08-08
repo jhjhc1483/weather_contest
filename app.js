@@ -413,15 +413,15 @@ function recomputeAll() {
   renderDay();
 }
 
-/* 🧮 MAIN CALCULATION & GITHUB ACTION TRIGGER ENGINE */
-window.calculateAndTriggerAction = async function() {
+/* ⚡ BUTTON 1: FETCH WEATHER DATA VIA GITHUB ACTIONS */
+window.triggerGitHubActionPipeline = async function() {
   const toast = document.getElementById("ghToast");
   const toastText = document.getElementById("ghToastText");
   const ghBadge = document.getElementById("ghBadge");
 
   if (toast) toast.hidden = false;
   if (toastText) {
-    toastText.textContent = `[${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] 부대활동(${S.activeActivityId}) 파싱 및 GitHub Actions 연산 중...`;
+    toastText.textContent = `⚡ 1단계: GitHub Actions 날씨 수집 파이프라인 (fetch_weather.yml) 실행 요청 중...`;
   }
   if (ghBadge) {
     ghBadge.textContent = '● GitHub Actions Pipeline: Running...';
@@ -436,10 +436,7 @@ window.calculateAndTriggerAction = async function() {
         planDate: S.planDate,
         fromHour: S.from,
         toHour: S.to,
-        activityId: S.activeActivityId,
-        pax: S.pax,
-        task: S.task,
-        gear: S.gear
+        activityId: S.activeActivityId
       })
     });
 
@@ -465,9 +462,25 @@ window.calculateAndTriggerAction = async function() {
 
   setTimeout(() => {
     if (toast) toast.hidden = true;
-    renderEnvCards();
-    recomputeAll();
+    fetchKmaLiveWeather();
   }, 2200);
+};
+
+/* 🧮 BUTTON 2: CALCULATE ACTIVITY RISK & WATER REQUIREMENT */
+window.calculateActivityRisk = function() {
+  const toast = document.getElementById("ghToast");
+  const toastText = document.getElementById("ghToastText");
+
+  if (toast) toast.hidden = false;
+  if (toastText) {
+    toastText.textContent = `🧮 2단계: [${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] ${S.activeActivityId} 훈련 위험도 & 식수 ${S.pax}명분 산출 완료!`;
+  }
+
+  recomputeAll();
+
+  setTimeout(() => {
+    if (toast) toast.hidden = true;
+  }, 1600);
 };
 
 async function fetchKmaLiveWeather() {
