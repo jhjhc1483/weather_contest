@@ -599,3 +599,71 @@ footer li { margin-bottom: 6px; }
 }
 
 
+
+/* ══════════ ❄️ 한랭 스트레스 패널 (TB MED 508) ══════════ */
+.cold-panel {
+  margin-top: 16px; padding: 16px 18px; border-radius: 12px;
+  background: rgba(56, 189, 248, .06);
+  border: 1px solid rgba(56, 189, 248, .28);
+}
+.cold-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px;
+}
+.cold-item {
+  background: var(--glass-2); border-radius: 9px; padding: 10px 13px;
+  border: 1px solid rgba(255, 255, 255, .07);
+}
+.cold-item label { display: block; font-size: 11.5px; color: var(--dim); font-weight: 600; margin-bottom: 3px; }
+.cold-item b { display: block; font-size: 17px; font-family: var(--mono); font-weight: 700; color: var(--ink); }
+.cold-item small { display: block; margin-top: 2px; font-size: 11.5px; color: var(--faint); }
+.cold-warn {
+  margin: 12px 0 0; padding: 10px 13px; border-radius: 8px; font-size: 12.5px; line-height: 1.65;
+  background: rgba(245, 158, 11, .10); border-left: 3px solid var(--k3); color: var(--ink);
+}
+.cold-src { margin: 12px 0 0; font-size: 11px; color: var(--faint); letter-spacing: .2px; }
+
+/* ══════════ 📋 ARAS 척도 변환 패널 ══════════ */
+.aras-score {
+  padding: 18px; border-radius: 12px; background: var(--glass-2);
+  border: 1px solid rgba(255, 255, 255, .09);
+}
+.aras-eq { display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap; }
+.aras-f, .aras-total {
+  flex: 1 1 130px; min-width: 120px; text-align: center;
+  padding: 12px 10px; border-radius: 10px;
+  background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .08);
+}
+.aras-f em, .aras-total em { display: block; font-style: normal; font-size: 11.5px; color: var(--dim); font-weight: 600; }
+.aras-f b, .aras-total b { display: block; font-size: 30px; font-family: var(--mono); font-weight: 800; line-height: 1.25; color: var(--ink); }
+.aras-f small, .aras-total small { display: block; font-size: 11.5px; color: var(--faint); }
+.aras-x { display: flex; align-items: center; font-size: 21px; color: var(--dim); font-weight: 700; }
+.aras-total { border-width: 2px; }
+.aras-total.p-high { background: rgba(220, 38, 38, .16); border-color: var(--c4); }
+.aras-total.p-high b, .aras-total.p-high small { color: var(--c4); }
+.aras-total.p-mid { background: rgba(245, 158, 11, .14); border-color: var(--k3); }
+.aras-total.p-mid b, .aras-total.p-mid small { color: var(--k3); }
+.aras-total.p-low { background: rgba(74, 222, 128, .12); border-color: var(--c1); }
+.aras-act { margin: 14px 0 0; font-size: 14px; font-weight: 700; color: var(--ink); }
+.aras-res { margin: 8px 0 0; font-size: 12.5px; color: var(--dim); }
+.aras-res b { font-family: var(--mono); }
+.aras-res b.p-low { color: var(--c1); }
+.aras-res b.p-mid { color: var(--k3); }
+.aras-res b.p-high { color: var(--c4); }
+.aras-h { margin: 20px 0 10px; font-size: 14px; font-weight: 700; color: var(--ink); }
+.aras-tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.aras-tbl th {
+  text-align: left; padding: 8px 10px; font-size: 11.5px; color: var(--dim); font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+.aras-tbl td { padding: 9px 10px; border-bottom: 1px solid rgba(255, 255, 255, .05); color: var(--ink); line-height: 1.55; }
+.aras-pri, .aras-m4 {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.aras-pri.p1 { background: rgba(220, 38, 38, .18); color: var(--c4); }
+.aras-pri.p2 { background: rgba(245, 158, 11, .18); color: var(--k3); }
+.aras-pri.p3 { background: rgba(56, 189, 248, .16); color: var(--accent); }
+.aras-pri.p4 { background: rgba(148, 163, 184, .16); color: var(--dim); }
+.aras-pri.p5 { background: rgba(148, 163, 184, .10); color: var(--faint); }
+.aras-m4 { background: rgba(255, 255, 255, .06); color: var(--dim); }
+.aras-note { margin: 14px 0 0; font-size: 11.5px; color: var(--faint); line-height: 1.7; }

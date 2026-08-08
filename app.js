@@ -16,22 +16,112 @@ const UNIT_ACTIVITIES = [
   { id: "act_gaekae", name: "💥 각개전투 / 포복", task: "mod", gear: "iba", pax: 350, desc: "장애물 극복 및 전술 포복 (중등작업 425W)" },
   { id: "act_cbrn", name: "☣️ 화생방 제독", task: "mod", gear: "cbrn", pax: 180, desc: "MOPP 4단계 완전 보호의 착용 (+11.1°C 가산)" },
   { id: "act_obstacle", name: "🧗 유격 / 장애물", task: "vhard", gear: "scu", pax: 280, desc: "코스 장애물 극복 및 극기 훈련 (고강도 800W)" },
+  /* 정적 과업 — 혹한기 한랭손상이 집중되는 과업군 (TB MED 508 표 3-1 Sedentary) */
+  { id: "act_sentry", name: "🥶 경계 · 보초 근무", task: "static", gear: "ecwcs", pax: 60, desc: "정적 노출 지속 (1 MET) · 혹한기 한랭손상 최다 발생 과업" },
+  { id: "act_gate", name: "🚧 위병소 근무", task: "static", gear: "ecwcs", pax: 20, desc: "정적 노출 지속 (1 MET) · 주야 교대 노출" },
+  { id: "act_ambush", name: "🫥 매복 · 관측", task: "static", gear: "ecwcs", pax: 40, desc: "장시간 정적 자세 유지 (1 MET) · 말초 순환 저하로 동상 위험 가중" },
   { id: "act_custom", name: "⚙️ 사용자 직접설정", task: "heavy", gear: "iba", pax: 240, desc: "과업 및 복장 직접 선택" }
 ];
 
-/* Military Task Metabolic Rates & Gear Adjustments (Celsius Basis) */
+/* Military Task Metabolic Rates & Gear Adjustments (Celsius Basis)
+   met: TB MED 508 표 3-1 「Intensity of exercise for selected military tasks」 기준 MET 등급
+   ── 혹서기에는 대사율이 '부하'지만, 혹한기에는 대사열이 인체의 유일한 내부 열원이므로
+      '방어'로 부호가 뒤집힌다. 따라서 정적 과업(1 MET)이 한랭에서는 최고 위험군이 된다. */
 const TASKS = [
-  { id: "easy",  name: "경작업 (~250W)",   w: "250 W", ex: "총기 손질 · 영점 사격자세 · 제식 훈련 · 실내/그늘 강의" },
-  { id: "mod",   name: "중등작업 (~425W)", w: "425 W", ex: "30 lb 부하 정찰 · 전술 포복 · 진지 구축 · 경계 훈련" },
-  { id: "heavy", name: "중작업 (~600W)",   w: "600 W", ex: "45 lb 완전군장 행군 · 4인 들것 환자 수송 · 야외 구보" },
-  { id: "vhard", name: "고강도 (~800W)",   w: "800 W", ex: "3km 뜀걸음 체력측정 · 장애물/유격 코스 · 2인 들것 고속 수송" }
+  { id: "static", name: "정적 과업 (1 MET)",  w: "~115 W/m²", met: 1.0,
+    ex: "경계·보초 근무 · 위병소 근무 · 매복 · 관측 · 사격장 대기",
+    src: "TB MED 508 표 3-1 Sedentary (Sentry duty · Gate duty)" },
+  { id: "easy",  name: "경작업 (2~3 MET)",   w: "250 W", met: 2.5,
+    ex: "총기 손질 · 영점 사격자세 · 제식 훈련 · 실내/그늘 강의",
+    src: "TB MED 508 표 3-1 Easy work (Weapon maintenance · Drill and ceremony)" },
+  { id: "mod",   name: "중등작업 (4~5 MET)", w: "425 W", met: 4.5,
+    ex: "30 lb 부하 정찰 · 전술 포복 · 진지 구축 · 경계 훈련",
+    src: "TB MED 508 표 3-1 Moderate work (Patrolling · Defensive position construction)" },
+  { id: "heavy", name: "중작업 (6 MET)",     w: "600 W", met: 6.0,
+    ex: "45 lb 완전군장 행군 · 4인 들것 환자 수송 · 야외 구보",
+    src: "TB MED 508 표 3-1 Hard work (Walking ≥40-lb load · Field assaults)" },
+  { id: "vhard", name: "고강도 (8 MET)",     w: "800 W", met: 8.0,
+    ex: "3km 뜀걸음 체력측정 · 장애물/유격 코스 · 2인 들것 고속 수송",
+    src: "TB MED 507 고강도 구간 (TB MED 508 Hard work 초과)" }
 ];
 
+/* clo: TB MED 508 표 3-2 「Insulation value of different pieces of Army clothing」
+   ※ 원문 주의: 개별 clo 값의 단순 합산은 층간 압축으로 총 단열값을 과대평가한다. */
 const GEARS = [
-  { id: "scu",  name: "전투복 / 체육복", adj: () => 0,                src: "기준 복장 (보정 없음 +0.0°C)" },
-  { id: "iba",  name: "방탄복·군장",   adj: () => 2.8,              src: "DAFI 48-151 · +2.8°C 가산 (+5°F)" },
-  { id: "cbrn", name: "화생방 보호의", adj: t => t==="easy"?5.6:11.1, src: "TB MED 507 표 3-2 주7 · +5.6 / +11.1°C 가산" }
+  { id: "scu",  name: "전투복 / 체육복", adj: () => 0,   clo: 1.15,
+    src: "기준 복장 (보정 없음 +0.0°C) · BDU 1.15 clo" },
+  { id: "iba",  name: "방탄복·군장",   adj: () => 2.8,   clo: 1.40,
+    src: "DAFI 48-151 · +2.8°C 가산 (+5°F) · 전투복 기준 1.15 clo + 피복층" },
+  { id: "cbrn", name: "화생방 보호의", adj: t => (t === "easy" || t === "static") ? 5.6 : 11.1, clo: 1.60,
+    src: "TB MED 507 표 3-2 주7 · +5.6 / +11.1°C 가산" },
+  { id: "ecwcs", name: "방한복 (ECWCS)", adj: () => 3.4, clo: 3.40,
+    src: "TB MED 508 표 3-2 Total ECWCS 3.4 clo · 혹서기에는 과열 위험" }
 ];
+
+/* ══════════ 한랭 요구 단열값 (TB MED 508 그림 3-2) ══════════
+   그림 3-2는 기온 × 활동수준(MET)별 요구 clo를 제시한다. 원문의 워크드 예제
+     · 20°F(-6.7℃) / 4~5 MET → 약 1 clo
+     · 0°F(-17.8℃) / 3 MET  → 약 2 clo
+   두 지점에 맞춰 보정한 표준 열균형식을 사용한다. (그림 3-2 전제: 풍속 5 mph 미만)
+   ※ ISO 11079 IREQ 정식 산출로 교체 가능하도록 이 함수만 분리해 둔다. */
+const MET_W = 58.15;            // 1 MET = 58.15 W/m²
+const T_SKIN = 33.0;            // 평균 피부온도 (℃)
+const DRY_FRACTION = 0.85;      // 호흡·증발 손실을 제외한 건열 손실 비율
+
+function requiredClo(ta, met) {
+  const M = Math.max(1.0, met) * MET_W;
+  const req = (T_SKIN - ta) / (0.155 * DRY_FRACTION * M);
+  return Math.max(0, +req.toFixed(2));
+}
+
+/* 풍속 보정: 그림 3-2는 5 mph(2.2 m/s) 미만 전제. 초과 시 착용 단열이 유효하게 감소한다. */
+function effectiveClo(cloWorn, ws) {
+  const excess = Math.max(0, (ws || 0) - 2.2);
+  return +(cloWorn * Math.max(0.45, 1 - 0.09 * excess)).toFixed(2);
+}
+
+/* ══════════ 말초 동상 노출시간 (TB MED 508 그림 3-5) ══════════
+   가장 취약한 5% 인원의 '볼(cheek) 동상' 발생까지의 시간(분).
+   행 = 풍속(mph), 열 = 기온(°F). 999 = >120분(원문 ">120"). */
+const FROSTBITE_WIND_MPH = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+const FROSTBITE_TEMP_F  = [10, 5, 0, -5, -10, -15, -20, -25, -30, -35, -40, -45];
+const FROSTBITE_MIN = [
+  [999, 999, 999, 999,  31,  22,  17,  14,  12,  11,   9,   8],
+  [999, 999, 999,  28,  19,  15,  12,  10,   9,   7,   7,   6],
+  [999, 999,  33,  20,  15,  12,   9,   8,   7,   6,   5,   4],
+  [999, 999,  23,  16,  12,   9,   8,   8,   6,   5,   4,   4],
+  [999,  42,  19,  13,  10,   8,   7,   6,   5,   4,   4,   3],
+  [999,  28,  16,  12,   9,   7,   6,   5,   4,   4,   3,   3],
+  [999,  23,  14,  10,   8,   6,   5,   4,   4,   3,   3,   2],
+  [999,  20,  13,   9,   7,   6,   5,   4,   3,   3,   2,   2],
+  [999,  18,  12,   8,   7,   5,   4,   4,   3,   3,   2,   2],
+  [999,  16,  11,   8,   6,   5,   4,   3,   3,   2,   2,   2]
+];
+
+/* 동상 위험등급 및 버디체크 주기 (TB MED 508 표 3-4) */
+const FROSTBITE_RISK = [
+  { id: "low",     name: "낮음",  color: "var(--c1)", buddy: null, act: "자가·동료 관찰 강화, 노출 피부 차단, 발한 회피" },
+  { id: "high",    name: "높음",  color: "var(--c3)", buddy: 25,   act: "20~30분마다 동료 점검 의무화, 방한복·방풍(머리/손/발/안면) 착용, 재가온 시설 운용" },
+  { id: "severe",  name: "심각",  color: "var(--c4)", buddy: 10,   act: "10분마다 동료 점검 의무화, 노출 피부 전면 차단, 2인 1조 이상 편성, 계속 활동 유지" },
+  { id: "extreme", name: "극심",  color: "var(--black-fill)", buddy: 10, act: "과업 시간 최소화 및 활동 변경 검토, 노출 피부 전면 차단, 2인 1조 이상 편성" }
+];
+
+function frostbiteMinutes(taC, wsMs) {
+  const tf = taC * 9 / 5 + 32;
+  const mph = (wsMs || 0) * 2.23694;
+  if (tf > 10) return { min: 999, risk: FROSTBITE_RISK[0] };
+  let wi = 0;
+  while (wi < FROSTBITE_WIND_MPH.length - 1 && mph >= FROSTBITE_WIND_MPH[wi + 1]) wi++;
+  let ti = 0;
+  while (ti < FROSTBITE_TEMP_F.length - 1 && tf <= FROSTBITE_TEMP_F[ti + 1]) ti++;
+  const m = FROSTBITE_MIN[wi][ti];
+  const risk = m >= 999 ? FROSTBITE_RISK[0]
+    : m < 5 ? FROSTBITE_RISK[3]
+    : m <= 10 ? FROSTBITE_RISK[2]
+    : m <= 30 ? FROSTBITE_RISK[1]
+    : FROSTBITE_RISK[0];
+  return { min: m, risk };
+}
 
 const WR = {
   1: { easy: ["제한 없음", 0.50], mod: ["제한 없음", 0.75], heavy: ["40 / 20", 0.75], vhard: ["20 / 40", 1.00] },
@@ -247,19 +337,21 @@ function applyDateWeather(targetDate) {
     const dParts = (targetDate || "").split("-");
     const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
 
-    if (month in [12, 1, 2]) { // Winter
+    // ⚠ `month in [12,1,2]`는 값이 아니라 배열 '인덱스'를 검사하므로 12월이 가을로 분류된다.
+    //    includes()로 교정.
+    if ([12, 1, 2].includes(month)) { // Winter
       TA = [-5.0, -4.5, -3.0, -1.5, 0.0, 2.0, 3.5, 4.5, 5.0, 4.8, 3.5, 1.0, -1.0, -2.5, -3.8, -4.5, -5.0];
       RH = [65, 62, 58, 52, 45, 40, 38, 35, 33, 34, 38, 42, 48, 55, 60, 63, 65];
       APP = TA.map(t => t - 3.0);
       BASE = TA.map(t => t * 0.7 + 3.0);
       S.envData = { ta: 5.0, rh: 33, ws: 3.5, chillTemp: 1.2, wbgt: 6.5, pm10: 55, pm25: 32, dustStatus: "보통", uvIndex: 3, pop: 10 };
-    } else if (month in [3, 4, 5]) { // Spring
+    } else if ([3, 4, 5].includes(month)) { // Spring
       TA = [10.0, 11.0, 13.0, 15.5, 17.5, 19.5, 21.0, 22.0, 22.5, 22.0, 20.5, 18.0, 16.0, 14.0, 12.5, 11.0, 10.0];
       RH = [55, 50, 45, 38, 32, 28, 25, 23, 22, 23, 26, 30, 36, 42, 48, 52, 55];
       APP = TA.map(t => t + 0.5);
       BASE = TA.map(t => t * 0.7 + 4.0);
       S.envData = { ta: 22.5, rh: 22, ws: 2.8, chillTemp: 22.8, wbgt: 19.5, pm10: 88, pm25: 48, dustStatus: "나쁨", uvIndex: 6, pop: 10 };
-    } else if (month in [6, 7, 8]) { // Summer
+    } else if ([6, 7, 8].includes(month)) { // Summer
       TA = [26.1,26.5,27.8,29.5,31.2,32.8,34.1,35.0,35.8,36.2,35.9,35.0,33.6,31.8,30.0,28.6,27.6];
       RH = [82,80,76,70,63,57,52,48,45,44,45,48,53,59,66,72,77];
       APP = [28.0,28.5,30.1,32.0,33.9,35.4,36.6,37.4,38.1,38.5,38.2,37.4,36.1,34.3,32.5,30.9,29.6];
@@ -457,19 +549,204 @@ function computeDay() {
     const ruleObj = WR[safeCatIndex] || WR[1];
     const rule = ruleObj[S.task] || ["제한 없음", 0.50];
 
+    const cold = assessCold(taVal, wsVal, seasonal.chillTemp, S.task, g);
+    const isCold = seasonal.activeSeason === "WINTER";
+    // 한랭에서는 대사율 축이 뒤집힌다 — 정적 과업·단열 부족일수록 위험이 커진다
+    const lvFinal = isCold ? Math.min(5, lv + cold.lvBump) : lv;
+
     return {
-      h, ta: taVal, rh: rhVal, app: appVal, wRaw, wC, cat, kl, lv, seasonal, src: f.src[i] || "기준",
-      wr: (cat === 0 && seasonal.activeSeason === "SUMMER") ? "제한 없음" : rule[0],
-      qt: (cat === 0 && seasonal.activeSeason === "SUMMER") ? 0.5 : rule[1]
+      h, ta: taVal, rh: rhVal, app: appVal, wRaw, wC, cat, kl, lv: lvFinal, seasonal,
+      src: f.src[i] || "기준", cold, isCold,
+      // 혹한기에는 여름용 작업/휴식 주기 대신 '노출/재가온 주기'를 적용한다
+      wr: isCold ? cold.cycleLabel
+        : (cat === 0 && seasonal.activeSeason === "SUMMER") ? "제한 없음" : rule[0],
+      qt: isCold ? cold.qt
+        : (cat === 0 && seasonal.activeSeason === "SUMMER") ? 0.5 : rule[1]
     };
   });
 }
 
-/* Find Peak Hour in Selected Time Window [S.from ~ S.to] */
+/* ══════════════════════════════════════════════════════════════
+   ARAS 위험성평가 척도 변환
+   ──────────────────────────────────────────────────────────────
+   육군 ARAS(Army Risk Assessment Support System)가 실제로 사용하는 척도로
+   본 시스템의 기상 위험도 산출 결과를 변환한다.
+
+     위험성(Risk) = 사고발생 가능성(1~5점) × 사고결과의 중대성(1~4점)
+
+   ※ 본 시스템은 ARAS와 직접 연동되지 않는다. 폐쇄망 체계이므로 연동이 아니라
+     '입력 지원'이며, 산출된 점수·감소대책을 지휘자가 ARAS에 수기 이관한다.
+   ※ 적용 범위: ARAS 141개 부대활동 유형 중 '기상 민감 활동'에 한정한다.
+   근거: 육군 ARAS 위험성평가 수식 및 기준표 / 고용노동부 위험성평가 해설 지침서
+   ══════════════════════════════════════════════════════════════ */
+const ARAS_LEVELS = [
+  { min: 15, max: 20, name: "매우 높음", cls: "p-high",  act: "즉시 활동 중지 및 감소대책 필수" },
+  { min: 8,  max: 14, name: "높음",     cls: "p-high",  act: "감소대책 필수 시행 (8점 미만으로 저감 필요)" },
+  { min: 4,  max: 7,  name: "보통",     cls: "p-mid",   act: "감소대책 권장" },
+  { min: 1,  max: 3,  name: "낮음",     cls: "p-low",   act: "현 수준 유지" }
+];
+
+const arasLevelOf = score => ARAS_LEVELS.find(l => score >= l.min && score <= l.max) || ARAS_LEVELS[3];
+
+/* 사고발생 가능성 (1~5) — 노출빈도·노출시간·회피가능성 */
+function arasLikelihood(peak, hours, hasSafeWindow) {
+  // 본 시스템의 통합 위험등급(0~5)을 기준값으로 삼는다
+  let p = [1, 1, 2, 3, 4, 5][Math.min(5, Math.max(0, peak.lv))];
+  if (hours >= 4) p += 1;            // 노출시간 4시간 이상
+  if (hours >= 8) p += 1;            // 장시간 연속 노출
+  if (hasSafeWindow && p > 1) p -= 1; // 대체 시간대 존재 = 회피 가능
+  return Math.min(5, Math.max(1, p));
+}
+
+/* 사고결과의 중대성 (1~4) — 전투력·임무수행능력·준비태세 영향
+   혹서기에는 고강도 과업이, 혹한기에는 정적 과업이 중증 손상으로 이어진다 */
+function arasSeverity(peak, taskId, pax) {
+  const isCold = peak.seasonal && peak.seasonal.activeSeason === "WINTER";
+  let s = 2;
+  if (isCold) {
+    if (taskId === "static") s += 1;                       // 저체온·동상 중증화
+  } else {
+    if (taskId === "heavy" || taskId === "vhard") s += 1;  // 열사병 중증화
+  }
+  if (pax >= 300) s += 1;                                  // 다수 환자 동시 발생
+  if (peak.lv >= 5) s += 1;                                // 최고 등급 = 치명적 결과 가능
+  return Math.min(4, Math.max(1, s));
+}
+
+/* 감소대책 — ① 제거 → ② 대체 → ③ 공학적 → ④ 관리적 → ⑤ 개인보호구 우선순위
+   각 대책은 4M(Man·Machine·Media·Management)으로 분류한다 */
+function arasMeasures(peak, safeWindowLabel) {
+  const s = peak.seasonal || {};
+  const isCold = s.activeSeason === "WINTER";
+  const isDust = s.activeSeason === "DUST";
+  const cold = peak.cold || {};
+  const out = [];
+  const add = (pri, priName, m4, text) => out.push({ pri, priName, m4, text });
+
+  if (peak.lv >= 4) {
+    add(1, "제거", "Media", isDust
+      ? "야외훈련 중지 및 실내 교육으로 전면 전환"
+      : "해당 시간대 야외훈련 중지 · 실내/주둔지 훈련으로 대체");
+  }
+  if (safeWindowLabel && safeWindowLabel !== "없음" && peak.lv >= 3) {
+    add(2, "대체", "Media", `훈련 시간대를 안전 시간창(${safeWindowLabel})으로 이동`);
+  }
+  if (peak.lv >= 3) {
+    add(2, "대체", "Management", isCold
+      ? "정적 과업(경계·매복)을 이동성 과업으로 교대 편성하여 대사열 확보"
+      : "고강도 과업을 저강도 과업으로 대체하거나 이른 시각으로 이동");
+  }
+  add(3, "공학적", "Machine", isCold
+    ? "재가온 시설(난방 천막·온풍기) 및 온수 급수대 설치, 방풍막 구축"
+    : "그늘 휴식지 및 냉각 구역 개설, 급수대·제빙 장비 전개");
+  add(4, "관리적", "Management", isCold
+    ? `노출/재가온 주기 강제 적용 (${cold.cycleLabel || "상시 관찰"})`
+    : `작업/휴식 주기 강제 적용 (${peak.wr || "제한 없음"})`);
+  if (cold.frostbiteRisk && cold.frostbiteRisk.buddy) {
+    add(4, "관리적", "Man", `동료 점검(버디체크) ${cold.frostbiteRisk.buddy}분 주기 의무화`);
+  }
+  add(4, "관리적", "Man", isCold
+    ? "갈증 여부와 무관하게 2시간 주기 강제 급수 · 온수 제공"
+    : "급수 주기 고정 및 개인별 음수량 확인 (과다 섭취 상한 준수)");
+  add(5, "개인보호구", "Man", isCold
+    ? `방한 피복 착용 상태 점검 (요구 ${cold.reqClo || "-"} clo / 착용 ${cold.wornClo || "-"} clo)`
+    : isDust ? "미세먼지 마스크 불출 및 야외활동 시 착용 강제"
+    : "방탄복·완전군장 착용 시간 최소화, 통풍 조치");
+
+  return out.sort((a, b) => a.pri - b.pri);
+}
+
+/* ARAS 종합 산출 */
+function computeAras(D, peak, safeWindowLabel) {
+  const hours = Math.max(1, S.to - S.from);
+  const hasSafe = !!(safeWindowLabel && safeWindowLabel !== "없음");
+  const likelihood = arasLikelihood(peak, hours, hasSafe);
+  const severity = arasSeverity(peak, S.task, S.pax);
+  const score = likelihood * severity;
+
+  // 감소대책 적용 후 잔여 위험성: 안전 시간창으로 이동했을 때의 등급으로 재산출
+  let residual = null;
+  if (score >= 8) {
+    const safeLv = hasSafe
+      ? Math.min(...D.filter(d => d.lv <= 3).map(d => d.lv))
+      : 0;
+    const rl = arasLikelihood({ lv: safeLv, seasonal: peak.seasonal }, Math.min(hours, 4), true);
+    residual = rl * severity;
+  }
+
+  return {
+    likelihood, severity, score,
+    level: arasLevelOf(score),
+    residual,
+    residualLevel: residual !== null ? arasLevelOf(residual) : null,
+    needsMeasure: score >= 8,
+    measures: arasMeasures(peak, safeWindowLabel)
+  };
+}
+
+/* ══════════ 한랭 평가 엔진 (TB MED 508) ══════════
+   혹서기에는 대사율이 '부하'지만 혹한기에는 대사열이 인체의 유일한 내부 열원이다.
+   따라서 대사율이 낮을수록 요구 단열값이 커지고, 착용 단열이 못 미치면 노출 한계가 짧아진다.
+   여름 로직과 부호가 반대이므로 별도 함수로 분리한다.
+   근거: TB MED 508 그림 3-2(기온×MET별 요구 clo) · 표 3-1(과업별 MET)
+        표 3-2(복장 clo) · 그림 3-5(동상 발생시간) · 표 3-4(버디체크 주기) */
+function assessCold(ta, ws, chill, taskId, gear) {
+  const taskObj = TASKS.find(t => t.id === taskId) || TASKS[1];
+  const met = taskObj.met || 2.5;
+  const reqClo = requiredClo(ta, met);
+  const wornClo = effectiveClo(gear && gear.clo ? gear.clo : 1.15, ws);
+  const deficit = +(reqClo - wornClo).toFixed(2);
+  const fb = frostbiteMinutes(ta, ws);
+
+  let lvBump = 0;
+  if (deficit >= 2.0) lvBump = 3;
+  else if (deficit >= 1.0) lvBump = 2;
+  else if (deficit >= 0.3) lvBump = 1;
+  if (met <= 1.0 && ta <= 10.0) lvBump += 1;       // 정적 자세의 말초 순환 저하
+  if (fb.min <= 10) lvBump = Math.max(lvBump, 3);  // 동상 심각·극심 구간
+
+  let cycleLabel, cycleMin = null;
+  if (fb.min >= 999 && deficit <= 0) {
+    cycleLabel = "열평형 유지 · 상시 관찰";
+  } else {
+    const limits = [];
+    if (fb.min < 999) limits.push(fb.min);
+    if (fb.risk.buddy) limits.push(fb.risk.buddy);
+    if (deficit > 0) limits.push(Math.max(10, Math.round(60 / (1 + deficit))));
+    cycleMin = limits.length ? Math.min(...limits) : null;
+    cycleLabel = cycleMin ? `노출 ${cycleMin}분 / 재가온` : "상시 관찰";
+  }
+
+  return {
+    met, reqClo, wornClo, deficit,
+    frostbiteMin: fb.min, frostbiteRisk: fb.risk,
+    lvBump, cycleMin, cycleLabel,
+    isStatic: met <= 1.0,
+    // 고강도 과업은 활동 중에는 안전하나 발한 후 정지 시점에 급격히 냉각된다 (after-drop)
+    afterDrop: met >= 4.5 && ta <= 10.0,
+    // 한랭 급수: 한랭이뇨·갈증둔화로 자발 섭취가 필요량보다 더 떨어진다 (일 2~6 캔틴)
+    qt: met >= 4.5 ? 0.50 : 0.33,
+    dailyQt: met >= 4.5 ? 6 : 4
+  };
+}
+
+/* 훈련 시간대 [S.from ~ S.to] 내 최악 시각 탐색
+   ⚠ 기존 reduce는 위험등급이 더 낮아도 WBGT가 높으면 선택되는 결함이 있었다.
+   등급을 1순위로, 동률일 때만 계절별 대표 지표로 비교한다.
+   혹서기는 WBGT 최대(오후), 혹한기는 체감온도 최소(새벽)가 최악 시각이다. */
 function getSelectedWindowPeakData(D) {
   const inWindow = D.filter(d => d.h >= S.from && d.h <= S.to);
   if (!inWindow.length) return D[0];
-  return inWindow.reduce((max, cur) => cur.lv > max.lv ? cur : cur.wC > max.wC ? cur : max, inWindow[0]);
+  const isCold = inWindow.some(d => d.seasonal && d.seasonal.activeSeason === "WINTER");
+  return inWindow.reduce((best, cur) => {
+    if (cur.lv !== best.lv) return cur.lv > best.lv ? cur : best;
+    if (isCold) {
+      const cc = cur.seasonal ? cur.seasonal.chillTemp : cur.ta;
+      const bc = best.seasonal ? best.seasonal.chillTemp : best.ta;
+      return cc < bc ? cur : best;
+    }
+    return cur.wC > best.wC ? cur : best;
+  }, inWindow[0]);
 }
 
 function getLegacyVerdict(peakData) {
@@ -809,24 +1086,38 @@ function renderDay() {
        <div><h3>${l.n} (피크 시각 ${pad(n.h)}:00)</h3><p>${l.a}<br><span style="color:var(--faint)">기상청 ${kmaLabel} · 미군 ${catLabel} → 높은 쪽 채택</span></p></div>`;
   }
   
+  const isCold = n.seasonal && n.seasonal.activeSeason === "WINTER";
+  const cold = n.cold || {};
+
   const wrEl = document.getElementById("wr");
   if (wrEl) wrEl.textContent = n.wr;
   const wrDescEl = document.getElementById("wrDesc");
-  if (wrDescEl) wrDescEl.textContent = n.wr === "제한 없음" ? "시간당 작업 제한 없음 (연속 4시간까지)" : "분 단위 · 매 시간 반복";
+  if (wrDescEl) {
+    wrDescEl.innerHTML = isCold
+      ? `한랭 노출/재가온 주기 · <b style="color:var(--k1)">대사율이 낮을수록 위험</b> (TB MED 508)`
+      : (n.wr === "제한 없음" ? "시간당 작업 제한 없음 (연속 4시간까지)" : "분 단위 · 매 시간 반복");
+  }
   const waterEl = document.getElementById("water");
   if (waterEl) waterEl.innerHTML = (n.qt * QT).toFixed(2) + "<small>L</small>";
-  
+
   const i0 = Math.max(0, HOURS.indexOf(S.from)), i1 = Math.max(0, HOURS.indexOf(S.to));
   let q = 0; for (let i = i0; i < i1; i++) q += (D[i] ? D[i].qt : 0.5);
   const L_ = q * QT * S.pax;
-  
+
   const prEl = document.getElementById("planRange");
   if (prEl) prEl.textContent = `${pad(S.from)}:00 – ${pad(S.to)}:00 · ${S.pax}명`;
   const twEl = document.getElementById("totalWater");
   if (twEl) twEl.innerHTML = Math.round(L_).toLocaleString() + "<small>L</small>";
   const twdEl = document.getElementById("totalWaterDesc");
-  if (twdEl) twdEl.textContent = `20 L 물통 ${Math.ceil(L_/20)}개 · 1인 ${(q*QT).toFixed(1)} L`;
-  
+  if (twdEl) {
+    twdEl.innerHTML = isCold
+      ? `20 L 물통 ${Math.ceil(L_/20)}개 · 1인 ${(q*QT).toFixed(1)} L<br>` +
+        `<b style="color:var(--k1)">❄️ 한랭: 1일 ${cold.dailyQt || 4} qt · 2시간 주기 강제 급수 · 온수 제공</b><br>` +
+        `<span style="color:var(--dim);font-size:11.5px">한랭이뇨·갈증 둔화로 자발 섭취가 필요량보다 감소 · 수통 동결 방지</span>`
+      : `20 L 물통 ${Math.ceil(L_/20)}개 · 1인 ${(q*QT).toFixed(1)} L<br>` +
+        `<span style="color:var(--dim);font-size:11.5px">⚠️ 상한 준수: 시간당 1.5 qt · 1일 12 qt 초과 금지 (저나트륨혈증)</span>`;
+  }
+
   let best = null, cur = null;
   D.forEach((d, i) => {
     if (d.lv <= 3) {
@@ -834,9 +1125,13 @@ function renderDay() {
       if (!best || (i - cur) >= (best[1] - best[0])) best = [cur, i];
     } else cur = null;
   });
-  
+
+  const safeWinLabel = best ? `${pad(D[best[0]].h)}:00 – ${pad(D[best[1]].h+1)}:00` : "없음";
   const swEl = document.getElementById("safeWin");
-  if (swEl) swEl.textContent = best ? `${pad(D[best[0]].h)}:00 – ${pad(D[best[1]].h+1)}:00` : "없음";
+  if (swEl) swEl.textContent = safeWinLabel;
+
+  renderColdPanel(n, isCold);
+  renderAras(computeAras(D, n, safeWinLabel), safeWinLabel);
   const slotsEl = document.getElementById("slots");
   if (slotsEl) slotsEl.innerHTML = D.map(d => `<span class="slot ${d.lv<=3?"ok":"no"}">${pad(d.h)} ${d.lv<=3?"가":"불가"}</span>`).join("");
   
@@ -862,6 +1157,93 @@ function renderDay() {
         </tr>`;
     }).join("");
   }
+}
+
+/* 한랭 지표 패널 — 요구/착용 단열값, 동상 노출시간, after-drop 경고 */
+function renderColdPanel(n, isCold) {
+  const box = document.getElementById("coldPanel");
+  if (!box) return;
+  const c = n.cold || {};
+  if (!isCold || !c.frostbiteRisk) { box.hidden = true; return; }
+  box.hidden = false;
+
+  const fb = c.frostbiteMin >= 999 ? "120분 초과" : `${c.frostbiteMin}분`;
+  const r = c.frostbiteRisk;
+  const deficitTxt = c.deficit > 0
+    ? `<b style="color:var(--c4)">${c.deficit} clo 부족</b>`
+    : `<b style="color:var(--c1)">충족</b>`;
+
+  box.innerHTML = `
+    <div class="cold-grid">
+      <div class="cold-item">
+        <label>과업 대사율</label>
+        <b>${c.met} MET</b>
+        <small>${c.isStatic ? "정적 과업 — 한랭 최고 위험군" : "활동성 과업"}</small>
+      </div>
+      <div class="cold-item">
+        <label>요구 단열값 / 착용</label>
+        <b>${c.reqClo} / ${c.wornClo} clo</b>
+        <small>${deficitTxt}</small>
+      </div>
+      <div class="cold-item">
+        <label>노출 피부 동상 발생</label>
+        <b style="color:${r.color}">${fb}</b>
+        <small>동상 위험 <b style="color:${r.color}">${r.name}</b></small>
+      </div>
+      <div class="cold-item">
+        <label>노출 / 재가온 주기</label>
+        <b>${c.cycleLabel}</b>
+        <small>${r.buddy ? `동료 점검 ${r.buddy}분 주기` : "자가·동료 관찰"}</small>
+      </div>
+    </div>
+    ${c.afterDrop ? `<p class="cold-warn">⚠️ <b>발한 후 정지 시점 급냉(after-drop) 주의</b> — 고강도 과업은 활동 중에는 안전하나, 젖은 상태로 휴식에 들어가면 급격히 냉각됩니다. 정지 직전 겉옷 추가·환복을 준비하십시오.</p>` : ""}
+    ${c.isStatic ? `<p class="cold-warn">🥶 <b>정적 과업 경고</b> — 대사열 생산이 없어 한랭손상 위험이 가장 높은 과업군입니다. 교대 주기 단축과 재가온 시설 운용이 필수입니다.</p>` : ""}
+    <p class="cold-src">근거: TB MED 508 표 3-1(과업별 MET) · 표 3-2(복장 clo) · 그림 3-2(요구 단열값) · 그림 3-5(동상 발생시간) · 표 3-4(버디체크 주기)</p>
+  `;
+}
+
+/* ARAS 위험성평가 척도 변환 패널 */
+function renderAras(a, safeWinLabel) {
+  const box = document.getElementById("arasPanel");
+  if (!box) return;
+  const M4 = { Man: "인적", Machine: "기계적", Media: "환경적", Management: "관리적" };
+
+  box.innerHTML = `
+    <div class="aras-score">
+      <div class="aras-eq">
+        <span class="aras-f"><em>사고발생 가능성</em><b>${a.likelihood}</b><small>1~5점</small></span>
+        <span class="aras-x">×</span>
+        <span class="aras-f"><em>사고결과 중대성</em><b>${a.severity}</b><small>1~4점</small></span>
+        <span class="aras-x">=</span>
+        <span class="aras-total ${a.level.cls}"><em>위험성</em><b>${a.score}</b><small>${a.level.name}</small></span>
+      </div>
+      <p class="aras-act">${a.level.act}</p>
+      ${a.residual !== null ? `
+        <p class="aras-res">감소대책 적용 시 잔여 위험성 →
+          <b class="${a.residualLevel.cls}">${a.residual}점 (${a.residualLevel.name})</b>
+          ${a.residual < 8 ? '<span style="color:var(--c1)">✔ 8점 미만 저감 달성</span>'
+                           : '<span style="color:var(--c4)">✖ 추가 감소대책 필요</span>'}
+        </p>` : ""}
+    </div>
+
+    <h4 class="aras-h">감소대책 (우선순위순 · 4M 분류)</h4>
+    <table class="aras-tbl">
+      <thead><tr><th style="width:64px">우선순위</th><th style="width:74px">4M</th><th>대책</th></tr></thead>
+      <tbody>
+        ${a.measures.map(m => `
+          <tr>
+            <td><span class="aras-pri p${m.pri}">${m.pri}. ${m.priName}</span></td>
+            <td><span class="aras-m4">${M4[m.m4]}</span></td>
+            <td>${m.text}</td>
+          </tr>`).join("")}
+      </tbody>
+    </table>
+    <p class="aras-note">
+      본 산출값은 육군 ARAS 위험성평가 척도(가능성 1~5 × 중대성 1~4)로 변환한 <b>입력 지원 자료</b>입니다.
+      ARAS는 군 인트라넷 폐쇄망 체계이므로 직접 연동되지 않으며, 지휘자가 결과를 확인하여 이관합니다.
+      적용 범위는 ARAS 141개 부대활동 유형 중 <b>기상 민감 활동</b>에 한정됩니다.
+    </p>
+  `;
 }
 
 function recomputeAll() {

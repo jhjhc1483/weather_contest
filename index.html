@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
   <!-- Ambient Dynamic Glow Field -->
@@ -131,6 +131,9 @@
             <!-- SIDE-BY-SIDE COMPARISON BOX -->
             <div class="comp-box" id="compBox" style="margin-top:0"></div>
 
+            <!-- ❄️ COLD STRESS PANEL (TB MED 508) -->
+            <div class="cold-panel" id="coldPanel" hidden></div>
+
             <!-- STATS & WATER REQUIREMENT GRID -->
             <div class="g2" style="margin-top:16px">
               <div class="card-inner glass" style="padding:0">
@@ -152,6 +155,17 @@
                 <div class="slots" id="slots"></div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- SECTION: ARAS 위험성평가 척도 변환 (입력 지원) -->
+        <section class="panel glass">
+          <div class="phd">
+            <h2>📋 ARAS 위험성평가 척도 변환 · 감소대책 산출</h2>
+            <span class="note">육군 ARAS 척도(가능성 1~5 × 중대성 1~4)로 변환한 입력 지원 자료 · 기상 민감 활동 한정</span>
+          </div>
+          <div class="pbd" style="padding-top:14px">
+            <div id="arasPanel"></div>
           </div>
         </section>
 
@@ -343,6 +357,6 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=26"></script>
+  <script src="app.js?v=28"></script>
 </body>
 </html>
