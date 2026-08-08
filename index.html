@@ -12,9 +12,30 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=31">
+  <link rel="stylesheet" href="styles.css?v=32">
 </head>
 <body>
+  <!-- PRINT ONLY REPORT HEADER & APPROVAL BLOCK -->
+  <div class="print-header-block">
+    <div class="print-header-title">
+      <h1>부대활동 기상 위험성평가 및 30일 훈련 가용성 종합보고서</h1>
+      <p>육군 ARAS 위험성평가 연동 및 FSB(Final Safety Briefing) 지휘판단 근거 · 기상 민감 활동 한정</p>
+    </div>
+    <table class="print-approval-tbl">
+      <tr>
+        <th rowspan="2" style="width:24px">결<br>재</th>
+        <th>작전담당관</th>
+        <th>작전장교</th>
+        <th>지휘관</th>
+      </tr>
+      <tr>
+        <td style="height:38px"></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
   <!-- Ambient Dynamic Glow Field -->
   <div class="field" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b><b class="b4"></b></div>
 
@@ -41,6 +62,9 @@
       
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
         <div style="display:flex;align-items:center;gap:8px">
+          <button type="button" class="btn-sub-sm" onclick="window.print()" aria-label="30일 훈련 위험도 종합보고서 인쇄 및 PDF 저장">
+            <span class="icon">📄</span> 보고서 인쇄/PDF
+          </button>
           <button type="button" class="btn-sub-sm" onclick="openJsonModal()" aria-label="latest_weather.json 30일 수집 DB 현황 보기">
             <span class="icon">🔍</span> +30일 날씨 DB
           </button>
@@ -130,11 +154,14 @@
 
         <!-- SECTION: 📅 30일 훈련 가능 캘린더 (1,440시점 전수 분석) -->
         <section class="panel glass" id="calendarSection">
-          <div class="phd">
-            <h2>📅 30일 훈련 가능 캘린더 · 1,440시점 전수 분석</h2>
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div class="phd" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h2>📅 30일 훈련 가능 캘린더 · 1,440시점 전수 분석</h2>
               <span class="note">현재 과업·복장·인원 조건으로 30일 × 17시간대 전수 위험도 판정 · 날짜 클릭 시 상세 분석 전환</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
               <div class="cal-region-tabs" id="calRegionTabs"></div>
+              <button type="button" class="btn-sub-sm no-print" onclick="window.print()">📄 리포트 인쇄</button>
             </div>
           </div>
           <div class="pbd" style="padding-top:14px">
@@ -395,6 +422,6 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=31"></script>
+  <script src="app.js?v=32"></script>
 </body>
 </html>

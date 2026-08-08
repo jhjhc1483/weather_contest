@@ -873,3 +873,58 @@ footer li { margin-bottom: 6px; }
   .cal-lv-badge { display: none; }
   .cal-stats { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ══════════ PRINT STYLES FOR OFFICIAL MILITARY REPORT ══════════ */
+.print-header-block { display: none; }
+
+@media print {
+  @page { size: A4 portrait; margin: 12mm 10mm; }
+  body {
+    background: #ffffff !important; color: #000000 !important;
+    font-size: 11pt; line-height: 1.4;
+  }
+  .field, .no-print, button, .themeBtn, .btn-step-1, .btn-sub-sm, header button, aside.panel {
+    display: none !important;
+  }
+  .wrap { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+  .dashboard-grid { display: block !important; }
+  .dashboard-content { width: 100% !important; }
+  .glass, .panel {
+    background: #ffffff !important; border: 1px solid #cccccc !important;
+    box-shadow: none !important; backdrop-filter: none !important;
+    border-radius: 6px !important; margin-bottom: 14px !important;
+    color: #000000 !important;
+  }
+  .phd h2 { color: #000000 !important; font-size: 14pt !important; }
+  .phd .note { color: #555555 !important; }
+
+  /* 인쇄 전용 헤더 및 결재란 */
+  .print-header-block {
+    display: flex !important; justify-content: space-between; align-items: flex-start;
+    border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 14px;
+  }
+  .print-header-title h1 { margin: 0 0 4px; font-size: 16pt; font-weight: 800; color: #000; }
+  .print-header-title p { margin: 0; font-size: 9.5pt; color: #444; }
+  .print-approval-tbl { border-collapse: collapse; border: 1px solid #000; text-align: center; }
+  .print-approval-tbl th, .print-approval-tbl td {
+    border: 1px solid #000; padding: 3px 8px; font-size: 8.5pt; color: #000;
+  }
+  .print-approval-tbl th { background: #f0f0f0 !important; font-weight: 700; }
+
+  /* 캘린더 인쇄 커스텀 */
+  .cal-cell {
+    border: 1px solid #bbb !important; background: #fafafa !important;
+    color: #000000 !important; min-height: 54px !important;
+    box-shadow: none !important;
+  }
+  .cal-date { color: #000 !important; font-size: 10pt !important; }
+  .cal-hours { color: #333 !important; font-size: 9pt !important; }
+  .cal-safe { color: #666 !important; font-size: 8pt !important; }
+  .cal-stat-box {
+    background: #f8f9fa !important; border: 1px solid #ddd !important;
+    color: #000000 !important;
+  }
+  .cal-stat-box .cs-val { color: #000000 !important; }
+  .cal-stat-box .cs-label { color: #444444 !important; }
+  .cal-region-tabs { display: none !important; }
+}

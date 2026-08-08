@@ -121,6 +121,8 @@ def fetch_naver_military_disaster_news():
     seen_titles = set()
     news_id_counter = 1
 
+    EXCLUDE_KEYWORDS = ["보험", "특약", "증권", "주가", "분양", "가입", "손해", "생명", "수혜주", "재테크", "대출", "카드", "주식", "매출", "영업이익"]
+
     for category, query in disaster_queries:
         # 최신순(date) 및 관련도순(sim) 조회를 병행하여 최근 사고 기사를 최우선 확보
         for sort_option in ["date", "sim"]:
@@ -140,6 +142,10 @@ def fetch_naver_military_disaster_news():
                             snippet = clean_html(item.get("description", ""))
                             combined_text = title + " " + snippet
                             
+                            # 상업성 / 보험 / 금융 관련 기사 강력 제외
+                            if any(ex_kw in combined_text for ex_kw in EXCLUDE_KEYWORDS):
+                                continue
+
                             # 중복 기사 제거
                             simplified_title = re.sub(r'\s+', '', title)
                             if simplified_title in seen_titles:

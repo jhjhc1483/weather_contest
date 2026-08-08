@@ -955,12 +955,20 @@ function renderSafetyNews(forceShuffle = false) {
   }
 
   const accidentKws = ["사고", "사례", "피해", "발생", "열사병", "열탈진", "온열질환", "동상", "한랭질환", "저체온증", "침수", "고립", "붕괴", "산불", "쓰러", "인명", "병원", "이송", "부상", "사망", "질환", "응급"];
+  const excludeKws = ["보험", "특약", "증권", "주가", "분양", "가입", "손해", "생명", "수혜주", "재테크", "대출", "카드", "주식", "매출", "영업이익"];
 
   const scoredNews = newsList.map((item, idx) => {
     let score = 0;
     const cat = item.category;
-    const isMilitary = item.isMilitary || anyKw(item.title + item.snippet, ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군"]);
-    const isAccident = item.isAccident || anyKw(item.title + item.snippet, accidentKws);
+    const combinedStr = (item.title || "") + " " + (item.snippet || "");
+
+    // 0. EXCLUDE COMMERCIAL / INSURANCE / FINANCIAL NEWS
+    if (anyKw(combinedStr, excludeKws)) {
+      return { item, finalScore: -99999 };
+    }
+
+    const isMilitary = item.isMilitary || anyKw(combinedStr, ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군"]);
+    const isAccident = item.isAccident || anyKw(combinedStr, accidentKws);
 
     // 1. ACCIDENT PRIORITY FIRST: Massive score boost for recent weather accident/incident news (+400 points)
     if (isAccident) {
@@ -1605,24 +1613,49 @@ function renderCalendarStats(calData) {
   const fullDays = calData.filter(d => d.trainableCount >= d.totalHours).length;
   const noDays = calData.filter(d => d.trainableCount === 0).length;
 
-  // 지역 비교 (현재 선택된 지역 외의 지역과 비교)
-  const activeRegion = _calRegion || S.region;
-  const otherRegionId = Object.keys(REGIONS).find(id => id !== activeRegion);
-  let compareHtml = "";
-  if (otherRegionId && S.byRegionWeather && S.byRegionWeather[otherRegionId]) {
-    const otherData = computeCalendar(otherRegionId);
-    const otherTrainable = otherData.reduce((s, d) => s + d.trainableCount, 0);
-    const otherTotal = otherData.reduce((s, d) => s + d.totalHours, 0);
-    const otherPct = otherTotal ? Math.round(otherTrainable / otherTotal * 100) : 0;
-    const diff = pct - otherPct;
-    const otherMeta = REGIONS[otherRegionId] || {};
-    compareHtml = `
-      <div class="cal-stat-box">
-        <span class="cs-label">${otherMeta.icon || ''} ${otherMeta.short || otherRegionId} 대비</span>
-        <span class="cs-val">${diff > 0 ? "+" : ""}${diff}<small>%p</small></span>
-        <span class="cs-label" style="margin-top:2px">${otherMeta.short} ${otherPct}% vs 현재 ${pct}%</span>
-      </div>`;
-  }
+  // 1. 최장 연속 훈련 가능일 (Streak: 피크 등급 3단계 이하 및 가용시간 8시간 이상)
+  let maxStreak = 0, currentStreak = 0;
+  let maxStreakStart = "", maxStreakEnd = "";
+  let currentStreakStart = "";
+
+  calData.forEach((d, idx) => {
+    const isGoodDay = d.peakLv <= 3 && d.trainableCount >= 8;
+    if (isGoodDay) {
+      if (currentStreak === 0) currentStreakStart = d.date;
+      currentStreak++;
+      if (currentStreak > maxStreak) {
+        maxStreak = currentStreak;
+        maxStreakStart = currentStreakStart;
+        maxStreakEnd = d.date;
+      }
+    } else {
+      currentStreak = 0;
+    }
+  });
+
+  const streakRangeStr = maxStreak > 0
+    ? `${maxStreakStart.slice(5).replace('-', '/')} ~ ${maxStreakEnd.slice(5).replace('-', '/')}`
+    : "없음";
+
+  // 2. 10일 순기별 기상 위험 분포 (초순 1~10일, 중순 11~20일, 하순 21~30일)
+  const decades = [
+    { name: "초순(1~10일)", items: calData.slice(0, 10) },
+    { name: "중순(11~20일)", items: calData.slice(10, 20) },
+    { name: "하순(21~30일)", items: calData.slice(20, 30) }
+  ];
+
+  const decadeStats = decades.map(dec => {
+    if (!dec.items.length) return { name: dec.name, pct: 0, highRiskDays: 0 };
+    const totH = dec.items.reduce((s, d) => s + d.totalHours, 0);
+    const trH = dec.items.reduce((s, d) => s + d.trainableCount, 0);
+    const highRiskDays = dec.items.filter(d => d.peakLv >= 4).length;
+    const pct = totH ? Math.round(trH / totH * 100) : 0;
+    return { name: dec.name, pct, highRiskDays };
+  });
+
+  // 가장 여건이 우수한 순기 찾기
+  let bestDecade = decadeStats[0];
+  decadeStats.forEach(d => { if (d.pct > bestDecade.pct) bestDecade = d; });
 
   box.innerHTML = `
     <div class="cal-stat-box">
@@ -1633,16 +1666,27 @@ function renderCalendarStats(calData) {
     <div class="cal-stat-box">
       <span class="cs-label">완전 가용일 / 완전 불가일</span>
       <span class="cs-val">${fullDays}<small>일 가용</small> / ${noDays}<small>일 불가</small></span>
-      <span class="cs-label" style="margin-top:2px">전체 ${total}일 중</span>
+      <span class="cs-label" style="margin-top:2px">전체 ${total}일 중 (피크 3단계 이하)</span>
     </div>
     <div class="cal-stat-box">
+      <span class="cs-label">🔥 최장 연속 훈련 가능일 (Streak)</span>
+      <span class="cs-val">${maxStreak}<small>일 연속 가용</small></span>
+      <span class="cs-label" style="margin-top:2px;color:var(--accent)">구간: ${streakRangeStr}</span>
+    </div>
+    <div class="cal-stat-box">
+      <span class="cs-label">📊 10일 순기별 가용 여건</span>
+      <span class="cs-val">${bestDecade.name.split('(')[0]} <small>최고 ${bestDecade.pct}%</small></span>
+      <span class="cs-label" style="margin-top:2px">
+        ${decadeStats.map(d => `${d.name.slice(0,2)}:${d.pct}%`).join(' · ')}
+      </span>
+    </div>
+    <div class="cal-stat-box" style="grid-column: 1 / -1">
       <span class="cs-label">피크 등급별 일수 분포</span>
       <div class="cal-dist">
         ${lvCounts.map((c, i) => c > 0 ? `<span class="cal-dist-chip" style="background:${lvColors[i]};color:${i===0||i===1||i===3?'#13202E':'#fff'}">
           ${lvNames[i]} ${c}일</span>` : "").join("")}
       </div>
     </div>
-    ${compareHtml}
   `;
 }
 
