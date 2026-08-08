@@ -431,7 +431,7 @@ function recomputeAll() {
   renderDay();
 }
 
-/* ⚡ BUTTON 1 (TOP HEADER): FETCH 30-DAY WEATHER FORECAST DATA VIA GITHUB ACTIONS */
+/* ⚡ TOP HEADER BUTTON: FETCH 30-DAY WEATHER FORECAST DATA VIA GITHUB ACTIONS */
 window.triggerGitHubActionPipeline = async function() {
   const toast = document.getElementById("ghToast");
   const toastTitle = document.getElementById("ghToastTitle");
@@ -483,23 +483,6 @@ window.triggerGitHubActionPipeline = async function() {
     if (toast) toast.hidden = true;
     fetchKmaLiveWeather();
   }, 2200);
-};
-
-/* 🧮 BUTTON 2 (STICKY SIDEBAR): PURE LOCAL CALCULATION (NO GITHUB ACTIONS DISPATCH) */
-window.calculateActivityRisk = function() {
-  const toast = document.getElementById("ghToast");
-  const toastTitle = document.getElementById("ghToastTitle");
-  const toastText = document.getElementById("ghToastText");
-
-  if (toast) toast.hidden = false;
-  if (toastTitle) toastTitle.textContent = "🧮 선택 일자 예보 파싱 및 위험도/식수 산출 완료";
-  if (toastText) toastText.textContent = `[${S.planDate} ${pad(S.from)}시~${pad(S.to)}시] ${S.activeActivityId} 훈련 ${S.pax}명분의 섭씨 보정 위험도 수식이 적용되었습니다.`;
-
-  recomputeAll();
-
-  setTimeout(() => {
-    if (toast) toast.hidden = true;
-  }, 1600);
 };
 
 async function fetchKmaLiveWeather() {
