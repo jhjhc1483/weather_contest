@@ -55,7 +55,7 @@
       <div>
         <p class="eyebrow">ARAS 실시간 공백 보완 · FSB 지휘결정 지원 · 기상 민감 활동 한정</p>
         <h1>부대활동 기상 위험성평가 지원체계</h1>
-        <p class="sub">육군훈련소(논산 연무대) 신병 및 부대 훈련 사전 위험도 자동 예측 · <span id="currentDateStr">2026-08-08</span></p>
+        <p class="sub">육군훈련소(논산 연무대) 신병 및 부대 훈련 사전 위험도 자동 예측 · <span id="currentDateStr">오늘 예보 기준</span></p>
         <div class="badges">
           <span class="badge">육군규정 온도지수·체감온도</span>
           <span class="badge">ARAS 척도 변환 (가능성×중대성)</span>
@@ -126,7 +126,7 @@
           <div class="ctl-sidebar" style="margin-top:14px">
             <div class="f">
               <label for="planDate">훈련 예정 일자 (30일 예보/추정 선택)</label>
-              <input type="date" id="planDate" value="2026-08-08">
+              <input type="date" id="planDate">
               <p class="hint" style="margin-top:4px;font-size:11px;color:var(--accent)" id="dateSourceHint">
                 * D+10일 이내: 기상청 API 실시간 예보 연동중
               </p>
@@ -393,7 +393,7 @@
           </div>
           <div class="modal-meta-box">
             <label>수집 일자 범위</label>
-            <span id="mMetaRange">31개 날짜 (2026-08-08 ~ 2026-09-07)</span>
+            <span id="mMetaRange">31개 날짜 예보/추정 연동완료</span>
           </div>
           <div class="modal-meta-box">
             <label>데이터 파이프라인 정책</label>

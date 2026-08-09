@@ -196,9 +196,17 @@ const REGIONS = {
 /* ═══════════ APP STATE ═══════════ */
 let newsDisplayCount = 3;
 
+function getTodayStr() {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 const S = {
   region: "nonsan",
-  planDate: "2026-08-08",
+  planDate: getTodayStr(),
   activeActivityId: "act_march40",
   task: "heavy", gear: "iba", pax: 600, from: 8, to: 12, mission: "normal",
   meas: HOURS.map(() => null),
@@ -952,7 +960,7 @@ function renderSafetyNews(forceShuffle = false) {
   const container = document.getElementById("newsBox");
   if (!container) return;
 
-  const dateStr = S.planDate || "2026-08-08";
+  const dateStr = S.planDate || getTodayStr();
   const dParts = dateStr.split("-");
   const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
   const env = S.envData || {};
@@ -2087,6 +2095,19 @@ async function fetchKmaLiveWeather() {
         }
       }
       if (json && json.news) S.newsList = json.news;
+      if (json && json.startDate) {
+        const dateInput = document.getElementById("planDate");
+        if (dateInput) {
+          if (json.startDate) dateInput.min = json.startDate;
+          if (json.endDate) dateInput.max = json.endDate;
+          if (!dateInput.value || dateInput.value < json.startDate || dateInput.value > json.endDate) {
+            dateInput.value = json.startDate;
+            S.planDate = json.startDate;
+            const dateStrEl = document.getElementById("currentDateStr");
+            if (dateStrEl) dateStrEl.textContent = S.planDate;
+          }
+        }
+      }
     }
   } catch (e) {
     console.log('Local fallback climo mode');
@@ -2153,6 +2174,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const dateInput = document.getElementById("planDate");
   if (dateInput) {
+    dateInput.value = S.planDate;
+    const dateStrEl = document.getElementById("currentDateStr");
+    if (dateStrEl) dateStrEl.textContent = S.planDate;
+
     dateInput.onchange = e => {
       S.planDate = e.target.value;
       newsDisplayCount = 3;
