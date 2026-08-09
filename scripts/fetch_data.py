@@ -243,27 +243,47 @@ def generate_daily_weather(base_date, day_offset, region_id=DEFAULT_REGION):
     month = target_dt.month
     is_api_forecast = day_offset <= 10 # D+10 is KMA API Forecast, D+11+ is 1-Year Climatology Estimate
 
-    # Authentic 1-Year Climate Base Data (Korea Meteorological Administration Climatology)
-    if month in [12, 1, 2]: # Winter (Coldwave/Frostbite)
-        mid_ta = -2.5 + math.sin(day_offset * 0.5) * 4.0
-        base_ta = [mid_ta - 5.0, mid_ta - 4.5, mid_ta - 3.0, mid_ta - 1.5, mid_ta, mid_ta + 2.0, mid_ta + 3.5, mid_ta + 4.5, mid_ta + 5.0, mid_ta + 4.8, mid_ta + 3.5, mid_ta + 1.0, mid_ta - 1.0, mid_ta - 2.5, mid_ta - 3.8, mid_ta - 4.5, mid_ta - 5.0]
-        base_rh = [65, 62, 58, 52, 45, 40, 38, 35, 33, 34, 38, 42, 48, 55, 60, 63, 65]
-        pm10_base, pm25_base = 55, 32
-    elif month in [3, 4, 5]: # Spring (Wildfire/Dust)
-        mid_ta = 14.0 + math.sin(day_offset * 0.5) * 3.5
-        base_ta = [mid_ta - 4.0, mid_ta - 3.0, mid_ta - 1.0, mid_ta + 1.5, mid_ta + 3.5, mid_ta + 5.5, mid_ta + 7.0, mid_ta + 8.0, mid_ta + 8.5, mid_ta + 8.0, mid_ta + 6.5, mid_ta + 4.0, mid_ta + 2.0, mid_ta, mid_ta - 1.5, mid_ta - 3.0, mid_ta - 4.0]
-        base_rh = [55, 50, 45, 38, 32, 28, 25, 23, 22, 23, 26, 30, 36, 42, 48, 52, 55]
-        pm10_base, pm25_base = 85, 45
-    elif month in [6, 7, 8]: # Summer (Heatwave/Rain)
-        mid_ta = 28.0 + math.sin(day_offset * 0.5) * 3.0
+    # Continuous Day-of-Year Climatology Interpolation (Smoothed to prevent monthly cliff edges)
+    doy = target_dt.timetuple().tm_yday
+    leap = 1 if (target_dt.year % 4 == 0 and (target_dt.year % 100 != 0 or target_dt.year % 400 == 0)) else 0
+    days_in_year = 365 + leap
+
+    # Monthly center days and 12-month baseline mean temperatures for Korea (Nonsan area)
+    # Jan 15(15), Feb 14(45), Mar 15(74), Apr 15(105), May 15(135), Jun 15(166), Jul 15(196), Aug 15(227), Sep 15(258), Oct 15(288), Nov 15(319), Dec 15(349)
+    month_anchors = [15, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349]
+    monthly_ta = [-2.5, 0.5, 7.0, 13.5, 18.5, 23.0, 26.5, 27.5, 22.0, 15.0, 7.5, 0.5]
+
+    # Cyclical linear interpolation across day-of-year
+    if doy <= month_anchors[0]:
+        t_prev, t_next = monthly_ta[-1], monthly_ta[0]
+        d_prev, d_next = month_anchors[-1] - days_in_year, month_anchors[0]
+    elif doy >= month_anchors[-1]:
+        t_prev, t_next = monthly_ta[-1], monthly_ta[0]
+        d_prev, d_next = month_anchors[-1], month_anchors[0] + days_in_year
+    else:
+        for i in range(len(month_anchors) - 1):
+            if month_anchors[i] <= doy <= month_anchors[i+1]:
+                t_prev, t_next = monthly_ta[i], monthly_ta[i+1]
+                d_prev, d_next = month_anchors[i], month_anchors[i+1]
+                break
+
+    ratio = (doy - d_prev) / float(d_next - d_prev)
+    base_mid_ta = t_prev + ratio * (t_next - t_prev)
+    mid_ta = base_mid_ta + math.sin(day_offset * 0.5) * 1.5
+
+    # Diurnal & RH curves dynamically adjusted according to temperature regime
+    if mid_ta >= 20.0: # Summer / High heat regime
         base_ta = [mid_ta - 2.0, mid_ta - 1.5, mid_ta, mid_ta + 1.5, mid_ta + 3.2, mid_ta + 4.8, mid_ta + 6.1, mid_ta + 7.0, mid_ta + 7.8, mid_ta + 8.2, mid_ta + 7.9, mid_ta + 7.0, mid_ta + 5.6, mid_ta + 3.8, mid_ta + 2.0, mid_ta + 0.6, mid_ta - 0.4]
         base_rh = [85, 82, 78, 72, 65, 58, 53, 49, 46, 45, 46, 49, 54, 60, 68, 75, 80]
         pm10_base, pm25_base = 35, 18
-    else: # Autumn (Dry/Wildfire)
-        mid_ta = 16.0 + math.sin(day_offset * 0.5) * 3.0
+    elif mid_ta >= 10.0: # Spring / Autumn transition regime
         base_ta = [mid_ta - 3.5, mid_ta - 2.5, mid_ta - 0.5, mid_ta + 1.5, mid_ta + 3.5, mid_ta + 5.0, mid_ta + 6.2, mid_ta + 7.0, mid_ta + 7.3, mid_ta + 7.0, mid_ta + 5.5, mid_ta + 3.2, mid_ta + 1.0, mid_ta - 0.5, mid_ta - 2.0, mid_ta - 3.0, mid_ta - 3.5]
         base_rh = [68, 64, 59, 53, 46, 41, 38, 36, 35, 36, 39, 44, 50, 56, 61, 65, 68]
-        pm10_base, pm25_base = 40, 20
+        pm10_base, pm25_base = 45, 22
+    else: # Winter regime
+        base_ta = [mid_ta - 5.0, mid_ta - 4.5, mid_ta - 3.0, mid_ta - 1.5, mid_ta, mid_ta + 2.0, mid_ta + 3.5, mid_ta + 4.5, mid_ta + 5.0, mid_ta + 4.8, mid_ta + 3.5, mid_ta + 1.0, mid_ta - 1.0, mid_ta - 2.5, mid_ta - 3.8, mid_ta - 4.5, mid_ta - 5.0]
+        base_rh = [65, 62, 58, 52, 45, 40, 38, 35, 33, 34, 38, 42, 48, 55, 60, 63, 65]
+        pm10_base, pm25_base = 55, 32
 
     # ── Apply region-specific climatology correction (지역 보정) ──
     season = season_of(month)
