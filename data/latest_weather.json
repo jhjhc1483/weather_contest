@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-09T06:54:25Z",
+  "updatedAt": "2026-08-09T09:37:47Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9333,22 +9333,22 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "아산 밤새 평균 134㎜ 폭우…긴급 재난대책회의 개최",
+      "title": "밤사이 전국 '극한호우' 전망… \"하천 범람·산사태·저지대 침수 등 유...",
       "source": "기상/재난 보도",
-      "snippet": "오 시장은 2020년 송악면 역촌리 수해 당시 이장의 기지로 인명사고를 막았던 사례를 언급하며 산사태 위험지역 주민의 선제적 대피와 예찰 활동도 강조했다. 오세현 시장은 \"비가 그친 뒤에는 농로와 농경지 침수 등...",
-      "url": "https://weekly.hankooki.com/news/articleView.html?idxno=7173569",
-      "date": "2026-07-09"
+      "snippet": "한 총리는 \"그동안 내린 비로 지반이 약해져 토사유출, 산사태, 낙석, 축대 붕괴 등이 우려되니 안전 조치를 강화하고 주민대피 체계를 점검하라\"며 \"지난 호우로 침수피해를 입은 지역이 이번 비로 다시 피해를 입지...",
+      "url": "https://www.newscj.com/news/articleView.html?idxno=3417878",
+      "date": "2026-07-18"
     },
     {
       "id": "mil_news_17",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "영주서 70대 하천에 휩쓸려 실종···200㎜ 넘는 폭우에 침수·대피 잇...",
+      "title": "경기북부 새벽부터 강한 비…도로 침수·축대 붕괴 등 피해 속출",
       "source": "기상/재난 보도",
-      "snippet": "전국 곳곳에 많은 비가 내리면서 9일 주민 대피와 고립, 도로 침수 등 피해가 속출했다. 경북 영주에서는 70대 남성이 하천에 휩쓸려 실종돼 경찰과 소방당국이 수색 작업을 벌이고 있다. 집중호우로 KTX와 일반 열차...",
-      "url": "https://www.khan.co.kr/article/202607091726001",
-      "date": "2026-07-09"
+      "snippet": "안전사고 예방을 위해 출입 통제선이 설치됐다. 자일동 축석고개 인근에서는 쓰러진 나무가 도로 1·2차로를 막아 긴급 제거 작업이 진행됐다. 소방당국은 호우특보가 이어지는 동안 산사태 위험 지역, 하천, 계곡, 침수된...",
+      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3639441",
+      "date": "2026-07-18"
     },
     {
       "id": "mil_news_18",
