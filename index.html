@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>부대활동 기상 위험성평가 지원체계 · ARAS 실시간 공백 보완 및 FSB 지휘결정 지원</title>
-  <meta name="description" content="육군 ARAS의 실시간 기상 반영 공백을 보완하고 실행 직전 FSB(Final Safety Briefing) Go/No-Go 판단을 지원하는 체계. 육군규정·기상청·TB MED 507/508 근거. 기상 민감 활동 한정.">
+  <title>부대활동 기상 위험성평가 지원체계 · 30일 훈련 가용성 분석 및 시행 판단 지원</title>
+  <meta name="description" content="기상 데이터를 상시 분석하여 육군 위험성평가 척도로 변환하고, 활동 개시 전 시행 여부 판단을 지원하는 체계. 육군규정·기상청·TB MED 507/508 근거. 기상 민감 활동 한정.">
   
   <!-- Premium Web Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="ARAS-FSB">
+  <meta name="apple-mobile-web-app-title" content="기상 위험성평가">
   <link rel="apple-touch-icon" href="manifest-icon-192.png">
 </head>
 <body>
@@ -28,7 +28,7 @@
   <div class="print-header-block">
     <div class="print-header-title">
       <h1>부대활동 기상 위험성평가 및 30일 훈련 가용성 종합보고서</h1>
-      <p>육군 ARAS 위험성평가 연동 및 FSB(Final Safety Briefing) 지휘판단 근거 · 기상 민감 활동 한정</p>
+      <p>육군 위험성평가 척도 변환 및 지휘판단 근거 · 기상 민감 활동 한정</p>
     </div>
     <table class="print-approval-tbl">
       <tr>
@@ -53,7 +53,7 @@
     <!-- HEADER (TOP BAR WITH DATA FETCH BUTTON & JSON DB VIEW BUTTON) -->
     <header class="glass">
       <div>
-        <p class="eyebrow">ARAS 실시간 공백 보완 · FSB 지휘결정 지원 · 기상 민감 활동 한정</p>
+        <p class="eyebrow">기상 상시 분석 · 위험성평가 척도 변환 · 시행 판단 지원</p>
         <h1>부대활동 기상 위험성평가 지원체계</h1>
         <p class="sub">육군훈련소(논산 연무대) 신병 및 부대 훈련 사전 위험도 자동 예측 · <span id="currentDateStr">오늘 예보 기준</span></p>
         <div class="badges">
@@ -161,11 +161,11 @@
       <!-- RIGHT CONTENT AREA: Results & Detailed Modules -->
       <main class="dashboard-content">
 
-        <!-- SECTION: 📅 30일 훈련 가능 캘린더 (1,440시점 전수 분석) -->
+        <!-- SECTION: 📅 30일 훈련 가능 캘린더 (전 시점 전수 분석) -->
         <section class="panel glass" id="calendarSection">
           <div class="phd" style="display:flex;justify-content:space-between;align-items:center">
             <div>
-              <h2>📅 30일 훈련 가능 캘린더 · 1,440시점 전수 분석</h2>
+              <h2>📅 30일 훈련 가능 캘린더 · <span id="calScopeLabel">전 시점</span> 전수 분석</h2>
               <span class="note">현재 과업·복장·인원 조건으로 30일 × 17시간대 전수 위험도 판정 · 날짜 클릭 시 상세 분석 전환</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -216,19 +216,19 @@
           </div>
         </section>
 
-        <!-- SECTION: FSB 실행 직전 안전브리핑 (Go/No-Go 지원) -->
+        <!-- SECTION: 활동 개시 전 안전브리핑 (시행 여부 판단 지원) -->
         <section class="panel glass">
           <div class="phd">
-            <h2>🎙️ FSB 실행 직전 안전브리핑 · Go/No-Go 판단 지원</h2>
+            <h2>🎙️ 활동 개시 전 안전브리핑 · 시행 여부 판단 지원</h2>
             <div style="display:flex;align-items:center;gap:10px">
-              <span class="note">임무 수행 직전 5단계 절차 · 최종 결정은 지휘관 권한</span>
-              <button type="button" class="btn-sub-sm" onclick="copyFsb()" aria-label="브리핑 전문 복사">
+              <span class="note">활동 직전 5단계 절차 · 최종 결정은 지휘관 권한</span>
+              <button type="button" class="btn-sub-sm" onclick="copyBrief()" aria-label="브리핑 전문 복사">
                 <span class="icon">📋</span> 브리핑 복사
               </button>
             </div>
           </div>
           <div class="pbd" style="padding-top:14px">
-            <div id="fsbPanel"></div>
+            <div id="briefPanel"></div>
           </div>
         </section>
 

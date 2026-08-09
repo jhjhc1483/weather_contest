@@ -1211,7 +1211,7 @@ function renderDay() {
   renderColdPanel(n, isCold);
   const aras = computeAras(D, n, safeWinLabel);
   renderAras(aras, safeWinLabel);
-  renderFsb(buildFsb(D, n, aras, safeWinLabel));
+  renderBrief(buildBrief(D, n, aras, safeWinLabel));
   const slotsEl = document.getElementById("slots");
   if (slotsEl) slotsEl.innerHTML = D.map(d => `<span class="slot ${d.lv<=3?"ok":"no"}">${pad(d.h)} ${d.lv<=3?"가":"불가"}</span>`).join("");
   
@@ -1283,16 +1283,17 @@ function renderColdPanel(n, isCold) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   FSB (Final Safety Briefing) — 실행 직전 5단계 안전브리핑
+   활동 개시 전 안전브리핑 — 5단계
    ──────────────────────────────────────────────────────────────
-   ARAS는 계획단계 평가에 머물러 실행단계 행동 통제로 이어지지 않는 구조적 단절이 있다.
-   FSB는 임무 수행 직전 지휘자가 실시하는 5단계 절차로 이 단절을 메운다.
-   본 시스템은 1단계(위험요소 공유)와 5단계(Go/No-Go)에 필요한 정량 근거를 제공한다.
-   ※ 임무 개시 여부 결정은 전적으로 지휘관 권한이며, 본 시스템은 판단 근거만 제시한다.
+   위험성평가 결과가 문서에 머물지 않고 현장 행동으로 이어지도록, 활동 직전 지휘자가
+   병력과 함께 시행하는 5단계 절차를 산출값으로 자동 생성한다.
+   근거: 「사업장 위험성평가에 관한 지침」(고용노동부 고시)의 작업 전 안전점검회의(TBM)
+        — 위험성평가 결과를 작업 전 회의로 공유·주지하도록 규정한 절차를 부대활동에 적용
+   ※ 활동 개시 여부 결정은 전적으로 지휘관 권한이며, 본 시스템은 판단 근거만 제시한다.
    ══════════════════════════════════════════════════════════════ */
-let _fsbText = "";
+let _briefText = "";
 
-function buildFsb(D, peak, aras, safeWin) {
+function buildBrief(D, peak, aras, safeWin) {
   const s = peak.seasonal || {};
   const cold = peak.cold || {};
   const isCold = s.activeSeason === "WINTER";
@@ -1310,17 +1311,17 @@ function buildFsb(D, peak, aras, safeWin) {
 
   let go, goCls, goWhy;
   if (hardStop.on) {
-    go = "No-Go 권고"; goCls = "p-high";
+    go = "시행 보류 권고"; goCls = "p-high";
     goWhy = `${hardStop.why}. 경계작전 등 필수 활동만 시행하고 야외훈련은 중지 대상입니다.`;
   } else if (aras.score >= 15) {
-    go = "No-Go 권고"; goCls = "p-high";
+    go = "시행 보류 권고"; goCls = "p-high";
     goWhy = `ARAS 위험성 ${aras.score}점(매우 높음) — 즉시 활동 중지 및 감소대책이 필수인 구간입니다.`;
   } else if (aras.score >= 8) {
-    go = "조건부 Go"; goCls = "p-mid";
+    go = "조건부 시행"; goCls = "p-mid";
     goWhy = `ARAS 위험성 ${aras.score}점(높음) — 감소대책 시행으로 8점 미만 저감 후 시행 가능합니다.` +
             (aras.residual !== null && aras.residual < 8 ? ` 아래 대책 적용 시 ${aras.residual}점으로 저감됩니다.` : "");
   } else {
-    go = "Go 가능"; goCls = "p-low";
+    go = "시행 가능"; goCls = "p-low";
     goWhy = `ARAS 위험성 ${aras.score}점(${aras.level.name}) — 계획된 감소대책 유지 하에 시행 가능합니다.`;
   }
 
@@ -1371,15 +1372,15 @@ function buildFsb(D, peak, aras, safeWin) {
     hazards, asks, declares, checks, aras
   };
 
-  _fsbText = fsbToText(fsb);
+  _briefText = briefToText(fsb);
   return fsb;
 }
 
-function fsbToText(f) {
+function briefToText(f) {
   const h = f.header;
   const strip = t => String(t).replace(/<[^>]+>/g, "");
   return [
-    `[FSB 실행 직전 안전브리핑]`,
+    `[활동 개시 전 안전브리핑]`,
     `일자 ${h.date} · 시간대 ${h.window} · ${h.region}`,
     `활동 ${h.act} / 과업 ${h.task} / 복장 ${h.gear} / 인원 ${h.pax}명`,
     ``,
@@ -1399,22 +1400,22 @@ function fsbToText(f) {
     ``,
     `5단계. 지휘관 최종승인`,
     `  판단 근거: ${f.go} — ${strip(f.goWhy)}`,
-    `  ※ 임무 개시 여부는 지휘관이 결정합니다.`,
+    `  ※ 활동 개시 여부는 지휘관이 결정합니다.`,
     ``,
     `[감소대책 — 우선순위순]`,
     ...f.aras.measures.map(m => `  ${m.pri}.${m.priName} (${m.m4}) ${strip(m.text)}`)
   ].join("\n");
 }
 
-window.copyFsb = function () {
-  if (!_fsbText) return;
+window.copyBrief = function () {
+  if (!_briefText) return;
   const done = () => {
-    const b = document.getElementById("fsbCopied");
+    const b = document.getElementById("briefCopied");
     if (b) { b.hidden = false; setTimeout(() => { b.hidden = true; }, 2200); }
   };
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(_fsbText).then(done).catch(() => fallbackCopy(_fsbText, done));
-  } else fallbackCopy(_fsbText, done);
+    navigator.clipboard.writeText(_briefText).then(done).catch(() => fallbackCopy(_briefText, done));
+  } else fallbackCopy(_briefText, done);
 };
 
 function fallbackCopy(text, cb) {
@@ -1425,18 +1426,18 @@ function fallbackCopy(text, cb) {
   document.body.removeChild(ta);
 }
 
-function renderFsb(f) {
-  const box = document.getElementById("fsbPanel");
+function renderBrief(f) {
+  const box = document.getElementById("briefPanel");
   if (!box) return;
   const h = f.header;
   const step = (n, title, body) => `
-    <div class="fsb-step">
-      <div class="fsb-no">${n}</div>
-      <div class="fsb-body"><h4>${title}</h4>${body}</div>
+    <div class="brief-step">
+      <div class="brief-no">${n}</div>
+      <div class="brief-body"><h4>${title}</h4>${body}</div>
     </div>`;
 
   box.innerHTML = `
-    <div class="fsb-head">
+    <div class="brief-head">
       <div><label>일자 · 시간대</label><b>${h.date} · ${h.window}</b></div>
       <div><label>지역</label><b>${h.region}</b></div>
       <div><label>활동 · 과업</label><b>${h.act} / ${h.task}</b></div>
@@ -1444,28 +1445,28 @@ function renderFsb(f) {
     </div>
 
     ${step(1, "핵심 위험요소 공유 <small>(계획단계 평가 결과를 행동 기준으로 전환)</small>",
-      `<ul class="fsb-ul">${f.hazards.map(x => `<li>${x}</li>`).join("")}</ul>
-       <p class="fsb-kv">ARAS 위험성 <b>${f.aras.likelihood} × ${f.aras.severity} = ${f.aras.score}점 (${f.aras.level.name})</b>
+      `<ul class="brief-ul">${f.hazards.map(x => `<li>${x}</li>`).join("")}</ul>
+       <p class="brief-kv">ARAS 위험성 <b>${f.aras.likelihood} × ${f.aras.severity} = ${f.aras.score}점 (${f.aras.level.name})</b>
         · 안전 훈련 가능 시간창 <b>${h.safeWin}</b></p>`)}
 
     ${step(2, "병력 참여 위험확인 <small>(거수 확인 — 위험 인식의 행동 전환 준비)</small>",
-      `<ul class="fsb-ul ask">${f.asks.map(x => `<li>${x}</li>`).join("")}</ul>`)}
+      `<ul class="brief-ul ask">${f.asks.map(x => `<li>${x}</li>`).join("")}</ul>`)}
 
     ${step(3, "행동 선언 <small>(복창 — 위험 인식을 개인별 행동 기준으로 고정)</small>",
-      `<ul class="fsb-ul say">${f.declares.map(x => `<li>“${x}”</li>`).join("")}</ul>`)}
+      `<ul class="brief-ul say">${f.declares.map(x => `<li>“${x}”</li>`).join("")}</ul>`)}
 
     ${step(4, "장비·무기·통신체계 점검 <small>(돌발 사고 가능성 사전 차단)</small>",
-      `<ul class="fsb-ul chk">${f.checks.map(x => `<li>${x}</li>`).join("")}</ul>`)}
+      `<ul class="brief-ul chk">${f.checks.map(x => `<li>${x}</li>`).join("")}</ul>`)}
 
-    ${step(5, "지휘관 최종승인 <small>(Go / No-Go)</small>",
-      `<div class="fsb-go ${f.goCls}">
+    ${step(5, "지휘관 최종승인 <small>(시행 / 조건부 시행 / 보류)</small>",
+      `<div class="brief-go ${f.goCls}">
          <b>${f.go}</b>
          <p>${f.goWhy}</p>
        </div>
-       ${f.hardStop.on ? `<p class="fsb-hard">⛔ 육군규정상 <b>중지</b> 기준에 해당합니다. 본 항목은 시스템 판단이 아니라 규정에 의한 강제 조항으로, 하향 조정할 수 없습니다.</p>` : ""}
-       <p class="fsb-auth">※ 임무 개시 여부는 <b>전적으로 지휘관의 권한</b>입니다. 본 체계는 판단에 필요한 정량 근거를 제공하는 지원 도구입니다.</p>`)}
+       ${f.hardStop.on ? `<p class="brief-hard">⛔ 육군규정상 <b>중지</b> 기준에 해당합니다. 본 항목은 시스템 판단이 아니라 규정에 의한 강제 조항으로, 하향 조정할 수 없습니다.</p>` : ""}
+       <p class="brief-auth">※ 활동 개시 여부는 <b>전적으로 지휘관의 권한</b>입니다. 본 체계는 판단에 필요한 정량 근거를 제공하는 지원 도구입니다.</p>`)}
 
-    <span class="fsb-copied" id="fsbCopied" hidden>✔ 브리핑 전문이 복사되었습니다</span>
+    <span class="brief-copied" id="briefCopied" hidden>✔ 브리핑 전문이 복사되었습니다</span>
   `;
 }
 
@@ -1531,7 +1532,7 @@ function renderAras(a, safeWinLabel) {
 }
 
 /* ═══════════ 30일 훈련 가능 캘린더 엔진 ═══════════
-   기존 파이프라인이 산출한 1,440개 시점(30일 × 24시간 × 2지역)을 전수 판정하여
+   파이프라인이 산출한 전 시점(31일 × 시간대 × 지역)을 전수 판정하여
    과업·복장·인원 조건별 "어느 날 몇 시가 훈련 가능한가"를 달력 형태로 시각화한다.
    핵심: computeDay() 로직을 재사용하므로 모든 보정(착의·대사율·MET·clo·동상)이 동일하게 적용된다. */
 
@@ -1620,6 +1621,14 @@ function renderCalendarStats(calData) {
 
   const total = calData.length;
   if (!total) { box.innerHTML = ""; return; }
+
+  // 분석 규모를 실제 산출값으로 표기 (일수 × 시간대 × 지역)
+  const scopeEl = document.getElementById("calScopeLabel");
+  if (scopeEl) {
+    const regionCount = S.byRegionWeather ? Object.keys(S.byRegionWeather).length : 1;
+    const slots = calData.reduce((s, d) => s + d.totalHours, 0) * Math.max(1, regionCount);
+    scopeEl.textContent = `${slots.toLocaleString()}시점`;
+  }
 
   const totalHoursAll = calData.reduce((s, d) => s + d.totalHours, 0);
   const trainableAll = calData.reduce((s, d) => s + d.trainableCount, 0);
