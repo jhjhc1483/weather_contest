@@ -993,14 +993,14 @@ function renderSafetyNews(forceShuffle = false) {
     const isMilitary = item.isMilitary || anyKw(combinedStr, ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군"]);
     const isAccident = item.isAccident || anyKw(combinedStr, accidentKws);
 
-    // 1. ACCIDENT PRIORITY FIRST: Massive score boost for recent weather accident/incident news (+400 points)
+    // 1. ACCIDENT PRIORITY FIRST: Massive score boost for weather accident/incident cases (+400 points)
     if (isAccident) {
       score += 400;
     }
 
-    // 2. MILITARY PRIORITY: Additional score boost for military related incident news (+300 points)
+    // 2. MILITARY RELEVANCE BONUS: Additional score boost for military related cases (+100 points)
     if (isMilitary) {
-      score += 300;
+      score += 100;
     }
 
     // 3. STRICT HARD EXCLUSION: Physical impossibility rules
@@ -1011,20 +1011,20 @@ function renderSafetyNews(forceShuffle = false) {
       return { item, finalScore: -99999 }; // Never show coldwave in summer
     }
 
-    // 4. DATE WEATHER HAZARD MATCHING WEIGHTS (+150 ~ +300 points)
+    // 4. DATE WEATHER HAZARD MATCHING WEIGHTS (+350 ~ +500 points)
     if ((month === 12 || month === 1 || month === 2) && (cat === "coldwave" || cat === "strongwind")) {
-      score += 300;
+      score += 350;
     } else if ((month >= 6 && month <= 8) && (cat === "heatwave" || cat === "foodpoison" || cat === "lightning" || cat === "typhoon_heavyrain")) {
-      score += 300;
+      score += 350;
     } else if ((month >= 3 && month <= 5 || month >= 9 && month <= 11) && (cat === "wildfire_dry" || cat === "dust_ozon")) {
-      score += 300;
+      score += 350;
     }
 
-    if (env.ta >= 31.0 && cat === "heatwave") score += 150;
-    if (env.ta <= 5.0 && cat === "coldwave") score += 150;
-    if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 120;
-    if (env.pm10 >= 80 && cat === "dust_ozon") score += 100;
-    if (env.ws >= 4.0 && cat === "strongwind") score += 80;
+    if (env.ta >= 31.0 && cat === "heatwave") score += 200;
+    if (env.ta <= 5.0 && cat === "coldwave") score += 200;
+    if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 180;
+    if (env.pm10 >= 80 && cat === "dust_ozon") score += 150;
+    if (env.ws >= 4.0 && cat === "strongwind") score += 120;
 
     // 5. Per-Date Pseudo-random offset for unique date variations
     const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 40;
@@ -1033,7 +1033,7 @@ function renderSafetyNews(forceShuffle = false) {
     return { item, finalScore, isMilitary, isAccident };
   });
 
-  // Filter out hard excluded items (-99999) and sort descending (Accident & Military First + Date Weather Match)
+  // Filter out hard excluded items (-99999) and sort descending (Weather Match & Accident Prevention First)
   const validScored = scoredNews.filter(s => s.finalScore > -9000);
   validScored.sort((a, b) => b.finalScore - a.finalScore);
 
@@ -1059,7 +1059,8 @@ function renderSafetyNews(forceShuffle = false) {
     const isMil = n.isMilitary || anyKw(n.title + n.snippet, ["군", "군대", "장병", "부대", "훈련", "국방"]);
     const isAcc = n.isAccident || anyKw(n.title + n.snippet, accidentKws);
     const pubDateStr = n.date ? `보도일자: ${n.date}` : "최신 보도";
-    const borderStyle = isAcc && isMil ? 'border-left:3.5px solid var(--accent);background:var(--glass-2)' : isAcc ? 'border-left:3.5px solid #ff4d4f;background:var(--glass-2)' : '';
+    const catLabel = catNames[n.category] || "⚠️ 기상사고";
+    const borderStyle = isAcc ? 'border-left:4px solid #ff4d4f;background:var(--glass-2)' : 'border-left:4px solid var(--accent);background:var(--glass-2)';
     
     return `
       <div class="news-card" style="${borderStyle}">
@@ -1067,9 +1068,16 @@ function renderSafetyNews(forceShuffle = false) {
           <a href="${n.url}" target="_blank" rel="noopener" class="news-title">
             ${isMil ? '🪖' : '🚨'} ${n.title}
           </a>
-          <span class="news-tag" style="${isMil ? 'background:var(--accent);color:#fff' : 'background:#ff4d4f;color:#fff'}">${n.source}</span>
+          <div style="display:flex;gap:4px;align-items:center;flex-shrink:0;">
+            <span class="news-tag" style="background:rgba(255,255,255,0.15);color:var(--text-light);font-size:11px">${catLabel}</span>
+            <span class="news-tag" style="${isMil ? 'background:var(--accent);color:#fff' : 'background:#ff4d4f;color:#fff'}">${n.source}</span>
+          </div>
         </div>
         <p class="news-snippet">${n.snippet}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11px;color:var(--dim)">
+          <span>📅 ${pubDateStr}</span>
+          <span>💡 부대 운영 사고 예방 참고 사례</span>
+        </div>
       </div>
     `;
   }).join("");
