@@ -590,100 +590,57 @@ function computeDay() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ARAS 위험성평가 척도 변환
+   판정 2단 구조
    ──────────────────────────────────────────────────────────────
-   육군 ARAS(Army Risk Assessment Support System)가 실제로 사용하는 척도로
-   본 시스템의 기상 위험도 산출 결과를 변환한다.
+   [1차] 규정 판정 (절대) — 육군 교육훈련 규정의 온도지수·체감온도·미세먼지 행동기준
+         어떤 경우에도 하향 조정하지 않는다.
 
-     위험성(Risk) = 사고발생 가능성(1~5점) × 사고결과의 중대성(1~4점)
+   [2차] 기상 요인 상세 평가 (보강) — 규정이 다루지 않는 축을 공개 근거로 보완
+         · 과업 대사율      TB MED 507 / TB MED 508 (과업별 MET)
+         · 복장 단열·보정   DAFI 48-151, TB MED 507 / 508 (clo)
+         · 급수량·작업휴식  TB MED 507
+         · 동상 노출시간    TB MED 508
+         · 체감온도 산출식  기상청 (여름철 체감온도 3.0 / 겨울철 풍냉식)
+         · 대기질 임계      환경부 대기오염 경보 발령기준
+         · 감소대책 체계    「사업장 위험성평가에 관한 지침」(고용노동부 고시)
 
-   ※ 본 시스템은 ARAS와 직접 연동되지 않는다. 폐쇄망 체계이므로 연동이 아니라
-     '입력 지원'이며, 산출된 점수·감소대책을 지휘자가 ARAS에 수기 이관한다.
-   ※ 적용 범위: ARAS 141개 부대활동 유형 중 '기상 민감 활동'에 한정한다.
-   근거: 육군 ARAS 위험성평가 수식 및 기준표 / 고용노동부 위험성평가 해설 지침서
+   ※ 2차 평가가 1차보다 엄격할 경우 경고로 제시하며, 1차 규정의 중지 기준을
+     완화하는 방향으로는 어떤 산출도 적용하지 않는다.
    ══════════════════════════════════════════════════════════════ */
-const ARAS_LEVELS = [
-  { min: 15, max: 20, name: "매우 높음", cls: "p-high",  act: "즉시 활동 중지 및 감소대책 필수" },
-  { min: 8,  max: 14, name: "높음",     cls: "p-high",  act: "감소대책 필수 시행 (8점 미만으로 저감 필요)" },
-  { min: 4,  max: 7,  name: "보통",     cls: "p-mid",   act: "감소대책 권장" },
-  { min: 1,  max: 3,  name: "낮음",     cls: "p-low",   act: "현 수준 유지" }
-];
 
-const arasLevelOf = score => ARAS_LEVELS.find(l => score >= l.min && score <= l.max) || ARAS_LEVELS[3];
+/* 규정 판정 결과를 표준 형태로 정리 (1차) */
+function regulationVerdict(peak) {
+  const s = peak.seasonal || {};
+  const isCold = s.activeSeason === "WINTER";
+  const isDust = s.activeSeason === "DUST";
+  const idx = isCold ? s.chillTemp : peak.wRaw;   // 보정 전 원 지수 = 규정 판정 대상
+  return {
+    scope: isCold ? "체감온도" : isDust ? "미세먼지" : "온도지수",
+    value: isDust ? `PM10 ${S.envData.pm10} · PM2.5 ${S.envData.pm25} ㎍/㎥`
+                  : `${(typeof idx === "number" ? idx.toFixed(1) : idx)}${isCold ? "℃" : ""}`,
+    status: s.activeStatus || "정상",
+    action: s.activeAction || "정상 야외훈련 실시",
+    lv: s.activeLv || 0,
+    isStop: (!isCold && peak.wRaw >= 32.0) || (isCold && s.chillTemp <= -24.1),
+    src: "육군 교육훈련 규정"
+  };
+}
 
-/* 임무 중요도 — 중대성(임무수행능력·준비태세 영향) 및 회피 가능성에 반영
-   defer=false 인 임무는 연기·대체가 불가하므로 안전 시간창이 있어도 회피 감점을 주지 않는다 */
+/* 임무 중요도 — 연기·대체 가능 여부에 따라 감소대책 및 시행 판단 문구를 달리한다.
+   defer=false 인 임무는 연기가 불가하므로 '시간대 이동' 대책을 제시하지 않는다. */
 const MISSIONS = [
-  { id: "normal",    name: "통상 훈련", sev: 0, defer: true,
-    desc: "연기·시간대 조정이 가능한 일반 훈련 · 임무 차질 영향 낮음" },
-  { id: "key",       name: "핵심 훈련", sev: 1, defer: true,
+  { id: "normal",    name: "통상 훈련", defer: true,
+    desc: "연기·시간대 조정이 가능한 일반 훈련" },
+  { id: "key",       name: "핵심 훈련", defer: true,
     desc: "전투력 측정·검열 등 일정 조정 부담이 큰 훈련" },
-  { id: "essential", name: "필수 임무", sev: 2, defer: false,
-    desc: "경계작전 등 중단 불가 임무 · 연기 불가로 회피 수단 제한" }
+  { id: "essential", name: "필수 임무", defer: false,
+    desc: "경계작전 등 중단 불가 임무 · 연기 불가" }
 ];
-
-/* ── 사고발생 가능성 (1~5) ──
-   고용노동부 위험성평가 지침 해설의 3요소로 분해한다.
-   ① 유해·위험한 사건의 발생(기상 위험등급) ② 노출(시간대 길이) ③ 회피·제한 가능성 */
-function arasLikelihood(peak, hours, hasSafeWindow, missionId) {
-  const mission = MISSIONS.find(m => m.id === missionId) || MISSIONS[0];
-  const parts = [];
-  const lv = Math.min(5, Math.max(0, peak.lv));
-  let p = [1, 1, 2, 3, 4, 5][lv];
-  parts.push({ label: "사건 발생", delta: p, why: `기상 위험등급 ${lv}단계 기준값`, base: true });
-
-  if (hours >= 8) { p += 2; parts.push({ label: "노출", delta: +2, why: `연속 노출 ${hours}시간 (8시간 이상)` }); }
-  else if (hours >= 4) { p += 1; parts.push({ label: "노출", delta: +1, why: `연속 노출 ${hours}시간 (4시간 이상)` }); }
-  else parts.push({ label: "노출", delta: 0, why: `연속 노출 ${hours}시간 (4시간 미만)` });
-
-  if (!mission.defer) {
-    parts.push({ label: "회피·제한", delta: 0, why: `${mission.name} — 연기 불가로 회피 수단 제한` });
-  } else if (hasSafeWindow && p > 1) {
-    p -= 1; parts.push({ label: "회피·제한", delta: -1, why: "안전 시간창 존재 — 시간대 이동으로 회피 가능" });
-  } else {
-    parts.push({ label: "회피·제한", delta: 0, why: hasSafeWindow ? "이미 최저 수준" : "안전 시간창 없음 — 회피 수단 제한" });
-  }
-
-  const score = Math.min(5, Math.max(1, p));
-  if (score !== p) parts.push({ label: "범위 보정", delta: score - p, why: "1~5점 범위로 조정" });
-  return { score, parts };
-}
-
-/* ── 사고결과의 중대성 (1~4) ──
-   ARAS 정의: 부대의 전투력·임무수행능력·준비태세에 미치는 영향
-   민간 기준의 '치료기간·사망'이 아니라 부대 임무 관점이라는 점이 핵심 차이다.
-   혹서기에는 고강도 과업이, 혹한기에는 정적 과업이 중증 손상으로 이어진다. */
-function arasSeverity(peak, taskId, pax, missionId) {
-  const isCold = peak.seasonal && peak.seasonal.activeSeason === "WINTER";
-  const mission = MISSIONS.find(m => m.id === missionId) || MISSIONS[0];
-  const parts = [];
-  let s = 2;
-  parts.push({ label: "기본", delta: 2, why: "개인 후송 · 임무 지속 가능 수준", base: true });
-
-  if (isCold && taskId === "static") {
-    s += 1; parts.push({ label: "과업 특성", delta: +1, why: "한랭 정적 과업 — 저체온·동상 중증화" });
-  } else if (!isCold && (taskId === "heavy" || taskId === "vhard")) {
-    s += 1; parts.push({ label: "과업 특성", delta: +1, why: "혹서기 고강도 과업 — 열사병 중증화" });
-  } else {
-    parts.push({ label: "과업 특성", delta: 0, why: "중증화 요인 없음" });
-  }
-
-  if (pax >= 300) { s += 1; parts.push({ label: "피해 범위", delta: +1, why: `${pax}명 — 다수 환자 동시 발생 가능` }); }
-  else parts.push({ label: "피해 범위", delta: 0, why: `${pax}명 — 소수 인원` });
-
-  if (mission.sev > 0) { s += mission.sev; parts.push({ label: "임무 영향", delta: +mission.sev, why: `${mission.name} — 임무수행능력·준비태세 영향` }); }
-  else parts.push({ label: "임무 영향", delta: 0, why: `${mission.name} — 연기·대체로 임무 차질 최소화 가능` });
-
-  if (peak.lv >= 5) { s += 1; parts.push({ label: "최고 등급", delta: +1, why: "위험등급 5단계 — 치명적 결과 가능" }); }
-
-  const score = Math.min(4, Math.max(1, s));
-  if (score !== s) parts.push({ label: "범위 보정", delta: score - s, why: "1~4점 범위로 조정" });
-  return { score, parts };
-}
 
 /* 감소대책 — ① 제거 → ② 대체 → ③ 공학적 → ④ 관리적 → ⑤ 개인보호구 우선순위
-   각 대책은 4M(Man·Machine·Media·Management)으로 분류한다 */
-function arasMeasures(peak, safeWindowLabel) {
+   각 대책은 4M(Man·Machine·Media·Management)으로 분류한다
+   근거: 「사업장 위험성평가에 관한 지침」(고용노동부 고시) 위험성 감소대책 수립 원칙 */
+function buildMeasures(peak, safeWindowLabel) {
   const s = peak.seasonal || {};
   const isCold = s.activeSeason === "WINTER";
   const isDust = s.activeSeason === "DUST";
@@ -696,8 +653,11 @@ function arasMeasures(peak, safeWindowLabel) {
       ? "야외훈련 중지 및 실내 교육으로 전면 전환"
       : "해당 시간대 야외훈련 중지 · 실내/주둔지 훈련으로 대체");
   }
-  if (safeWindowLabel && safeWindowLabel !== "없음" && peak.lv >= 3) {
+  const mission = MISSIONS.find(m => m.id === S.mission) || MISSIONS[0];
+  if (mission.defer && safeWindowLabel && safeWindowLabel !== "없음" && peak.lv >= 3) {
     add(2, "대체", "Media", `훈련 시간대를 안전 시간창(${safeWindowLabel})으로 이동`);
+  } else if (!mission.defer && peak.lv >= 3) {
+    add(2, "대체", "Management", `${mission.name} — 연기 불가. 교대 주기 단축 및 예비 인원 확보로 개인 노출시간 단축`);
   }
   if (peak.lv >= 3) {
     add(2, "대체", "Management", isCold
@@ -724,33 +684,57 @@ function arasMeasures(peak, safeWindowLabel) {
   return out.sort((a, b) => a.pri - b.pri);
 }
 
-/* ARAS 종합 산출 */
-function computeAras(D, peak, safeWindowLabel) {
-  const hours = Math.max(1, S.to - S.from);
-  const hasSafe = !!(safeWindowLabel && safeWindowLabel !== "없음");
-  const L = arasLikelihood(peak, hours, hasSafe, S.mission);
-  const V = arasSeverity(peak, S.task, S.pax, S.mission);
-  const likelihood = L.score, severity = V.score;
-  const score = likelihood * severity;
+/* ══════════ 종합 판정 (1차 규정 + 2차 상세) ══════════ */
+function computeVerdict(D, peak, safeWindowLabel) {
+  const reg = regulationVerdict(peak);
+  const s = peak.seasonal || {};
+  const isCold = s.activeSeason === "WINTER";
+  const g = GEARS.find(x => x.id === S.gear) || GEARS[0];
+  const taskObj = TASKS.find(x => x.id === S.task) || TASKS[1];
 
-  // 감소대책 적용 후 잔여 위험성: 안전 시간창으로 이동했을 때의 등급으로 재산출
-  let residual = null;
-  if (score >= 8) {
-    const safeLv = hasSafe
-      ? Math.min(...D.filter(d => d.lv <= 3).map(d => d.lv))
-      : 0;
-    const rl = arasLikelihood({ lv: safeLv, seasonal: peak.seasonal }, Math.min(hours, 4), true, S.mission);
-    residual = rl.score * severity;
+  // 2차 상세: 과업·복장 보정을 반영한 유효 지수와 그에 대응하는 규정 등급
+  const rawIdx = peak.wRaw;
+  const effIdx = peak.wC;
+  const adj = +(effIdx - rawIdx).toFixed(1);
+
+  // 보정 후 지수가 규정의 어느 구간에 해당하는지 (경고 판단용)
+  const bandOf = v => v >= 32.0 ? 4 : v >= 31.0 ? 3 : v >= 29.5 ? 2 : v >= 26.5 ? 1 : 0;
+  const bandName = ["해당없음", "주의", "부분제한", "제한", "중지"];
+  const rawBand = bandOf(rawIdx), effBand = bandOf(effIdx);
+
+  // 규정 판정보다 상세 평가가 엄격해지는 경우를 경고로 잡는다.
+  //  · 혹서기 : 복장 보정 후 유효 온도지수가 상위 구간으로 올라간 경우
+  //  · 혹한기 : 요구 단열값 미달 또는 동상 위험 '높음' 이상인 경우
+  //             (규정의 체감온도 단일 축은 과업 대사율·복장 단열을 보지 않으므로 누락됨)
+  const c = peak.cold || {};
+  const coldEscalated = isCold && (
+    (c.deficit != null && c.deficit >= 0.3) ||
+    (c.frostbiteMin != null && c.frostbiteMin <= 30) ||
+    !!c.isStatic
+  );
+  const escalated = isCold ? coldEscalated : (effBand > rawBand);
+  let escalReason = "";
+  if (isCold && coldEscalated) {
+    const rs = [];
+    if (c.deficit >= 0.3) rs.push(`방한 단열 ${c.deficit.toFixed(2)} clo 부족`);
+    if (c.frostbiteMin != null && c.frostbiteMin <= 30) rs.push(`동상 발생 ${c.frostbiteMin}분`);
+    if (c.isStatic) rs.push("정적 과업 — 대사열 생산 없음");
+    escalReason = rs.join(" · ");
   }
 
   return {
-    likelihood, severity, score,
-    likelihoodParts: L.parts, severityParts: V.parts,
-    level: arasLevelOf(score),
-    residual,
-    residualLevel: residual !== null ? arasLevelOf(residual) : null,
-    needsMeasure: score >= 8,
-    measures: arasMeasures(peak, safeWindowLabel)
+    reg,
+    detail: {
+      task: taskObj.name, gear: g.name,
+      rawIdx, effIdx, adj,
+      rawBandName: bandName[rawBand], effBandName: bandName[effBand],
+      escalated, escalReason,
+      wr: peak.wr,
+      qtL: +(peak.qt * QT).toFixed(2),
+      cold: peak.cold || null,
+      isCold
+    },
+    measures: buildMeasures(peak, safeWindowLabel)
   };
 }
 
@@ -1217,9 +1201,9 @@ function renderDay() {
   if (swEl) swEl.textContent = safeWinLabel;
 
   renderColdPanel(n, isCold);
-  const aras = computeAras(D, n, safeWinLabel);
-  renderAras(aras, safeWinLabel);
-  renderBrief(buildBrief(D, n, aras, safeWinLabel));
+  const verdict = computeVerdict(D, n, safeWinLabel);
+  renderVerdictPanel(verdict);
+  renderBrief(buildBrief(D, n, verdict, safeWinLabel));
   const slotsEl = document.getElementById("slots");
   if (slotsEl) slotsEl.innerHTML = D.map(d => `<span class="slot ${d.lv<=3?"ok":"no"}">${pad(d.h)} ${d.lv<=3?"가":"불가"}</span>`).join("");
   
@@ -1301,7 +1285,7 @@ function renderColdPanel(n, isCold) {
    ══════════════════════════════════════════════════════════════ */
 let _briefText = "";
 
-function buildBrief(D, peak, aras, safeWin) {
+function buildBrief(D, peak, verdict, safeWin) {
   const s = peak.seasonal || {};
   const cold = peak.cold || {};
   const isCold = s.activeSeason === "WINTER";
@@ -1321,16 +1305,18 @@ function buildBrief(D, peak, aras, safeWin) {
   if (hardStop.on) {
     go = "시행 보류 권고"; goCls = "p-high";
     goWhy = `${hardStop.why}. 경계작전 등 필수 활동만 시행하고 야외훈련은 중지 대상입니다.`;
-  } else if (aras.score >= 15) {
+  } else if (verdict.reg.lv >= 4) {
     go = "시행 보류 권고"; goCls = "p-high";
-    goWhy = `ARAS 위험성 ${aras.score}점(매우 높음) — 즉시 활동 중지 및 감소대책이 필수인 구간입니다.`;
-  } else if (aras.score >= 8) {
+    goWhy = `규정 판정 '${verdict.reg.status}' — ${verdict.reg.action}`;
+  } else if (verdict.reg.lv >= 2 || verdict.detail.escalated) {
     go = "조건부 시행"; goCls = "p-mid";
-    goWhy = `ARAS 위험성 ${aras.score}점(높음) — 감소대책 시행으로 8점 미만 저감 후 시행 가능합니다.` +
-            (aras.residual !== null && aras.residual < 8 ? ` 아래 대책 적용 시 ${aras.residual}점으로 저감됩니다.` : "");
+    goWhy = `규정 판정 '${verdict.reg.status}'. ` +
+            (verdict.detail.escalated
+              ? `다만 과업·복장 보정 시 '${verdict.detail.effBandName}' 수준에 해당하므로, 아래 감소대책 시행을 전제로 판단하십시오.`
+              : `아래 감소대책 시행을 전제로 시행 가능합니다.`);
   } else {
     go = "시행 가능"; goCls = "p-low";
-    goWhy = `ARAS 위험성 ${aras.score}점(${aras.level.name}) — 계획된 감소대책 유지 하에 시행 가능합니다.`;
+    goWhy = `규정 판정 '${verdict.reg.status}' — 계획된 감소대책 유지 하에 시행 가능합니다.`;
   }
 
   const hazards = [];
@@ -1377,7 +1363,7 @@ function buildBrief(D, peak, aras, safeWin) {
       pax: S.pax,
       safeWin
     },
-    hazards, asks, declares, checks, aras
+    hazards, asks, declares, checks, verdict
   };
 
   _briefText = briefToText(fsb);
@@ -1394,7 +1380,7 @@ function briefToText(f) {
     ``,
     `1단계. 핵심 위험요소 공유`,
     ...f.hazards.map((x, i) => `  ${i + 1}) ${strip(x)}`),
-    `  ARAS 위험성 ${f.aras.likelihood} × ${f.aras.severity} = ${f.aras.score}점 (${f.aras.level.name})`,
+    `  규정 판정 : ${f.verdict.reg.scope} ${f.verdict.reg.value} → ${f.verdict.reg.status}`,
     `  안전 훈련 가능 시간창: ${h.safeWin}`,
     ``,
     `2단계. 병력 참여 위험확인 (거수 확인)`,
@@ -1411,7 +1397,7 @@ function briefToText(f) {
     `  ※ 활동 개시 여부는 지휘관이 결정합니다.`,
     ``,
     `[감소대책 — 우선순위순]`,
-    ...f.aras.measures.map(m => `  ${m.pri}.${m.priName} (${m.m4}) ${strip(m.text)}`)
+    ...f.verdict.measures.map(m => `  ${m.pri}.${m.priName} (${m.m4}) ${strip(m.text)}`)
   ].join("\n");
 }
 
@@ -1454,7 +1440,7 @@ function renderBrief(f) {
 
     ${step(1, "핵심 위험요소 공유 <small>(계획단계 평가 결과를 행동 기준으로 전환)</small>",
       `<ul class="brief-ul">${f.hazards.map(x => `<li>${x}</li>`).join("")}</ul>
-       <p class="brief-kv">ARAS 위험성 <b>${f.aras.likelihood} × ${f.aras.severity} = ${f.aras.score}점 (${f.aras.level.name})</b>
+       <p class="brief-kv">규정 판정 <b>${f.verdict.reg.scope} ${f.verdict.reg.value} → ${f.verdict.reg.status}</b>
         · 안전 훈련 가능 시간창 <b>${h.safeWin}</b></p>`)}
 
     ${step(2, "병력 참여 위험확인 <small>(거수 확인 — 위험 인식의 행동 전환 준비)</small>",
@@ -1478,52 +1464,56 @@ function renderBrief(f) {
   `;
 }
 
-/* ARAS 위험성평가 척도 변환 패널 */
-function renderAras(a, safeWinLabel) {
-  const box = document.getElementById("arasPanel");
+/* 판정 패널 — 1차 규정(절대) / 2차 기상 요인 상세(보강) */
+function renderVerdictPanel(v) {
+  const box = document.getElementById("verdictPanel");
   if (!box) return;
   const M4 = { Man: "인적", Machine: "기계적", Media: "환경적", Management: "관리적" };
+  const r = v.reg, d = v.detail, c = d.cold || {};
 
   box.innerHTML = `
-    <div class="aras-score">
-      <div class="aras-eq">
-        <span class="aras-f"><em>사고발생 가능성</em><b>${a.likelihood}</b><small>1~5점</small></span>
-        <span class="aras-x">×</span>
-        <span class="aras-f"><em>사고결과 중대성</em><b>${a.severity}</b><small>1~4점</small></span>
-        <span class="aras-x">=</span>
-        <span class="aras-total ${a.level.cls}"><em>위험성</em><b>${a.score}</b><small>${a.level.name}</small></span>
+    <div class="vd-two">
+      <div class="vd-col vd-reg">
+        <div class="vd-tag">1차 · 규정 판정 <b>(절대 기준)</b></div>
+        <div class="vd-idx">${r.scope} <b>${r.value}</b></div>
+        <div class="vd-status ${r.isStop ? "stop" : ""}">${r.status}</div>
+        <p class="vd-act">${r.action}</p>
+        <p class="vd-src">근거 : ${r.src}</p>
+        ${r.isStop ? `<p class="vd-stop">⛔ 규정상 <b>중지</b> 기준에 해당함. 본 항목은 시스템 판단이 아니라 규정에 의한 강제 조항으로 하향 조정할 수 없음.</p>` : ""}
       </div>
-      <p class="aras-act">${a.level.act}</p>
 
-      <div class="aras-break">
-        ${[["사고발생 가능성", a.likelihoodParts, a.likelihood, "1~5"],
-           ["사고결과 중대성", a.severityParts, a.severity, "1~4"]].map(([t, parts, total, range]) => `
-          <div class="aras-bcol">
-            <h5>${t} 산출 근거 <small>(${range}점)</small></h5>
-            <table class="aras-btbl">
-              ${parts.map(p => `
-                <tr class="${p.base ? "base" : ""}">
-                  <td class="bl">${p.label}</td>
-                  <td class="bd ${p.delta > 0 ? "up" : p.delta < 0 ? "dn" : "zero"}">${p.base ? p.delta : (p.delta > 0 ? "+" + p.delta : p.delta === 0 ? "±0" : p.delta)}</td>
-                  <td class="bw">${p.why}</td>
-                </tr>`).join("")}
-              <tr class="sum"><td class="bl">합계</td><td class="bd">${total}</td><td class="bw"></td></tr>
-            </table>
-          </div>`).join("")}
+      <div class="vd-col vd-det">
+        <div class="vd-tag">2차 · 기상 요인 상세 평가 <b>(보강)</b></div>
+        ${d.isCold ? `
+          <table class="vd-tbl">
+            <tr><td>과업 대사율</td><td><b>${c.met != null ? c.met : "-"} MET</b> · ${d.task}</td></tr>
+            <tr><td>요구 / 착용 단열</td><td><b>${c.reqClo != null ? c.reqClo.toFixed(2) : "-"} / ${c.wornClo != null ? c.wornClo.toFixed(2) : "-"} clo</b></td></tr>
+            <tr><td>노출 / 재가온</td><td><b>${c.cycleLabel || "-"}</b></td></tr>
+            <tr><td>동상 발생시간</td><td><b>${c.frostbiteMin >= 999 ? "120분 초과" : (c.frostbiteMin || "-") + "분"}</b> · 위험 ${c.frostbiteRisk ? c.frostbiteRisk.name : "-"}</td></tr>
+            <tr><td>1인 시간당 급수</td><td><b>${d.qtL} L</b></td></tr>
+          </table>
+          <p class="vd-src">근거 : TB MED 508 (과업별 MET · 요구 단열값 · 동상 발생시간 · 동료점검 주기)</p>
+        ` : `
+          <table class="vd-tbl">
+            <tr><td>규정 판정 지수</td><td><b>${d.rawIdx.toFixed(1)}</b> → ${d.rawBandName}</td></tr>
+            <tr><td>복장 보정</td><td>${d.gear} <b>${d.adj >= 0 ? "+" : ""}${d.adj}℃</b></td></tr>
+            <tr><td>보정 후 유효 지수</td><td><b>${d.effIdx.toFixed(1)}</b> → ${d.effBandName} 상당</td></tr>
+            <tr><td>작업 / 휴식</td><td><b>${d.wr}</b> · ${d.task}</td></tr>
+            <tr><td>1인 시간당 급수</td><td><b>${d.qtL} L</b></td></tr>
+          </table>
+          <p class="vd-src">근거 : TB MED 507 (작업/휴식·급수량) · DAFI 48-151 (복장 보정)</p>
+        `}
+        ${d.escalated ? (d.isCold
+          ? `<p class="vd-warn">⚠️ 규정 판정은 <b>${r.status}</b>이나, 과업·복장 조건상 보강 조치 필요 — ${d.escalReason}. 규정의 체감온도 단일 축은 과업 대사율·복장 단열을 반영하지 않음.</p>`
+          : `<p class="vd-warn">⚠️ 규정 판정은 <b>${d.rawBandName}</b>이나, 과업·복장 보정 시 <b>${d.effBandName}</b> 수준에 해당함. 규정 준수와 별도로 보강 조치 필요.</p>`) : ""}
       </div>
-      ${a.residual !== null ? `
-        <p class="aras-res">감소대책 적용 시 잔여 위험성 →
-          <b class="${a.residualLevel.cls}">${a.residual}점 (${a.residualLevel.name})</b>
-          ${a.residual < 8 ? '<span style="color:var(--c1)">✔ 8점 미만 저감 달성</span>'
-                           : '<span style="color:var(--c4)">✖ 추가 감소대책 필요</span>'}
-        </p>` : ""}
     </div>
 
-    <h4 class="aras-h">감소대책 (우선순위순 · 4M 분류)</h4>
+    <h4 class="vd-h">감소대책 (우선순위순 · 4M 분류)</h4>
     <table class="aras-tbl">
       <thead><tr><th style="width:64px">우선순위</th><th style="width:74px">4M</th><th>대책</th></tr></thead>
       <tbody>
-        ${a.measures.map(m => `
+        ${v.measures.map(m => `
           <tr>
             <td><span class="aras-pri p${m.pri}">${m.pri}. ${m.priName}</span></td>
             <td><span class="aras-m4">${M4[m.m4]}</span></td>
@@ -1532,9 +1522,9 @@ function renderAras(a, safeWinLabel) {
       </tbody>
     </table>
     <p class="aras-note">
-      본 산출값은 육군 ARAS 위험성평가 척도(가능성 1~5 × 중대성 1~4)로 변환한 <b>입력 지원 자료</b>입니다.
-      ARAS는 군 인트라넷 폐쇄망 체계이므로 직접 연동되지 않으며, 지휘자가 결과를 확인하여 이관합니다.
-      적용 범위는 ARAS 141개 부대활동 유형 중 <b>기상 민감 활동</b>에 한정됩니다.
+      <b>1차 규정 판정은 절대 기준</b>으로 어떤 경우에도 완화되지 않으며, 2차 상세 평가는 규정이 다루지 않는
+      과업 대사율·복장 단열 축을 공개 근거로 보완한 참고 자료임.
+      감소대책 우선순위 체계는 「사업장 위험성평가에 관한 지침」(고용노동부 고시)을 따름.
     </p>
   `;
 }
