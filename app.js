@@ -1474,7 +1474,7 @@ function renderVerdictPanel(v) {
   box.innerHTML = `
     <div class="vd-two">
       <div class="vd-col vd-reg">
-        <div class="vd-tag">1차 · 규정 판정 <b>(절대 기준)</b></div>
+        <div class="vd-tag">1차 · 규정 판정 <b>(육군 규정 절대 기준)</b></div>
         <div class="vd-idx">${r.scope} <b>${r.value}</b></div>
         <div class="vd-status ${r.isStop ? "stop" : ""}">${r.status}</div>
         <p class="vd-act">${r.action}</p>
@@ -1483,7 +1483,7 @@ function renderVerdictPanel(v) {
       </div>
 
       <div class="vd-col vd-det">
-        <div class="vd-tag">2차 · 기상 요인 상세 평가 <b>(보강)</b></div>
+        <div class="vd-tag">2차 · 세부 산출 근거 <b>(TB MED / DAFI 보강)</b></div>
         ${d.isCold ? `
           <table class="vd-tbl">
             <tr><td>과업 대사율</td><td><b>${c.met != null ? c.met : "-"} MET</b> · ${d.task}</td></tr>
