@@ -457,7 +457,9 @@ function computeSeasonalRisk(ta, rh, ws, pm10, pm25, wC, month) {
   let dustDesc = "정상 야외훈련 실시";
   let dustAction = "일반 야외 훈련 진행";
 
-  if (pm10 > 300 || pm25 > 180) {
+  // ⚠ PM2.5 경보 임계는 150 (환경부 현행). 2018.7.1 강화로 주의보 90→75, 경보 180→150.
+  //    구 기준 180으로 되돌리지 말 것.
+  if (pm10 > 300 || pm25 > 150) {
     dustLv = 5;
     dustStatus = "미세먼지 경보";
     dustDesc = "실내 훈련/교육 전면 전환";
