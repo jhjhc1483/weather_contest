@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-14T07:22:31Z",
+  "updatedAt": "2026-08-14T10:00:06Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "내일부터 남부지방부터 폭우…정부, 비상 대응태세 점검",
+      "source": "기상/재난 보도",
+      "snippet": "지난 8일 산지에 내린 집중호우로 하류 계곡과 하천의 수위가 급격히 상승하면서 관광객이 고립된 사례도... 여러분께서도 집중호우 시 외출을 삼가고, 산사태 우려지역, 하천변, 지하공간 등 위험한 지역의 접근을...",
+      "url": "https://www.nocutnews.co.kr/news/6563175?utm_source=naver&utm_medium=article&utm_campaign=20260814043031",
+      "date": "2026-08-14"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "일본 지바현, 12시간 동안 348㎜ ‘역대 최대급’ 폭우…8명 숨져",
       "source": "기상/재난 보도",
       "snippet": "못하는 사례들도 많은 것으로 알려졌다. 지바현에 있는 나리타공항의 버스와 철도 운행이 중단돼 7천여명이 공항에 발이 묶이기도 했다. 이번 폭우는 발달한 비구름이 띠 모양으로 이어져 같은 지역에 집중호우를 쏟는...",
@@ -9307,7 +9318,7 @@
       "date": "2026-08-14"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9318,7 +9329,7 @@
       "date": "2026-07-31"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9327,17 +9338,6 @@
       "snippet": "짧은 시간에 많은 비가 쏟아지면서 하천이 범람하고 산사태와 토사 유출이 발생했다. 도로와 철도, 주택... 태풍과 집중호우 때는 차량이나 시설물을 살피기 위한 이동보다 침수와 붕괴 위험이 없는 곳으로 벗어나는...",
       "url": "https://www.wikitree.co.kr/articles/1149449",
       "date": "2026-07-30"
-    },
-    {
-      "id": "mil_news_16",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "'몬순 폭우'에 남아시아 초토화 … 인명피해 확산",
-      "source": "기상/재난 보도",
-      "snippet": "중국에서는 제9호 태풍 '바비'의 영향으로 집중호우가 이어지며 수백만 명이 대피했고, 남미 칠레에서도 강풍을 동반한 폭우로 인명 피해와 대규모 침수 피해가 발생했다. 세계기상기구(WMO)는 지구온난화로 대기 중...",
-      "url": "https://www.safetimes.co.kr/news/articleView.html?idxno=244415",
-      "date": "2026-07-23"
     },
     {
       "id": "mil_news_17",
@@ -9366,11 +9366,11 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "밤사이 전국 '극한호우' 전망… \"하천 범람·산사태·저지대 침수 등 유...",
+      "title": "'몬순 폭우'에 남아시아 초토화 … 인명피해 확산",
       "source": "기상/재난 보도",
-      "snippet": "한 총리는 \"그동안 내린 비로 지반이 약해져 토사유출, 산사태, 낙석, 축대 붕괴 등이 우려되니 안전 조치를 강화하고 주민대피 체계를 점검하라\"며 \"지난 호우로 침수피해를 입은 지역이 이번 비로 다시 피해를 입지...",
-      "url": "https://www.newscj.com/news/articleView.html?idxno=3417878",
-      "date": "2026-07-18"
+      "snippet": "중국에서는 제9호 태풍 '바비'의 영향으로 집중호우가 이어지며 수백만 명이 대피했고, 남미 칠레에서도 강풍을 동반한 폭우로 인명 피해와 대규모 침수 피해가 발생했다. 세계기상기구(WMO)는 지구온난화로 대기 중...",
+      "url": "https://www.safetimes.co.kr/news/articleView.html?idxno=244415",
+      "date": "2026-07-23"
     },
     {
       "id": "mil_news_20",
