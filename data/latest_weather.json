@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-14T04:47:00Z",
+  "updatedAt": "2026-08-14T07:22:31Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "일본 지바현, 12시간 동안 348㎜ ‘역대 최대급’ 폭우…8명 숨져",
+      "source": "기상/재난 보도",
+      "snippet": "못하는 사례들도 많은 것으로 알려졌다. 지바현에 있는 나리타공항의 버스와 철도 운행이 중단돼 7천여명이 공항에 발이 묶이기도 했다. 이번 폭우는 발달한 비구름이 띠 모양으로 이어져 같은 지역에 집중호우를 쏟는...",
+      "url": "https://www.hani.co.kr/arti/international/international_general/1272970.html",
+      "date": "2026-08-14"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "[안전상황실·31일] 폭염 속 밭일 90대 숨져 전북 사망 2명",
       "source": "기상/재난 보도",
       "snippet": "145㎜ 집중호우가 쏟아져 계곡에서 야영 중이던 등산객과 주민 등 103명(사망 78명·실종 25명)이 급류에... 산사태·2020년 부산 초량 지하차도·2022년 서울 강남 침수·2023년 오송 지하차도 참사 등 게릴라성 폭우 관련...",
@@ -9307,7 +9318,7 @@
       "date": "2026-07-31"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9318,7 +9329,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9327,17 +9338,6 @@
       "snippet": "중국에서는 제9호 태풍 '바비'의 영향으로 집중호우가 이어지며 수백만 명이 대피했고, 남미 칠레에서도 강풍을 동반한 폭우로 인명 피해와 대규모 침수 피해가 발생했다. 세계기상기구(WMO)는 지구온난화로 대기 중...",
       "url": "https://www.safetimes.co.kr/news/articleView.html?idxno=244415",
       "date": "2026-07-23"
-    },
-    {
-      "id": "mil_news_16",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "폭염·폭우·태풍... 지구촌 기상재난에 몸살",
-      "source": "기상/재난 보도",
-      "snippet": "폭우가 쏟아지면서 산사태나 건물 붕괴 사고가 발생했고 사상자가 잇따랐다.최근 몇 년 동안 기후 변화로 인도 히말라야 지역과 파키스탄 북부 지역에서는 짧은 시간 동안 좁은 지역에 매우 많은 양의 비가 집중적으...",
-      "url": "https://weeklytrade.co.kr/news/view.html?section=1&category=136&item=&no=100718",
-      "date": "2026-07-22"
     },
     {
       "id": "mil_news_17",
@@ -9355,21 +9355,21 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "밤사이 전국 '극한호우' 전망… \"하천 범람·산사태·저지대 침수 등 유...",
+      "title": "폭염·폭우·태풍... 지구촌 기상재난에 몸살",
       "source": "기상/재난 보도",
-      "snippet": "한 총리는 \"그동안 내린 비로 지반이 약해져 토사유출, 산사태, 낙석, 축대 붕괴 등이 우려되니 안전 조치를 강화하고 주민대피 체계를 점검하라\"며 \"지난 호우로 침수피해를 입은 지역이 이번 비로 다시 피해를 입지...",
-      "url": "https://www.newscj.com/news/articleView.html?idxno=3417878",
-      "date": "2026-07-18"
+      "snippet": "폭우가 쏟아지면서 산사태나 건물 붕괴 사고가 발생했고 사상자가 잇따랐다.최근 몇 년 동안 기후 변화로 인도 히말라야 지역과 파키스탄 북부 지역에서는 짧은 시간 동안 좁은 지역에 매우 많은 양의 비가 집중적으...",
+      "url": "https://weeklytrade.co.kr/news/view.html?section=1&category=136&item=&no=100718",
+      "date": "2026-07-22"
     },
     {
       "id": "mil_news_19",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "경기북부 새벽부터 강한 비…도로 침수·축대 붕괴 등 피해 속출",
+      "title": "밤사이 전국 '극한호우' 전망… \"하천 범람·산사태·저지대 침수 등 유...",
       "source": "기상/재난 보도",
-      "snippet": "안전사고 예방을 위해 출입 통제선이 설치됐다. 자일동 축석고개 인근에서는 쓰러진 나무가 도로 1·2차로를 막아 긴급 제거 작업이 진행됐다. 소방당국은 호우특보가 이어지는 동안 산사태 위험 지역, 하천, 계곡, 침수된...",
-      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3639441",
+      "snippet": "한 총리는 \"그동안 내린 비로 지반이 약해져 토사유출, 산사태, 낙석, 축대 붕괴 등이 우려되니 안전 조치를 강화하고 주민대피 체계를 점검하라\"며 \"지난 호우로 침수피해를 입은 지역이 이번 비로 다시 피해를 입지...",
+      "url": "https://www.newscj.com/news/articleView.html?idxno=3417878",
       "date": "2026-07-18"
     },
     {
