@@ -55,9 +55,9 @@ const GEARS = [
   { id: "single", name: "단독군장",           adj: () => 1.5,   clo: 1.25,
     src: "단독군장 (전투복+방탄헬멧+전투조끼 +1.5°C 가산) · 1.25 clo" },
   { id: "iba",    name: "완전군장 / 방탄복",   adj: () => 2.8,   clo: 1.40,
-    src: "완전군장 (방탄복+45lb 군장 +2.8°C 가산) · 1.40 clo" },
+    src: "TB MED 507 · 방탄복 착용 시 습한 기후에서 WBGT +5°F(+2.8°C) 가산" },
   { id: "cbrn",   name: "화생방 보호의",      adj: t => (t === "easy" || t === "static") ? 5.6 : 11.1, clo: 1.60,
-    src: "TB MED 507 표 3-2 주7 · MOPP 4단계 전신 보호의 (+11.1°C 가산)" },
+    src: "TB MED 507 · MOPP 4 착용 시 경작업 +10°F(+5.6°C) / 중등·중작업 +20°F(+11.1°C)" },
   { id: "ecwcs",  name: "방한복 (ECWCS)",     adj: () => 3.4,   clo: 3.40,
     src: "TB MED 508 표 3-2 Total ECWCS 3.40 clo · 혹한기 다층 단열" }
 ];
@@ -127,12 +127,28 @@ function frostbiteMinutes(taC, wsMs) {
   return { min: m, risk };
 }
 
+/* ══════════ 작업/휴식 주기 및 시간당 급수량 (TB MED 507) ══════════
+   원문: Work/Rest and Water Consumption Table
+        (열순응 완료 · 평균 체격 · ACU 착용 · 혹서기 기준, 4시간 지속 전제)
+
+   Heat Cat  WBGT °F      Easy         Moderate      Hard
+     1       78 ~ 81.9    NL   / ½qt   NL    / ¾qt   40/20 / ¾qt
+     2       82 ~ 84.9    NL   / ½qt   50/10 / ¾qt   30/30 / 1qt
+     3       85 ~ 87.9    NL   / ¾qt   40/20 / ¾qt   30/30 / 1qt
+     4       88 ~ 89.9    NL   / ¾qt   30/30 / ¾qt   20/40 / 1qt
+     5       ≥ 90         50/10/ 1qt   20/40 / 1qt   10/50 / 1qt
+
+   ※ easy·mod·heavy 는 원문 Easy·Moderate·Hard Work 3개 열을 그대로 옮긴 값.
+     vhard 는 원문에 없는 구간(3km 뜀걸음·유격 등)에 대한 자체 보수적 확장으로,
+     각 단계에서 Hard Work보다 한 단계 엄격하게 설정하였음. 원문 값이 아님.
+   ※ 상한: 시간당 1½ qt, 1일 12 qt 초과 금지 (원문 CAUTION)
+   ※ 휴식 = 가능하면 그늘에서 최소 신체활동(앉기 또는 서기) */
 const WR = {
-  1: { easy: ["제한 없음", 0.50], mod: ["제한 없음", 0.75], heavy: ["40 / 20", 0.75], vhard: ["20 / 40", 1.00] },
-  2: { easy: ["제한 없음", 0.50], mod: ["제한 없음", 0.75], heavy: ["30 / 30", 1.00], vhard: ["15 / 45", 1.00] },
-  3: { easy: ["제한 없음", 0.75], mod: ["제한 없음", 0.75], heavy: ["30 / 30", 1.00], vhard: ["10 / 50", 1.00] },
-  4: { easy: ["제한 없음", 0.75], mod: ["50 / 10", 0.75],   heavy: ["20 / 40", 1.00], vhard: ["10 / 50", 1.00] },
-  5: { easy: ["제한 없음", 1.00], mod: ["20 / 40", 1.00],   heavy: ["15 / 45", 1.00], vhard: ["10 / 50", 1.00] }
+  1: { easy: ["제한 없음", 0.50], mod: ["제한 없음", 0.75], heavy: ["40 / 20", 0.75], vhard: ["30 / 30", 1.00] },
+  2: { easy: ["제한 없음", 0.50], mod: ["50 / 10", 0.75],   heavy: ["30 / 30", 1.00], vhard: ["20 / 40", 1.00] },
+  3: { easy: ["제한 없음", 0.75], mod: ["40 / 20", 0.75],   heavy: ["30 / 30", 1.00], vhard: ["20 / 40", 1.00] },
+  4: { easy: ["제한 없음", 0.75], mod: ["30 / 30", 0.75],   heavy: ["20 / 40", 1.00], vhard: ["10 / 50", 1.00] },
+  5: { easy: ["50 / 10", 1.00],   mod: ["20 / 40", 1.00],   heavy: ["10 / 50", 1.00], vhard: ["10 / 50", 1.00] }
 };
 
 const QT = 0.9464;
@@ -599,7 +615,7 @@ function computeDay() {
 
    [2차] 기상 요인 상세 평가 (보강) — 규정이 다루지 않는 축을 공개 근거로 보완
          · 과업 대사율      TB MED 507 / TB MED 508 (과업별 MET)
-         · 복장 단열·보정   DAFI 48-151, TB MED 507 / 508 (clo)
+         · 복장 단열·보정   TB MED 507 (WBGT 가산) / TB MED 508 (clo)
          · 급수량·작업휴식  TB MED 507
          · 동상 노출시간    TB MED 508
          · 체감온도 산출식  기상청 (여름철 체감온도 3.0 / 겨울철 풍냉식)
@@ -1485,7 +1501,7 @@ function renderVerdictPanel(v) {
       </div>
 
       <div class="vd-col vd-det">
-        <div class="vd-tag">2차 · 세부 산출 근거 <b>(TB MED / DAFI 보강)</b></div>
+        <div class="vd-tag">2차 · 세부 산출 근거 <b>(TB MED 507 / 508 보강)</b></div>
         ${d.isCold ? `
           <table class="vd-tbl">
             <tr><td>과업 대사율</td><td><b>${c.met != null ? c.met : "-"} MET</b> · ${d.task}</td></tr>
@@ -1503,7 +1519,7 @@ function renderVerdictPanel(v) {
             <tr><td>작업 / 휴식</td><td><b>${d.wr}</b> · ${d.task}</td></tr>
             <tr><td>1인 시간당 급수</td><td><b>${d.qtL} L</b></td></tr>
           </table>
-          <p class="vd-src">근거 : TB MED 507 (작업/휴식·급수량) · DAFI 48-151 (복장 보정)</p>
+          <p class="vd-src">근거 : TB MED 507 (작업/휴식 · 급수량 · 복장 WBGT 가산)</p>
         `}
         ${d.escalated ? (d.isCold
           ? `<p class="vd-warn">⚠️ 규정 판정은 <b>${r.status}</b>이나, 과업·복장 조건상 보강 조치 필요 — ${d.escalReason}. 규정의 체감온도 단일 축은 과업 대사율·복장 단열을 반영하지 않음.</p>`
