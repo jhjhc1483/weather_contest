@@ -127,31 +127,17 @@ function frostbiteMinutes(taC, wsMs) {
   return { min: m, risk };
 }
 
-/* ══════════ 작업/휴식 주기 및 시간당 급수량 (TB MED 507) ══════════
-   원문: Work/Rest and Water Consumption Table
-        (열순응 완료 · 평균 체격 · ACU 착용 · 혹서기 기준, 4시간 지속 전제)
+/* ══════════ [제거됨] 작업/휴식 주기 · 급수량 산출 ══════════
+   TB MED 507의 Work/Rest and Water Consumption Table은 '열순응 완료 병사가 연속 작업을
+   4시간 지속'하는 미군 기준으로, 우리 훈련 편성(50분 교육/10분 휴식, 행군 대휴식 등)과
+   단위가 맞지 않아 지시값으로 내보내지 않는다.
+   또한 육군 교육훈련 규정은 시간당 분배가 아니라 '1일 ○시간 이내'라는
+   일일 누적 노출 제한 방식을 쓰므로 어법도 다르다.
+   급수량은 근거가 확보되지 않은 구간(혹한기)이 있어 함께 제외한다.
 
-   Heat Cat  WBGT °F      Easy         Moderate      Hard
-     1       78 ~ 81.9    NL   / ½qt   NL    / ¾qt   40/20 / ¾qt
-     2       82 ~ 84.9    NL   / ½qt   50/10 / ¾qt   30/30 / 1qt
-     3       85 ~ 87.9    NL   / ¾qt   40/20 / ¾qt   30/30 / 1qt
-     4       88 ~ 89.9    NL   / ¾qt   30/30 / ¾qt   20/40 / 1qt
-     5       ≥ 90         50/10/ 1qt   20/40 / 1qt   10/50 / 1qt
-
-   ※ easy·mod·heavy 는 원문 Easy·Moderate·Hard Work 3개 열을 그대로 옮긴 값.
-     vhard 는 원문에 없는 구간(3km 뜀걸음·유격 등)에 대한 자체 보수적 확장으로,
-     각 단계에서 Hard Work보다 한 단계 엄격하게 설정하였음. 원문 값이 아님.
-   ※ 상한: 시간당 1½ qt, 1일 12 qt 초과 금지 (원문 CAUTION)
-   ※ 휴식 = 가능하면 그늘에서 최소 신체활동(앉기 또는 서기) */
-const WR = {
-  1: { easy: ["제한 없음", 0.50], mod: ["제한 없음", 0.75], heavy: ["40 / 20", 0.75], vhard: ["30 / 30", 1.00] },
-  2: { easy: ["제한 없음", 0.50], mod: ["50 / 10", 0.75],   heavy: ["30 / 30", 1.00], vhard: ["20 / 40", 1.00] },
-  3: { easy: ["제한 없음", 0.75], mod: ["40 / 20", 0.75],   heavy: ["30 / 30", 1.00], vhard: ["20 / 40", 1.00] },
-  4: { easy: ["제한 없음", 0.75], mod: ["30 / 30", 0.75],   heavy: ["20 / 40", 1.00], vhard: ["10 / 50", 1.00] },
-  5: { easy: ["50 / 10", 1.00],   mod: ["20 / 40", 1.00],   heavy: ["10 / 50", 1.00], vhard: ["10 / 50", 1.00] }
-};
-
-const QT = 0.9464;
+   → TB MED 507은 아래 두 가지로만 사용한다.
+      · 열지수 등급(CAT 1~5) 임계값  25.6 / 27.8 / 29.4 / 31.1 / 32.2 ℃
+      · 복장 WBGT 가산  방탄복 +5°F · MOPP4 경작업 +10°F / 중등·중작업 +20°F  */
 
 const CAT = [
   { l: "—", c: "var(--c0)", i: "var(--dim)" },
@@ -586,9 +572,6 @@ function computeDay() {
     const appVal = typeof APP[i] === 'number' && !isNaN(APP[i]) ? APP[i] : 28.0;
     const kl = kmaLv(appVal);
     const lv = Math.max(kl, seasonal.activeLv);
-    const safeCatIndex = Math.min(5, Math.max(1, cat));
-    const ruleObj = WR[safeCatIndex] || WR[1];
-    const rule = ruleObj[S.task] || ["제한 없음", 0.50];
 
     const cold = assessCold(taVal, wsVal, seasonal.chillTemp, S.task, g);
     const isCold = seasonal.activeSeason === "WINTER";
@@ -597,12 +580,7 @@ function computeDay() {
 
     return {
       h, ta: taVal, rh: rhVal, app: appVal, wRaw, wC, cat, kl, lv: lvFinal, seasonal,
-      src: f.src[i] || "기준", cold, isCold,
-      // 혹한기에는 여름용 작업/휴식 주기 대신 '노출/재가온 주기'를 적용한다
-      wr: isCold ? cold.cycleLabel
-        : (cat === 0 && seasonal.activeSeason === "SUMMER") ? "제한 없음" : rule[0],
-      qt: isCold ? cold.qt
-        : (cat === 0 && seasonal.activeSeason === "SUMMER") ? 0.5 : rule[1]
+      src: f.src[i] || "기준", cold, isCold
     };
   });
 }
@@ -616,7 +594,7 @@ function computeDay() {
    [2차] 기상 요인 상세 평가 (보강) — 규정이 다루지 않는 축을 공개 근거로 보완
          · 과업 대사율      TB MED 507 / TB MED 508 (과업별 MET)
          · 복장 단열·보정   TB MED 507 (WBGT 가산) / TB MED 508 (clo)
-         · 급수량·작업휴식  TB MED 507
+         · 열지수 등급 임계  TB MED 507 (CAT 1~5)
          · 동상 노출시간    TB MED 508
          · 체감온도 산출식  기상청 (여름철 체감온도 3.0 / 겨울철 풍냉식)
          · 대기질 임계      환경부 대기오염 경보 발령기준
@@ -683,17 +661,17 @@ function buildMeasures(peak, safeWindowLabel) {
       : "고강도 과업을 저강도 과업으로 대체하거나 이른 시각으로 이동");
   }
   add(3, "공학적", "Machine", isCold
-    ? "재가온 시설(난방 천막·온풍기) 및 온수 급수대 설치, 방풍막 구축"
-    : "그늘 휴식지 및 냉각 구역 개설, 급수대·제빙 장비 전개");
-  add(4, "관리적", "Management", isCold
-    ? `노출/재가온 주기 강제 적용 (${cold.cycleLabel || "상시 관찰"})`
-    : `작업/휴식 주기 강제 적용 (${peak.wr || "제한 없음"})`);
+    ? "재가온 시설(난방 천막·온풍기) 설치 및 방풍막 구축"
+    : "그늘 휴식지 및 냉각 구역 개설");
+  if (isCold) {
+    add(4, "관리적", "Management", `노출/재가온 주기 적용 (${cold.cycleLabel || "상시 관찰"})`);
+  }
   if (cold.frostbiteRisk && cold.frostbiteRisk.buddy) {
     add(4, "관리적", "Man", `동료 점검(버디체크) ${cold.frostbiteRisk.buddy}분 주기 의무화`);
   }
   add(4, "관리적", "Man", isCold
-    ? "갈증 여부와 무관하게 2시간 주기 강제 급수 · 온수 제공"
-    : "급수 주기 고정 및 개인별 음수량 확인 (과다 섭취 상한 준수)");
+    ? "손·발·귀 감각 이상 여부 수시 확인 및 젖은 피복 즉시 교체"
+    : "어지럼·두통·오심 등 이상 징후 관찰 및 즉시 보고 체계 유지");
   add(5, "개인보호구", "Man", isCold
     ? `방한 피복 착용 상태 점검 (요구 ${cold.reqClo != null ? cold.reqClo.toFixed(2) : "-"} clo / 착용 ${cold.wornClo != null ? cold.wornClo.toFixed(2) : "-"} clo)`
     : isDust ? "미세먼지 마스크 불출 및 야외활동 시 착용 강제"
@@ -747,8 +725,6 @@ function computeVerdict(D, peak, safeWindowLabel) {
       rawIdx, effIdx, adj,
       rawBandName: bandName[rawBand], effBandName: bandName[effBand],
       escalated, escalReason,
-      wr: peak.wr,
-      qtL: +(peak.qt * QT).toFixed(2),
       cold: peak.cold || null,
       isCold
     },
@@ -795,10 +771,7 @@ function assessCold(ta, ws, chill, taskId, gear) {
     lvBump, cycleMin, cycleLabel,
     isStatic: met <= 1.0,
     // 고강도 과업은 활동 중에는 안전하나 발한 후 정지 시점에 급격히 냉각된다 (after-drop)
-    afterDrop: met >= 4.5 && ta <= 10.0,
-    // 한랭 급수: 한랭이뇨·갈증둔화로 자발 섭취가 필요량보다 더 떨어진다 (일 2~6 캔틴)
-    qt: met >= 4.5 ? 0.50 : 0.33,
-    dailyQt: met >= 4.5 ? 6 : 4
+    afterDrop: met >= 4.5 && ta <= 10.0
   };
 }
 
@@ -872,7 +845,6 @@ function renderComparison(D) {
         </div>
         <div class="desc">
           <b>권장 조치</b>: ${seasonal.activeAction || proposedLv.a}<br>
-          <b>작업/휴식</b>: ${n.wr} | <b>1인 시간당 급수</b>: ${(n.qt * QT).toFixed(2)}L<br>
           <small style="color:var(--accent)">* 강점: 4계절 기후(${seasonal.seasonLabel}) + 복장 보정(${gearObj.name} ${gearObj.src}) 대사량 정밀 산정</small>
         </div>
       </div>
@@ -898,7 +870,7 @@ function renderTimelineGrid(D) {
         <div class="t-hour">${pad(d.h)}:00 ${s.seasonIcon || ''}</div>
         <div class="t-lvl" style="background:${bgCol};color:${txtCol}">${statusText} (${d.lv}단계)</div>
         <div class="t-sub">${tempLabel}</div>
-        <div class="t-sub" style="color:var(--accent)">${d.wr}</div>
+        <div class="t-sub" style="color:var(--accent)">${d.lv <= 3 ? "훈련 가능" : "훈련 불가"}</div>
       </div>
     `;
   }).join("");
@@ -1178,33 +1150,20 @@ function renderDay() {
   const isCold = n.seasonal && n.seasonal.activeSeason === "WINTER";
   const cold = n.cold || {};
 
-  const wrEl = document.getElementById("wr");
-  if (wrEl) wrEl.textContent = n.wr;
-  const wrDescEl = document.getElementById("wrDesc");
-  if (wrDescEl) {
-    wrDescEl.innerHTML = isCold
-      ? `한랭 노출/재가온 주기 · <b style="color:var(--k1)">대사율이 낮을수록 위험</b> (TB MED 508)`
-      : (n.wr === "제한 없음" ? "시간당 작업 제한 없음 (연속 4시간까지)" : "분 단위 · 매 시간 반복");
-  }
-  const waterEl = document.getElementById("water");
-  if (waterEl) waterEl.innerHTML = (n.qt * QT).toFixed(2) + "<small>L</small>";
-
-  const i0 = Math.max(0, HOURS.indexOf(S.from)), i1 = Math.max(0, HOURS.indexOf(S.to));
-  let q = 0; for (let i = i0; i < i1; i++) q += (D[i] ? D[i].qt : 0.5);
-  const L_ = q * QT * S.pax;
-
   const prEl = document.getElementById("planRange");
   if (prEl) prEl.textContent = `${pad(S.from)}:00 – ${pad(S.to)}:00 · ${S.pax}명`;
-  const twEl = document.getElementById("totalWater");
-  if (twEl) twEl.innerHTML = Math.round(L_).toLocaleString() + "<small>L</small>";
-  const twdEl = document.getElementById("totalWaterDesc");
-  if (twdEl) {
-    twdEl.innerHTML = isCold
-      ? `20 L 물통 ${Math.ceil(L_/20)}개 · 1인 ${(q*QT).toFixed(1)} L<br>` +
-        `<b style="color:var(--k1)">❄️ 한랭: 1일 ${cold.dailyQt || 4} qt · 2시간 주기 강제 급수 · 온수 제공</b><br>` +
-        `<span style="color:var(--dim);font-size:11.5px">한랭이뇨·갈증 둔화로 자발 섭취가 필요량보다 감소 · 수통 동결 방지</span>`
-      : `20 L 물통 ${Math.ceil(L_/20)}개 · 1인 ${(q*QT).toFixed(1)} L<br>` +
-        `<span style="color:var(--dim);font-size:11.5px">⚠️ 상한 준수: 시간당 1.5 qt · 1일 12 qt 초과 금지 (저나트륨혈증)</span>`;
+
+  // 계획 구간 내 훈련 가능 시간 집계
+  const i0 = Math.max(0, HOURS.indexOf(S.from)), i1 = Math.max(0, HOURS.indexOf(S.to));
+  let okH = 0, totH = 0;
+  for (let i = i0; i < i1; i++) { if (D[i]) { totH++; if (D[i].lv <= 3) okH++; } }
+  const okEl = document.getElementById("okHours");
+  if (okEl) okEl.innerHTML = `${okH}<small> / ${totH}시간</small>`;
+  const okDescEl = document.getElementById("okHoursDesc");
+  if (okDescEl) {
+    okDescEl.textContent = totH
+      ? `계획 구간 ${totH}시간 중 채택 등급 3단계 이하 시간 (가용률 ${Math.round(okH / totH * 100)}%)`
+      : "계획 구간을 선택하십시오";
   }
 
   let best = null, cur = null;
@@ -1348,9 +1307,8 @@ function buildBrief(D, peak, verdict, safeWin) {
   } else if (isDust) {
     hazards.push(`미세먼지 ${s.activeStatus} — PM10 ${S.envData.pm10} · PM2.5 ${S.envData.pm25} ㎍/㎥`);
   } else {
-    hazards.push(`피크 시각 ${pad(peak.h)}:00 온도지수 <b>${peak.wC.toFixed(1)}℃</b> (${s.activeStatus})`);
-    hazards.push(`착의 보정 포함 — ${gearObj.name} 적용 시 유효 온도지수 <b>${peak.wC.toFixed(1)}℃</b>`);
-    hazards.push(`작업/휴식 <b>${peak.wr}</b> · 1인 시간당 급수 <b>${(peak.qt * QT).toFixed(2)} L</b>`);
+    hazards.push(`피크 시각 ${pad(peak.h)}:00 규정 판정 지수 <b>${peak.wRaw.toFixed(1)}℃</b> (${s.activeStatus})`);
+    hazards.push(`${gearObj.name} 보정 적용 시 유효 온도지수 <b>${peak.wC.toFixed(1)}℃</b>`);
   }
 
   const asks = isCold
@@ -1358,16 +1316,16 @@ function buildBrief(D, peak, verdict, safeWin) {
     : ["최근 감기·발열·설사 증상이 있는 사람?", "어제 잠을 못 잤거나 아침 식사를 거른 사람?", "이전에 온열손상 병력이 있는 사람?"];
 
   const declares = isCold
-    ? ["나는 손발 감각이 둔해지면 즉시 보고한다.", "나는 목이 마르지 않아도 정해진 주기에 급수한다.",
+    ? ["나는 손발 감각이 둔해지면 즉시 보고한다.",
        "나는 땀이 나면 겉옷을 열어 조절하고, 정지 전에 겉옷을 추가한다.", "나는 2인 1조를 유지하고 동료의 안면 상태를 확인한다."]
-    : ["나는 어지럼·두통·오심이 오면 즉시 보고한다.", "나는 정해진 급수 주기를 지키고 과다 섭취하지 않는다.",
+    : ["나는 어지럼·두통·오심이 오면 즉시 보고한다.",
        "나는 휴식 시 그늘·냉각 구역으로 이동한다.", "나는 동료의 이상 징후를 관찰하고 즉시 보고한다."];
 
   const checks = isCold
-    ? ["방한 피복 착용 상태 (머리·손·발·안면 노출 차단)", "수통 동결 여부 및 온수 확보 상태",
-       "재가온 시설(난방 천막·온풍기) 가동 상태", "젖은 피복 교체용 예비 내피·양말 휴대", "통신장비 배터리 저온 성능 저하 점검"]
-    : ["개인 수통 충수 상태 및 급수 지점 확인", "그늘 휴식지·냉각 구역 개설 상태",
-       "얼음·제빙 장비 및 응급 냉각(냉수 침수) 준비", "구급낭 및 후송 차량 대기 상태", "통신장비 작동 확인"];
+    ? ["방한 피복 착용 상태 (머리·손·발·안면 노출 차단)", "젖은 피복 교체용 예비 내피·양말 휴대",
+       "재가온 시설(난방 천막·온풍기) 가동 상태", "통신장비 배터리 저온 성능 저하 점검", "구급낭 및 후송 차량 대기 상태"]
+    : ["그늘 휴식지·냉각 구역 개설 상태", "응급 냉각(냉수 침수) 준비 상태",
+       "구급낭 및 후송 차량 대기 상태", "통신장비 작동 확인"];
 
   const fsb = {
     go, goCls, goWhy, hardStop,
@@ -1509,18 +1467,16 @@ function renderVerdictPanel(v) {
             <tr><td>요구 / 착용 단열</td><td><b>${c.reqClo != null ? c.reqClo.toFixed(2) : "-"} / ${c.wornClo != null ? c.wornClo.toFixed(2) : "-"} clo</b></td></tr>
             <tr><td>노출 / 재가온</td><td><b>${c.cycleLabel || "-"}</b></td></tr>
             <tr><td>동상 발생시간</td><td><b>${c.frostbiteMin >= 999 ? "120분 초과" : (c.frostbiteMin || "-") + "분"}</b> · 위험 ${c.frostbiteRisk ? c.frostbiteRisk.name : "-"}</td></tr>
-            <tr><td>1인 시간당 급수</td><td><b>${d.qtL} L</b></td></tr>
           </table>
           <p class="vd-src">근거 : TB MED 508 (과업별 MET · 요구 단열값 · 동상 발생시간 · 동료점검 주기)</p>
         ` : `
           <table class="vd-tbl">
+            <tr><td>과업 대사율</td><td><b>${c.met != null ? c.met : "-"} MET</b> · ${d.task}</td></tr>
             <tr><td>규정 판정 지수</td><td><b>${d.rawIdx.toFixed(1)}</b> → ${d.rawBandName}</td></tr>
             <tr><td>복장 보정</td><td>${d.gear} <b>${d.adj >= 0 ? "+" : ""}${d.adj}℃</b></td></tr>
             <tr><td>보정 후 유효 지수</td><td><b>${d.effIdx.toFixed(1)}</b> → ${d.effBandName} 상당</td></tr>
-            <tr><td>작업 / 휴식</td><td><b>${d.wr}</b> · ${d.task}</td></tr>
-            <tr><td>1인 시간당 급수</td><td><b>${d.qtL} L</b></td></tr>
           </table>
-          <p class="vd-src">근거 : TB MED 507 (작업/휴식 · 급수량 · 복장 WBGT 가산)</p>
+          <p class="vd-src">근거 : TB MED 507 (열지수 등급 임계 · 복장 WBGT 가산)</p>
         `}
         ${d.escalated ? (d.isCold
           ? `<p class="vd-warn">⚠️ 규정 판정은 <b>${r.status}</b>이나, 과업·복장 조건상 보강 조치 필요 — ${d.escalReason}. 규정의 체감온도 단일 축은 과업 대사율·복장 단열을 반영하지 않음.</p>`

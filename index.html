@@ -187,7 +187,7 @@
             <!-- ❄️ COLD STRESS PANEL (TB MED 508) -->
             <div class="cold-panel" id="coldPanel" hidden></div>
 
-            <!-- STATS & WATER REQUIREMENT GRID -->
+            <!-- 피크 판정 및 가용 시간 -->
             <div class="g2" style="margin-top:16px">
               <div class="card-inner glass" style="padding:0">
                 <div class="phd">
@@ -195,14 +195,11 @@
                   <span class="note" id="peakTimeNote">선택 시간대 피크 기준</span>
                 </div>
                 <div class="verdict" id="verdict"></div>
-                <div class="stat"><div class="k">권장 작업 / 휴식 주기</div><div class="v" id="wr"></div><div class="d" id="wrDesc"></div></div>
-                <div class="stat"><div class="k">1인 시간당 권장 급수량</div><div class="v" id="water"></div>
-                  <div class="d">TB MED 507 표 3-2 기준 (시간당 1.4 L, 1일 11.4 L 초과금지)</div></div>
               </div>
-              
+
               <div class="card-inner glass" style="padding:0">
-                <div class="phd"><h2>계획 구간 총 물/얼음 소요 산출</h2><span class="note" id="planRange"></span></div>
-                <div class="stat"><div class="k">총 필요 식수량 (L)</div><div class="v" id="totalWater"></div><div class="d" id="totalWaterDesc"></div></div>
+                <div class="phd"><h2>계획 구간 훈련 가용 시간</h2><span class="note" id="planRange"></span></div>
+                <div class="stat"><div class="k">훈련 가능 시간</div><div class="v" id="okHours"></div><div class="d" id="okHoursDesc"></div></div>
                 <div class="stat"><div class="k">안전 훈련 가능 시간창</div><div class="v" style="font-size:19px" id="safeWin"></div>
                   <div class="d">채택 등급 3단계(경고) 이하로 유지되는 최장 연속 시간대</div></div>
                 <div class="slots" id="slots"></div>
@@ -319,14 +316,15 @@
 
       <h4>근거 문헌 및 지침 인용 표기</h4>
       <ol>
-        <li><b>열지수 구분 · 작업/휴식 비율 · 시간당 급수량</b> — 미 육군성 <i>TB MED 507: Heat Stress Control and Heat Casualty Management</i> (2022.4.12 개정판, 미 육군/공군 공동 규정, 섭씨 환산 반영).</li>
-        <li><b>방탄복 착의 보정</b> — <i>TB MED 507</i> Work/Rest and Water Consumption Table 주기 (방탄복 착용 시 습한 기후에서 WBGT +5°F = +2.8°C 가산).</li>
-        <li><b>화생방 보호의 착의 보정</b> — TB MED 507 표 3-2 주7 (경작업 +5.6°C, 중등/중작업 +11.1°C).</li>
+        <li><b>열지수 등급 구분</b> — 미 육군성 <i>TB MED 507: Heat Stress Control and Heat Casualty Management</i> (CAT 1~5 임계 78·82·85·88·90 °F를 섭씨 환산).</li>
+        <li><b>방탄복 착의 보정</b> — <i>TB MED 507</i> Work/Rest and Water Consumption Table 주기 (방탄복 착용 시 습한 기후에서 WBGT +5 °F = +2.8 °C 가산).</li>
+        <li><b>화생방 보호의 착의 보정</b> — <i>TB MED 507</i> 동 주기 (MOPP 4 착용 시 경작업 +10 °F = +5.6 °C, 중등·중작업 +20 °F = +11.1 °C).</li>
+        <li><b>과업별 대사율 · 복장 단열값 · 동상 발생시간 · 동료점검 주기</b> — 미 육군성 <i>TB MED 508: Prevention and Management of Cold Weather Injuries</i> (표 3-1 · 표 3-2 · 그림 3-2 · 그림 3-5 · 표 3-4).</li>
       </ol>
       <div class="caution">
         <b>본 도구는 부대활동 사전 계획 수립용입니다.</b><br>
-        TB MED 507 교리는 "WBGT 예보는 지휘관의 사전 훈련 배치, 예비일 산정, 물/얼음 보급 사전 산출용으로 활용하며, <b>당일 훈련 현장의 실제 통제 판단은 실측 WBGT를 사용해야 한다</b>"고 규정합니다.<br><br>
-        본 서비스는 이 지침을 충실히 준수하여 부대 훈련 계획의 적절성과 논리성을 극대화합니다.
+        예보 기반 산출값은 훈련 시기·시간대 배치와 예비일 산정에 활용하고, <b>당일 현장의 실제 통제 판단은 실측값을 우선</b>해야 합니다.<br><br>
+        작업/휴식 주기와 급수량은 우리 훈련 편성 단위와 맞지 않고 근거가 확보되지 않은 구간이 있어 산출 항목에서 제외하였습니다.
       </div>
     </footer>
 
