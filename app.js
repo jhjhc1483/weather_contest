@@ -957,7 +957,9 @@ function getDateHashSeed(dateStr) {
   return Math.abs(hash);
 }
 
-/* Render Severe Weather Incident News with Military First Priority & Authentic News Published Date */
+/* [비활성] 사건사고 기사 모듈
+   외부 뉴스 나열은 본 체계의 분석 산출물이 아니고 폐쇄망 이관도 불가하여 화면에서 제거함.
+   #newsBox 가 없으면 즉시 반환하므로 아래 코드는 동작하지 않는다. */
 function renderSafetyNews(forceShuffle = false) {
   const container = document.getElementById("newsBox");
   if (!container) return;
@@ -1155,7 +1157,6 @@ function renderDay() {
   drawDay(D);
   renderComparison(D);
   renderTimelineGrid(D);
-  renderSafetyNews();
 
   const n = getSelectedWindowPeakData(D);
   const l = LV[n.lv] || LV[0];
@@ -1812,8 +1813,6 @@ window.selectCalDate = function(dateStr) {
   if (dateInput) dateInput.value = dateStr;
   const dateStrEl = document.getElementById("currentDateStr");
   if (dateStrEl) dateStrEl.textContent = dateStr;
-  newsDisplayCount = 3;
-  updateNewsToggleBtnUI();
   recomputeAll();
 
   // 스크롤을 상세 패널로 이동
@@ -2205,8 +2204,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     dateInput.onchange = e => {
       S.planDate = e.target.value;
-      newsDisplayCount = 3;
-      updateNewsToggleBtnUI();
       const dateStrEl = document.getElementById("currentDateStr");
       if (dateStrEl) dateStrEl.textContent = `${S.planDate}`;
       recomputeAll();
@@ -2215,7 +2212,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   seg("task", TASKS, "task", "taskHint", () => { const t = TASKS.find(x => x.id === S.task); return t ? `${t.w} · ${t.ex}` : ''; }, () => recomputeAll());
   seg("gear", GEARS, "gear", "gearHint", () => { const g = GEARS.find(x => x.id === S.gear); return g ? g.src : ''; }, () => recomputeAll());
-  seg("mission", MISSIONS, "mission", "missionHint", () => { const m = MISSIONS.find(x => x.id === S.mission); return m ? m.desc : ''; }, () => recomputeAll());
 
   const sf = document.getElementById("from"), st = document.getElementById("to");
   if (sf && st) {

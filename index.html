@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=40">
+  <link rel="stylesheet" href="styles.css?v=41">
 
   <!-- PWA (Progressive Web App) Manifest & Mobile App Meta -->
   <link rel="manifest" href="manifest.json">
@@ -149,11 +149,6 @@
               <div class="seg" id="gear"></div>
               <p class="hint" id="gearHint"></p>
             </div>
-            <div class="f" style="margin-top:10px">
-              <label>임무 중요도 (연기 가능 여부)</label>
-              <div class="seg" id="mission"></div>
-              <p class="hint" id="missionHint"></p>
-            </div>
           </div>
         </div>
       </aside>
@@ -165,7 +160,7 @@
         <section class="panel glass" id="calendarSection">
           <div class="phd" style="display:flex;justify-content:space-between;align-items:center">
             <div>
-              <h2>📅 30일 훈련 가능 캘린더 · <span id="calScopeLabel">전 시점</span> 전수 분석</h2>
+              <h2>① 30일 훈련 가능 캘린더 · <span id="calScopeLabel">전 시점</span> 전수 분석</h2>
               <span class="note">현재 과업·복장·인원 조건으로 30일 × 17시간대 전수 위험도 판정 · 날짜 클릭 시 상세 분석 전환</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -182,7 +177,7 @@
         <!-- SECTION 2: SIDE-BY-SIDE COMPARISON & DECISION CARD -->
         <section class="panel glass">
           <div class="phd">
-            <h2>⚡ 규정 vs 보정 결과 1:1 직관 비교</h2>
+            <h2>② 규정 기준 vs 과업·복장 보정 결과</h2>
             <span class="note">현 육군규정 기준과 4계절·복장·과업 대사량 보정 결과를 직관적으로 1:1 비교</span>
           </div>
           <div class="pbd" style="padding-top:14px">
@@ -216,73 +211,15 @@
           </div>
         </section>
 
-        <!-- SECTION: 활동 개시 전 안전브리핑 (시행 여부 판단 지원) -->
+        <!-- ③ 시간대별 판정 — 하루를 쪼개서 가능한 시간을 찾는다 -->
         <section class="panel glass">
           <div class="phd">
-            <h2>🎙️ 활동 개시 전 안전브리핑 · 시행 여부 판단 지원</h2>
-            <div style="display:flex;align-items:center;gap:10px">
-              <span class="note">활동 직전 5단계 절차 · 최종 결정은 지휘관 권한</span>
-              <button type="button" class="btn-sub-sm" onclick="copyBrief()" aria-label="브리핑 전문 복사">
-                <span class="icon">📋</span> 브리핑 복사
-              </button>
-            </div>
-          </div>
-          <div class="pbd" style="padding-top:14px">
-            <div id="briefPanel"></div>
-          </div>
-        </section>
-
-        <!-- SECTION: 법적 산출 근거 & 4M 위험 감소대책 -->
-        <section class="panel glass">
-          <div class="phd">
-            <h2>📋 법적 산출 근거 (TB MED) & 4M 위험 감소대책</h2>
-            <span class="note">미 육군 TB MED 507/508에 기반한 산출 수치 근거 및 4M 분류 위험 감소 조치</span>
-          </div>
-          <div class="pbd" style="padding-top:14px">
-            <div id="verdictPanel"></div>
-          </div>
-        </section>
-
-        <!-- SECTION 3: ⚠️ WEATHER INCIDENT & ACCIDENT PREVENTION NEWS MODULE -->
-        <section class="panel glass">
-          <div class="phd" style="display:flex;justify-content:space-between;align-items:center;width:100%">
-            <div>
-              <h2>⚠️ 기상 조건별 사건사고 사례 및 안전 경보</h2>
-              <span class="note">선택일 기상 상황(폭염·한파·호우·강풍 등)에 부합하는 사건사고 사례를 매칭하여 부대 운영 및 야외활동 사고 예방 참고</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
-              <button type="button" class="btn-sub-sm" onclick="refreshSafetyNews()" aria-label="기사 무작위 셔플 새로고침">
-                <span class="icon">🔄</span> 기사 새로고침
-              </button>
-              <button type="button" class="btn-sub-sm" id="btnToggleNews" onclick="toggleMoreSafetyNews()" aria-label="기사 더보기 또는 접기">
-                <span class="icon" id="btnToggleNewsIcon">➕</span> <span id="btnToggleNewsText">더보기</span>
-              </button>
-            </div>
-          </div>
-          <div class="pbd">
-            <div class="news-box" id="newsBox"></div>
-          </div>
-        </section>
-
-        <!-- SECTION 4: HOURLY RISK TIMELINE CARDS -->
-        <section class="panel glass">
-          <div class="phd">
-            <h2>시간대별 (05시~21시) 위험도 타임라인 & 1:1 조치 지침</h2>
+            <h2>③ 시간대별 위험도 — 오늘 언제 가능한가</h2>
             <span class="note">시간대 클릭 시 해당 시각 세부 데이터 하이라이트</span>
           </div>
           <div class="pbd">
             <div class="timeline-grid" id="timelineGrid"></div>
-          </div>
-        </section>
-
-        <!-- SECTION 5: Time Series SVG Chart -->
-        <section class="panel glass">
-          <div class="phd">
-            <h2>시간대별 온열 위험도 곡선 및 비교 스트립</h2>
-            <span class="note">기상청 예보 · 실측 병렬 표출 (높은 쪽 자동 채택)</span>
-          </div>
-          <div class="pbd">
-            <svg id="chart" viewBox="0 0 900 424" role="img" aria-label="시간대별 체감온도 및 WBGT 곡선과 위험 등급 스트립"></svg>
+            <svg id="chart" viewBox="0 0 900 424" role="img" aria-label="시간대별 체감온도 및 WBGT 곡선과 위험 등급 스트립" style="margin-top:16px"></svg>
             <div class="legend">
               <span><i style="background:var(--k3)"></i>기상청 체감온도 (예보)</span>
               <span><i style="background:var(--accent)"></i>WBGT + 군 섭씨 보정 (°C)</span>
@@ -292,9 +229,32 @@
           </div>
         </section>
 
-        <!-- SECTION 6: Measured WBGT Input Grid -->
+        <!-- 산출 근거 & 감소대책 -->
         <section class="panel glass">
-          <div class="phd"><h2>현장 실측 WBGT 시간별 입력 및 보간</h2><span class="note" id="measEcho"></span></div>
+          <div class="phd">
+            <h2>산출 근거 및 위험 감소대책</h2>
+            <span class="note">미 육군 TB MED 507 / 508 기반 산출 수치 근거 및 4M 분류 감소대책</span>
+          </div>
+          <div class="pbd" style="padding-top:14px">
+            <div id="verdictPanel"></div>
+          </div>
+        </section>
+
+        <!-- ▼ 접이식 보조 기능 -->
+        <details class="panel glass fold">
+          <summary>
+            <span>🎙️ 활동 개시 전 안전브리핑 <small>— 실행 직전 5단계 절차 · 최종 결정은 지휘관 권한</small></span>
+            <button type="button" class="btn-sub-sm" onclick="event.preventDefault();copyBrief()" aria-label="브리핑 전문 복사">
+              <span class="icon">📋</span> 브리핑 복사
+            </button>
+          </summary>
+          <div class="pbd" style="padding-top:14px">
+            <div id="briefPanel"></div>
+          </div>
+        </details>
+
+        <details class="panel glass fold">
+          <summary><span>🌡️ 현장 실측 WBGT 입력 <small id="measEcho">— 부대 보유 측정기 값을 입력하면 미입력 시각을 보간</small></span></summary>
           <div class="pbd">
             <div class="tools">
               <button type="button" id="mLoad">표본 기준값 불러오기</button>
@@ -304,11 +264,10 @@
             <div class="mgrid" id="mgrid"></div>
             <p class="hint">측정한 시각만 수치로 입력하면 인접 실측값 사이를 직선 보간합니다. (단위: °C)</p>
           </div>
-        </section>
+        </details>
 
-        <!-- SECTION 7: Detailed Data Table -->
-        <section class="panel glass">
-          <div class="phd"><h2>시간별 위험지수 및 등급 상세 데이터</h2></div>
+        <details class="panel glass fold">
+          <summary><span>📊 시간별 상세 데이터 <small>— 산출 과정 검증용 원자료</small></span></summary>
           <div class="scroll"><table id="tbl">
             <thead><tr>
               <th>시각</th><th class="num">기온(°C)</th><th class="num">습도(%)</th><th class="num">체감온도</th>
@@ -316,7 +275,7 @@
             </tr></thead>
             <tbody></tbody>
           </table></div>
-        </section>
+        </details>
 
       </main>
     </div>
@@ -431,7 +390,7 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=40"></script>
+  <script src="app.js?v=41"></script>
 
   <!-- PWA Service Worker Registration -->
   <script>
