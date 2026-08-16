@@ -9,18 +9,18 @@ let BASE = [24.0,24.5,25.8,27.2,28.6,29.8,30.8,31.5,32.0,32.3,32.0,31.2,30.0,28.
 
 /* 8 Core Military Activity Master Database */
 const UNIT_ACTIVITIES = [
-  { id: "act_range", name: "🎯 사격 훈련", task: "easy", gear: "single", pax: 240, desc: "단독군장(전투복·방탄헬멧) 착용 영점/사격술 (+1.5°C 가산, 경작업 250W)" },
-  { id: "act_fitness", name: "🏃 체력 측정", task: "vhard", gear: "pt", pax: 300, desc: "체육복/PT복 착용 3km 뜀걸음 및 훈련 (통풍 우수 -1.0°C 보정, 고강도 800W)" },
-  { id: "act_march10", name: "🎒 10km 급속행군", task: "heavy", gear: "single", pax: 450, desc: "단독군장 전술 부하 행군 (중작업 600W, 단독군장 +1.5°C)" },
-  { id: "act_march40", name: "⚔️ 40km 전술행군", task: "heavy", gear: "iba", pax: 600, desc: "45lb 완전군장 행군 (고부하 야외 노출, 완전군장/방탄복 +2.8°C)" },
-  { id: "act_gaekae", name: "💥 각개전투 / 포복", task: "mod", gear: "single", pax: 350, desc: "장애물 극복 및 단독군장 전술 포복 (중등작업 425W, +1.5°C)" },
-  { id: "act_cbrn", name: "☣️ 화생방 제독", task: "mod", gear: "cbrn", pax: 180, desc: "MOPP 4단계 전신 보호의 착용 (+11.1°C 가산)" },
-  { id: "act_obstacle", name: "🧗 유격 / 장애물", task: "vhard", gear: "scu", pax: 280, desc: "전투복 착용 코스 장애물 극복 및 극기 훈련 (+0.0°C, 고강도 800W)" },
+  { id: "act_range", name: "🎯 사격 훈련", task: "easy", gear: "single", desc: "단독군장(전투복·방탄헬멧) 착용 영점/사격술 (+1.5°C 가산, 경작업 250W)" },
+  { id: "act_fitness", name: "🏃 체력 측정", task: "vhard", gear: "pt", desc: "체육복/PT복 착용 3km 뜀걸음 및 훈련 (통풍 우수 -1.0°C 보정, 고강도 800W)" },
+  { id: "act_march10", name: "🎒 10km 급속행군", task: "heavy", gear: "single", desc: "단독군장 전술 부하 행군 (중작업 600W, 단독군장 +1.5°C)" },
+  { id: "act_march40", name: "⚔️ 40km 전술행군", task: "heavy", gear: "iba", desc: "45lb 완전군장 행군 (고부하 야외 노출, 완전군장/방탄복 +2.8°C)" },
+  { id: "act_gaekae", name: "💥 각개전투 / 포복", task: "mod", gear: "single", desc: "장애물 극복 및 단독군장 전술 포복 (중등작업 425W, +1.5°C)" },
+  { id: "act_cbrn", name: "☣️ 화생방 제독", task: "mod", gear: "cbrn", desc: "MOPP 4단계 전신 보호의 착용 (+11.1°C 가산)" },
+  { id: "act_obstacle", name: "🧗 유격 / 장애물", task: "vhard", gear: "scu", desc: "전투복 착용 코스 장애물 극복 및 극기 훈련 (+0.0°C, 고강도 800W)" },
   /* 정적 과업 — 혹한기 한랭손상이 집중되는 과업군 (TB MED 508 표 3-1 Sedentary) */
-  { id: "act_sentry", name: "🥶 경계 · 보초 근무", task: "static", gear: "ecwcs", pax: 60, desc: "정적 노출 지속 (1 MET) · 혹한기 한랭손상 최다 발생 과업 (방한복 3.4 clo)" },
-  { id: "act_gate", name: "🚧 위병소 근무", task: "static", gear: "ecwcs", pax: 20, desc: "정적 노출 지속 (1 MET) · 주야 교대 노출" },
-  { id: "act_ambush", name: "🫥 매복 · 관측", task: "static", gear: "ecwcs", pax: 40, desc: "장시간 정적 자세 유지 (1 MET) · 말초 순환 저하로 동상 위험 가중" },
-  { id: "act_custom", name: "⚙️ 사용자 직접설정", task: "heavy", gear: "single", pax: 240, desc: "과업 및 복장 직접 선택" }
+  { id: "act_sentry", name: "🥶 경계 · 보초 근무", task: "static", gear: "ecwcs", desc: "정적 노출 지속 (1 MET) · 혹한기 한랭손상 최다 발생 과업 (방한복 3.4 clo)" },
+  { id: "act_gate", name: "🚧 위병소 근무", task: "static", gear: "ecwcs", desc: "정적 노출 지속 (1 MET) · 주야 교대 노출" },
+  { id: "act_ambush", name: "🫥 매복 · 관측", task: "static", gear: "ecwcs", desc: "장시간 정적 자세 유지 (1 MET) · 말초 순환 저하로 동상 위험 가중" },
+  { id: "act_custom", name: "⚙️ 사용자 직접설정", task: "heavy", gear: "single", desc: "과업 및 복장 직접 선택" }
 ];
 
 /* Military Task Metabolic Rates & Gear Adjustments (Celsius Basis)
@@ -209,7 +209,7 @@ const S = {
   region: "nonsan",
   planDate: getTodayStr(),
   activeActivityId: "act_march40",
-  task: "heavy", gear: "iba", pax: 600, from: 8, to: 12,
+  task: "heavy", gear: "iba", from: 8, to: 12,
   meas: HOURS.map(() => null),
   envData: { ta: 33.2, rh: 68, ws: 2.1, chillTemp: 34.5, wbgt: 31.8, pm10: 42, pm25: 22, dustStatus: "보통", uvIndex: 8, pop: 10 },
   byDateWeather: {},      // 현재 선택 지역의 30일 데이터
@@ -267,9 +267,7 @@ window.selectActivity = function(actId) {
   S.activeActivityId = actId;
   const act = UNIT_ACTIVITIES.find(a => a.id === actId);
   if (act && actId !== 'act_custom') {
-    S.task = act.task; S.gear = act.gear; S.pax = act.pax;
-    const paxEl = document.getElementById("pax");
-    if (paxEl) paxEl.value = act.pax;
+    S.task = act.task; S.gear = act.gear;
   }
   seg("task", TASKS, "task", "taskHint", () => { const t = TASKS.find(x => x.id === S.task); return t ? `${t.w} · ${t.ex}` : ''; }, () => recomputeAll());
   seg("gear", GEARS, "gear", "gearHint", () => { const g = GEARS.find(x => x.id === S.gear); return g ? g.src : ''; }, () => recomputeAll());
@@ -966,7 +964,7 @@ function renderDay() {
   const cold = n.cold || {};
 
   const prEl = document.getElementById("planRange");
-  if (prEl) prEl.textContent = `${pad(S.from)}:00 – ${pad(S.to)}:00 · ${S.pax}명`;
+  if (prEl) prEl.textContent = `${pad(S.from)}:00 – ${pad(S.to)}:00`;
 
   // 계획 구간 내 훈련 가능 시간 집계
   const i0 = Math.max(0, HOURS.indexOf(S.from)), i1 = Math.max(0, HOURS.indexOf(S.to));
@@ -1152,7 +1150,6 @@ function buildBrief(D, peak, verdict, safeWin) {
       act: (act.name || "-") + ((act.task && (act.task !== S.task || act.gear !== S.gear)) ? " (조정됨)" : ""),
       task: taskObj.name || "-",
       gear: gearObj.name || "-",
-      pax: S.pax,
       safeWin
     },
     hazards, asks, declares, checks, verdict
@@ -1168,7 +1165,7 @@ function briefToText(f) {
   return [
     `[활동 개시 전 안전브리핑]`,
     `일자 ${h.date} · 시간대 ${h.window} · ${h.region}`,
-    `활동 ${h.act} / 과업 ${h.task} / 복장 ${h.gear} / 인원 ${h.pax}명`,
+    `활동 ${h.act} / 과업 ${h.task} / 복장 ${h.gear}`,
     ``,
     `1단계. 핵심 위험요소 공유`,
     ...f.hazards.map((x, i) => `  ${i + 1}) ${strip(x)}`),
@@ -1227,7 +1224,7 @@ function renderBrief(f) {
       <div><label>일자 · 시간대</label><b>${h.date} · ${h.window}</b></div>
       <div><label>지역</label><b>${h.region}</b></div>
       <div><label>활동 · 과업</label><b>${h.act} / ${h.task}</b></div>
-      <div><label>복장 · 인원</label><b>${h.gear} / ${h.pax}명</b></div>
+      <div><label>복장</label><b>${h.gear}</b></div>
     </div>
 
     ${step(1, "핵심 위험요소 공유 <small>(계획단계 평가 결과를 행동 기준으로 전환)</small>",
@@ -1993,8 +1990,6 @@ document.addEventListener("DOMContentLoaded", () => {
     st.onchange = () => { S.to = +st.value; if (S.to <= S.from) { S.from = Math.max(5, S.to - 1); sf.value = S.from; } recomputeAll(); };
   }
 
-  const paxEl = document.getElementById("pax");
-  if (paxEl) paxEl.oninput = e => { S.pax = Math.max(1, +e.target.value || 1); recomputeAll(); };
 
   const root = document.documentElement;
   if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) root.dataset.theme = "light";

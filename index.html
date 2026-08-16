@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=42">
+  <link rel="stylesheet" href="styles.css?v=43">
 
   <!-- PWA (Progressive Web App) Manifest & Mobile App Meta -->
   <link rel="manifest" href="manifest.json">
@@ -136,10 +136,6 @@
               <div class="row"><select id="from"></select><span style="color:var(--faint)">–</span><select id="to"></select></div>
             </div>
             <div class="f" style="margin-top:10px">
-              <label for="pax">훈련 인원 (명)</label>
-              <input type="number" id="pax" value="240" min="1" max="9999" step="10">
-            </div>
-            <div class="f" style="margin-top:10px">
               <label>훈련 과업 대사율</label>
               <div class="seg" id="task"></div>
               <p class="hint" id="taskHint"></p>
@@ -161,7 +157,7 @@
           <div class="phd" style="display:flex;justify-content:space-between;align-items:center">
             <div>
               <h2>① 30일 훈련 가능 캘린더 · <span id="calScopeLabel">전 시점</span> 전수 분석</h2>
-              <span class="note">현재 과업·복장·인원 조건으로 30일 × 17시간대 전수 위험도 판정 · 날짜 클릭 시 상세 분석 전환</span>
+              <span class="note">현재 과업·복장 조건으로 30일 × 17시간대 전수 위험도 판정 · 날짜 클릭 시 상세 분석 전환</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
               <div class="cal-region-tabs" id="calRegionTabs"></div>
@@ -388,7 +384,7 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=42"></script>
+  <script src="app.js?v=43"></script>
 
   <!-- PWA Service Worker Registration -->
   <script>
