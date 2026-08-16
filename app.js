@@ -196,7 +196,6 @@ const REGIONS = {
 };
 
 /* ═══════════ APP STATE ═══════════ */
-let newsDisplayCount = 3;
 
 function getTodayStr() {
   const d = new Date();
@@ -210,10 +209,9 @@ const S = {
   region: "nonsan",
   planDate: getTodayStr(),
   activeActivityId: "act_march40",
-  task: "heavy", gear: "iba", pax: 600, from: 8, to: 12, mission: "normal",
+  task: "heavy", gear: "iba", pax: 600, from: 8, to: 12,
   meas: HOURS.map(() => null),
   envData: { ta: 33.2, rh: 68, ws: 2.1, chillTemp: 34.5, wbgt: 31.8, pm10: 42, pm25: 22, dustStatus: "보통", uvIndex: 8, pop: 10 },
-  newsList: [],
   byDateWeather: {},      // 현재 선택 지역의 30일 데이터
   byRegionWeather: {},    // { nonsan: {...}, yangpyeong: {...} } 지역별 30일 데이터 전체
   modalRegion: "nonsan"   // 30일 DB 팝업에서 보고 있는 지역
@@ -622,17 +620,6 @@ function regulationVerdict(peak) {
   };
 }
 
-/* 임무 중요도 — 연기·대체 가능 여부에 따라 감소대책 및 시행 판단 문구를 달리한다.
-   defer=false 인 임무는 연기가 불가하므로 '시간대 이동' 대책을 제시하지 않는다. */
-const MISSIONS = [
-  { id: "normal",    name: "통상 훈련", defer: true,
-    desc: "연기·시간대 조정이 가능한 일반 훈련" },
-  { id: "key",       name: "핵심 훈련", defer: true,
-    desc: "전투력 측정·검열 등 일정 조정 부담이 큰 훈련" },
-  { id: "essential", name: "필수 임무", defer: false,
-    desc: "경계작전 등 중단 불가 임무 · 연기 불가" }
-];
-
 /* 감소대책 — ① 제거 → ② 대체 → ③ 공학적 → ④ 관리적 → ⑤ 개인보호구 우선순위
    각 대책은 4M(Man·Machine·Media·Management)으로 분류한다
    근거: 「사업장 위험성평가에 관한 지침」(고용노동부 고시) 위험성 감소대책 수립 원칙 */
@@ -649,11 +636,10 @@ function buildMeasures(peak, safeWindowLabel) {
       ? "야외훈련 중지 및 실내 교육으로 전면 전환"
       : "해당 시간대 야외훈련 중지 · 실내/주둔지 훈련으로 대체");
   }
-  const mission = MISSIONS.find(m => m.id === S.mission) || MISSIONS[0];
-  if (mission.defer && safeWindowLabel && safeWindowLabel !== "없음" && peak.lv >= 3) {
+  if (safeWindowLabel && safeWindowLabel !== "없음" && peak.lv >= 3) {
     add(2, "대체", "Media", `훈련 시간대를 안전 시간창(${safeWindowLabel})으로 이동`);
-  } else if (!mission.defer && peak.lv >= 3) {
-    add(2, "대체", "Management", `${mission.name} — 연기 불가. 교대 주기 단축 및 예비 인원 확보로 개인 노출시간 단축`);
+  } else if (peak.lv >= 3) {
+    add(2, "대체", "Management", "연기 불가 임무의 경우 교대 주기 단축 및 예비 인원 확보로 개인 노출시간 단축");
   }
   if (peak.lv >= 3) {
     add(2, "대체", "Management", isCold
@@ -823,7 +809,7 @@ function renderComparison(D) {
 
   compBox.innerHTML = `
     <div class="comp-col legacy">
-      <span class="comp-title">📋 현 규정 (계획 시간대 ${pad(n.h)}:00 ${seasonal.seasonIcon || ''} 계절 지침 기준)</span>
+      <span class="comp-title">📋 규정 판정 (${pad(n.h)}:00 ${seasonal.seasonIcon || ''} 육군 교육훈련 규정 기준)</span>
       <div class="comp-card">
         <div class="head">
           <span>${legacy.status}</span>
@@ -837,7 +823,7 @@ function renderComparison(D) {
     </div>
 
     <div class="comp-col proposed">
-      <span class="comp-title">🪖 본 시스템 (${pad(n.h)}:00 ${seasonal.seasonIcon || ''} ${seasonBadgeText} TB MED 507 보정)</span>
+      <span class="comp-title">🪖 과업·복장 보정 결과 (${pad(n.h)}:00 ${seasonal.seasonIcon || ''} ${seasonBadgeText})</span>
       <div class="comp-card" style="border-color:var(--accent);background:var(--accent-bg)">
         <div class="head">
           <span style="color:var(--accent)">${seasonal.activeStatus || proposedLv.n} (체감/보정 ${seasonal.activeSeason === 'WINTER' ? '체감' + seasonal.chillTemp + '°C' : 'WBGT ' + n.wC.toFixed(1) + '°C'})</span>
@@ -887,177 +873,6 @@ window.highlightHour = function(hour) {
     }
   }
 };
-
-/* Refresh & Expand/Collapse Toggle Safety News Handlers */
-window.refreshSafetyNews = function() {
-  newsDisplayCount = 3;
-  updateNewsToggleBtnUI();
-  renderSafetyNews(true);
-};
-
-window.toggleMoreSafetyNews = function() {
-  if (newsDisplayCount > 3) {
-    newsDisplayCount = 3;
-  } else {
-    newsDisplayCount += 3;
-  }
-  updateNewsToggleBtnUI();
-  renderSafetyNews();
-};
-
-function updateNewsToggleBtnUI() {
-  const iconEl = document.getElementById("btnToggleNewsIcon");
-  const textEl = document.getElementById("btnToggleNewsText");
-  if (iconEl && textEl) {
-    if (newsDisplayCount > 3) {
-      iconEl.textContent = "➖";
-      textEl.textContent = "접기 (3건 보기)";
-    } else {
-      iconEl.textContent = "➕";
-      textEl.textContent = "더보기";
-    }
-  }
-}
-
-/* Date String Seed Hash Helper for Unique Per-Date News Order */
-function getDateHashSeed(dateStr) {
-  let hash = 0;
-  for (let i = 0; i < dateStr.length; i++) {
-    hash = (hash << 5) - hash + dateStr.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
-/* [비활성] 사건사고 기사 모듈
-   외부 뉴스 나열은 본 체계의 분석 산출물이 아니고 폐쇄망 이관도 불가하여 화면에서 제거함.
-   #newsBox 가 없으면 즉시 반환하므로 아래 코드는 동작하지 않는다. */
-function renderSafetyNews(forceShuffle = false) {
-  const container = document.getElementById("newsBox");
-  if (!container) return;
-
-  const dateStr = S.planDate || getTodayStr();
-  const dParts = dateStr.split("-");
-  const month = dParts.length >= 2 ? parseInt(dParts[1], 10) : 8;
-  const env = S.envData || {};
-
-  const newsList = Array.isArray(S.newsList) ? S.newsList.slice() : [];
-  if (!newsList.length) {
-    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">수집된 기상 특보 사고 기사가 없습니다.</p>`;
-    return;
-  }
-
-  const dateSeed = forceShuffle ? Math.floor(Math.random() * 10000) : getDateHashSeed(dateStr);
-
-  function anyKw(str, kws) {
-    return kws.some(kw => str.includes(kw));
-  }
-
-  const accidentKws = ["사고", "사례", "피해", "발생", "열사병", "열탈진", "온열질환", "동상", "한랭질환", "저체온증", "침수", "고립", "붕괴", "산불", "쓰러", "인명", "병원", "이송", "부상", "사망", "질환", "응급"];
-  const excludeKws = ["보험", "특약", "증권", "주가", "분양", "가입", "손해", "생명", "수혜주", "재테크", "대출", "카드", "주식", "매출", "영업이익"];
-
-  const scoredNews = newsList.map((item, idx) => {
-    let score = 0;
-    const cat = item.category;
-    const combinedStr = (item.title || "") + " " + (item.snippet || "");
-
-    // 0. EXCLUDE COMMERCIAL / INSURANCE / FINANCIAL NEWS
-    if (anyKw(combinedStr, excludeKws)) {
-      return { item, finalScore: -99999 };
-    }
-
-    const isMilitary = item.isMilitary || anyKw(combinedStr, ["군", "군대", "장병", "부대", "훈련", "국방", "육군", "해군", "공군"]);
-    const isAccident = item.isAccident || anyKw(combinedStr, accidentKws);
-
-    // 1. ACCIDENT PRIORITY FIRST: Massive score boost for weather accident/incident cases (+400 points)
-    if (isAccident) {
-      score += 400;
-    }
-
-    // 2. MILITARY RELEVANCE BONUS: Additional score boost for military related cases (+100 points)
-    if (isMilitary) {
-      score += 100;
-    }
-
-    // 3. STRICT HARD EXCLUSION: Physical impossibility rules
-    if ((month === 12 || month === 1 || month === 2) && (cat === "heatwave" || cat === "foodpoison")) {
-      return { item, finalScore: -99999 }; // Never show heatwave in winter
-    }
-    if ((month >= 6 && month <= 8) && (cat === "coldwave")) {
-      return { item, finalScore: -99999 }; // Never show coldwave in summer
-    }
-
-    // 4. DATE WEATHER HAZARD MATCHING WEIGHTS (+350 ~ +500 points)
-    if ((month === 12 || month === 1 || month === 2) && (cat === "coldwave" || cat === "strongwind")) {
-      score += 350;
-    } else if ((month >= 6 && month <= 8) && (cat === "heatwave" || cat === "foodpoison" || cat === "lightning" || cat === "typhoon_heavyrain")) {
-      score += 350;
-    } else if ((month >= 3 && month <= 5 || month >= 9 && month <= 11) && (cat === "wildfire_dry" || cat === "dust_ozon")) {
-      score += 350;
-    }
-
-    if (env.ta >= 31.0 && cat === "heatwave") score += 200;
-    if (env.ta <= 5.0 && cat === "coldwave") score += 200;
-    if (env.pop >= 50 && (cat === "typhoon_heavyrain" || cat === "lightning")) score += 180;
-    if (env.pm10 >= 80 && cat === "dust_ozon") score += 150;
-    if (env.ws >= 4.0 && cat === "strongwind") score += 120;
-
-    // 5. Per-Date Pseudo-random offset for unique date variations
-    const pseudoRandom = Math.sin(dateSeed + idx * 7.7) * 40;
-    const finalScore = score + pseudoRandom;
-
-    return { item, finalScore, isMilitary, isAccident };
-  });
-
-  // Filter out hard excluded items (-99999) and sort descending (Weather Match & Accident Prevention First)
-  const validScored = scoredNews.filter(s => s.finalScore > -9000);
-  validScored.sort((a, b) => b.finalScore - a.finalScore);
-
-  const listToRender = validScored.map(s => s.item).slice(0, newsDisplayCount);
-
-  if (!listToRender.length) {
-    container.innerHTML = `<p style="color:var(--dim);padding:16px;text-align:center">선택하신 날짜(${dateStr}) 계절 조건에 맞는 기상 재난 사고 기사가 없습니다.</p>`;
-    return;
-  }
-
-  const catNames = {
-    heatwave: "☀️ 폭염/온열",
-    coldwave: "❄️ 한파/동상",
-    typhoon_heavyrain: "🌧️ 태풍/호우",
-    lightning: "⚡ 낙뢰/벼락",
-    strongwind: "💨 강풍/시설물",
-    wildfire_dry: "🌲 건조/산불",
-    dust_ozon: "😷 미세먼지/황사",
-    foodpoison: "🍱 식중독/위생"
-  };
-
-  container.innerHTML = listToRender.map(n => {
-    const isMil = n.isMilitary || anyKw(n.title + n.snippet, ["군", "군대", "장병", "부대", "훈련", "국방"]);
-    const isAcc = n.isAccident || anyKw(n.title + n.snippet, accidentKws);
-    const pubDateStr = n.date ? `보도일자: ${n.date}` : "최신 보도";
-    const catLabel = catNames[n.category] || "⚠️ 기상사고";
-    const borderStyle = isAcc ? 'border-left:4px solid #ff4d4f;background:var(--glass-2)' : 'border-left:4px solid var(--accent);background:var(--glass-2)';
-    
-    return `
-      <div class="news-card" style="${borderStyle}">
-        <div class="hdr">
-          <a href="${n.url}" target="_blank" rel="noopener" class="news-title">
-            ${isMil ? '🪖' : '🚨'} ${n.title}
-          </a>
-          <div style="display:flex;gap:4px;align-items:center;flex-shrink:0;">
-            <span class="news-tag" style="background:rgba(255,255,255,0.15);color:var(--text-light);font-size:11px">${catLabel}</span>
-            <span class="news-tag" style="${isMil ? 'background:var(--accent);color:#fff' : 'background:#ff4d4f;color:#fff'}">${n.source}</span>
-          </div>
-        </div>
-        <p class="news-snippet">${n.snippet}</p>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11px;color:var(--dim)">
-          <span>📅 ${pubDateStr}</span>
-          <span>💡 부대 운영 사고 예방 참고 사례</span>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
 
 function drawDay(D) {
   const chartEl = document.getElementById("chart");
@@ -2074,7 +1889,6 @@ async function fetchKmaLiveWeather() {
           badg.className = 'badge live';
         }
       }
-      if (json && json.news) S.newsList = json.news;
       if (json && json.startDate) {
         const dateInput = document.getElementById("planDate");
         if (dateInput) {
