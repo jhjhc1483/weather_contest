@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T18:36:43Z",
+  "updatedAt": "2026-08-17T21:24:34Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "[날씨] 거제, 200년에 한번 내릴 만한 비 쏟아져...사흘간 예보보다 4배...",
+      "source": "기상/재난 보도",
+      "snippet": "[백승주] 호우에 있어서 사망자도 발생하셨고 사망자께서는 집에 계시다가 산사태로 피해를 입으셨죠.... 더 집중해 보도록 하겠습니다. 산사태, 침수 이런 위험들은 앞으로 계속 당분간 이어진다는 말씀이신 거잖아요....",
+      "url": "https://www.ytn.co.kr/_ln/0108_202608180612310508",
+      "date": "2026-08-18"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "반가운 단비, 몇 시간 새 ‘재난’ 됐다(종합)",
       "source": "기상/재난 보도",
       "snippet": "경남에서는 이날 새벽 4시32분 거제 옥포동의 한 야산에서 폭우로 인한 산사태가 발생, 떠밀려온 토사가... 5㎜) 사례만 이를 앞선다. 특히 거제에는 이날 새벽 1시32분부터 1시간 동안 무려 124.5㎜의 호우가 집중됐다....",
@@ -9307,7 +9318,7 @@
       "date": "2026-08-17"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9318,7 +9329,7 @@
       "date": "2026-08-17"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9329,7 +9340,7 @@
       "date": "2026-08-17"
     },
     {
-      "id": "mil_news_16",
+      "id": "mil_news_17",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9340,7 +9351,7 @@
       "date": "2026-08-14"
     },
     {
-      "id": "mil_news_17",
+      "id": "mil_news_18",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9351,7 +9362,7 @@
       "date": "2026-08-14"
     },
     {
-      "id": "mil_news_18",
+      "id": "mil_news_19",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9362,7 +9373,7 @@
       "date": "2026-07-19"
     },
     {
-      "id": "mil_news_19",
+      "id": "mil_news_20",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9373,7 +9384,7 @@
       "date": "2026-07-22"
     },
     {
-      "id": "mil_news_20",
+      "id": "mil_news_21",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9384,7 +9395,7 @@
       "date": "2026-07-08"
     },
     {
-      "id": "mil_news_21",
+      "id": "mil_news_22",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9395,7 +9406,7 @@
       "date": "2024-07-16"
     },
     {
-      "id": "mil_news_22",
+      "id": "mil_news_23",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9406,7 +9417,7 @@
       "date": "2024-07-07"
     },
     {
-      "id": "mil_news_23",
+      "id": "mil_news_24",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9417,7 +9428,7 @@
       "date": "2024-06-20"
     },
     {
-      "id": "mil_news_24",
+      "id": "mil_news_25",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9428,7 +9439,7 @@
       "date": "2023-07-24"
     },
     {
-      "id": "mil_news_25",
+      "id": "mil_news_26",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9439,7 +9450,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_26",
+      "id": "mil_news_27",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9450,7 +9461,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_27",
+      "id": "mil_news_28",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9461,7 +9472,7 @@
       "date": "2026-06-01"
     },
     {
-      "id": "mil_news_28",
+      "id": "mil_news_29",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9472,7 +9483,7 @@
       "date": "2026-05-31"
     },
     {
-      "id": "mil_news_29",
+      "id": "mil_news_30",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9483,7 +9494,7 @@
       "date": "2025-06-19"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_31",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9505,7 @@
       "date": "2024-07-04"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_32",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9516,7 @@
       "date": "2023-08-10"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_33",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9527,7 @@
       "date": "2023-05-04"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_34",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9527,7 +9538,7 @@
       "date": "2026-08-06"
     },
     {
-      "id": "mil_news_34",
+      "id": "mil_news_35",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9538,7 +9549,7 @@
       "date": "2026-08-04"
     },
     {
-      "id": "mil_news_35",
+      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9549,7 +9560,7 @@
       "date": "2026-08-02"
     },
     {
-      "id": "mil_news_36",
+      "id": "mil_news_37",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,7 +9571,7 @@
       "date": "2026-07-27"
     },
     {
-      "id": "mil_news_37",
+      "id": "mil_news_38",
       "category": "foodpoison",
       "isMilitary": true,
       "isAccident": true,
@@ -9571,7 +9582,7 @@
       "date": "2026-07-15"
     },
     {
-      "id": "mil_news_38",
+      "id": "mil_news_39",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9582,7 +9593,7 @@
       "date": "2025-07-11"
     },
     {
-      "id": "mil_news_39",
+      "id": "mil_news_40",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
