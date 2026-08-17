@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-17T05:48:32Z",
+  "updatedAt": "2026-08-17T06:52:52Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,28 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "경남 거제 사흘간 여름비 90% 쏟아졌다…강수량 577㎜ '역대급 폭우' 기...",
+      "source": "기상/재난 보도",
+      "snippet": "기록적인 폭우가 쏟아지면서 곳곳에서 침수와 산사태 피해가 잇따랐다. 거제에서는 하루 동안 570㎜가... 1991~2020년 평균 여름 강수량은 거제 935.1㎜, 통영 728.8㎜로, 이번 집중호우로 두 지역 모두 평년 여름 강수량의 90...",
+      "url": "https://www.lecturernews.com/news/articleView.html?idxno=208783",
+      "date": "2026-08-17"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "\"잠자던 아파트 1층 덮친 산사태…거제서 1명 사망, '집 안도 안전하지...",
+      "source": "기상/재난 보도",
+      "snippet": "큰 사고로 이어질 수 있었던 상황이었다. 박은식 산림청장은 지난 5월 공식 브리핑에서 우면산을 대표 사례... 2023년 7월 집중호우 당시 산사태로 인명피해가 발생한 8곳 가운데 사전에 산사태취약지역으로 지정돼 있던...",
+      "url": "http://www.newsworker.co.kr/news/articleView.html?idxno=441400",
+      "date": "2026-08-17"
+    },
+    {
+      "id": "mil_news_15",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "내일부터 남부지방부터 폭우…정부, 비상 대응태세 점검",
       "source": "기상/재난 보도",
       "snippet": "지난 8일 산지에 내린 집중호우로 하류 계곡과 하천의 수위가 급격히 상승하면서 관광객이 고립된 사례도... 여러분께서도 집중호우 시 외출을 삼가고, 산사태 우려지역, 하천변, 지하공간 등 위험한 지역의 접근을...",
@@ -9307,7 +9329,7 @@
       "date": "2026-08-14"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9316,28 +9338,6 @@
       "snippet": "못하는 사례들도 많은 것으로 알려졌다. 지바현에 있는 나리타공항의 버스와 철도 운행이 중단돼 7천여명이 공항에 발이 묶이기도 했다. 이번 폭우는 발달한 비구름이 띠 모양으로 이어져 같은 지역에 집중호우를 쏟는...",
       "url": "https://www.hani.co.kr/arti/international/international_general/1272970.html",
       "date": "2026-08-14"
-    },
-    {
-      "id": "mil_news_15",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "[안전상황실·31일] 폭염 속 밭일 90대 숨져 전북 사망 2명",
-      "source": "기상/재난 보도",
-      "snippet": "145㎜ 집중호우가 쏟아져 계곡에서 야영 중이던 등산객과 주민 등 103명(사망 78명·실종 25명)이 급류에... 산사태·2020년 부산 초량 지하차도·2022년 서울 강남 침수·2023년 오송 지하차도 참사 등 게릴라성 폭우 관련...",
-      "url": "https://www.safetimes.co.kr/news/articleView.html?idxno=244457",
-      "date": "2026-07-31"
-    },
-    {
-      "id": "mil_news_16",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "매년 태풍철마다 소환되는 이름들… 한반도 강타했던 '초강력 태풍' 정...",
-      "source": "기상/재난 보도",
-      "snippet": "짧은 시간에 많은 비가 쏟아지면서 하천이 범람하고 산사태와 토사 유출이 발생했다. 도로와 철도, 주택... 태풍과 집중호우 때는 차량이나 시설물을 살피기 위한 이동보다 침수와 붕괴 위험이 없는 곳으로 벗어나는...",
-      "url": "https://www.wikitree.co.kr/articles/1149449",
-      "date": "2026-07-30"
     },
     {
       "id": "mil_news_17",
@@ -9352,28 +9352,6 @@
     },
     {
       "id": "mil_news_18",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "폭염·폭우·태풍... 지구촌 기상재난에 몸살",
-      "source": "기상/재난 보도",
-      "snippet": "폭우가 쏟아지면서 산사태나 건물 붕괴 사고가 발생했고 사상자가 잇따랐다.최근 몇 년 동안 기후 변화로 인도 히말라야 지역과 파키스탄 북부 지역에서는 짧은 시간 동안 좁은 지역에 매우 많은 양의 비가 집중적으...",
-      "url": "https://weeklytrade.co.kr/news/view.html?section=1&category=136&item=&no=100718",
-      "date": "2026-07-22"
-    },
-    {
-      "id": "mil_news_19",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "'몬순 폭우'에 남아시아 초토화 … 인명피해 확산",
-      "source": "기상/재난 보도",
-      "snippet": "중국에서는 제9호 태풍 '바비'의 영향으로 집중호우가 이어지며 수백만 명이 대피했고, 남미 칠레에서도 강풍을 동반한 폭우로 인명 피해와 대규모 침수 피해가 발생했다. 세계기상기구(WMO)는 지구온난화로 대기 중...",
-      "url": "https://www.safetimes.co.kr/news/articleView.html?idxno=244415",
-      "date": "2026-07-23"
-    },
-    {
-      "id": "mil_news_20",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9384,7 +9362,7 @@
       "date": "2026-07-22"
     },
     {
-      "id": "mil_news_21",
+      "id": "mil_news_19",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9395,7 +9373,7 @@
       "date": "2026-07-08"
     },
     {
-      "id": "mil_news_22",
+      "id": "mil_news_20",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9406,7 +9384,7 @@
       "date": "2024-07-16"
     },
     {
-      "id": "mil_news_23",
+      "id": "mil_news_21",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9417,7 +9395,7 @@
       "date": "2024-07-07"
     },
     {
-      "id": "mil_news_24",
+      "id": "mil_news_22",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9428,7 +9406,7 @@
       "date": "2024-06-20"
     },
     {
-      "id": "mil_news_25",
+      "id": "mil_news_23",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9439,7 +9417,18 @@
       "date": "2023-07-24"
     },
     {
-      "id": "mil_news_26",
+      "id": "mil_news_24",
+      "category": "strongwind",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "매년 태풍철마다 소환되는 이름들… 한반도 강타했던 '초강력 태풍' 정...",
+      "source": "기상/재난 보도",
+      "snippet": "국내에 영향을 준 태풍 가운데 재산 피해 규모가 가장 큰 사례로 남아 있다. 산지가 많고 하천이 좁은... 태풍과 집중호우 때는 차량이나 시설물을 살피기 위한 이동보다 침수와 붕괴 위험이 없는 곳으로 벗어나는 대응을...",
+      "url": "https://www.wikitree.co.kr/articles/1149449",
+      "date": "2026-07-30"
+    },
+    {
+      "id": "mil_news_25",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9450,7 +9439,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_27",
+      "id": "mil_news_26",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9461,7 +9450,7 @@
       "date": "2026-06-01"
     },
     {
-      "id": "mil_news_28",
+      "id": "mil_news_27",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9472,7 +9461,7 @@
       "date": "2026-05-31"
     },
     {
-      "id": "mil_news_29",
+      "id": "mil_news_28",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9483,7 +9472,7 @@
       "date": "2025-06-19"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_29",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9483,7 @@
       "date": "2024-07-04"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_30",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9494,7 @@
       "date": "2023-08-10"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_31",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9505,7 @@
       "date": "2023-05-04"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_32",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9527,7 +9516,7 @@
       "date": "2026-08-06"
     },
     {
-      "id": "mil_news_34",
+      "id": "mil_news_33",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9538,7 +9527,7 @@
       "date": "2026-08-04"
     },
     {
-      "id": "mil_news_35",
+      "id": "mil_news_34",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9549,7 +9538,7 @@
       "date": "2026-08-02"
     },
     {
-      "id": "mil_news_36",
+      "id": "mil_news_35",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,7 +9549,7 @@
       "date": "2026-07-27"
     },
     {
-      "id": "mil_news_37",
+      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": true,
       "isAccident": true,
@@ -9571,7 +9560,7 @@
       "date": "2026-07-15"
     },
     {
-      "id": "mil_news_38",
+      "id": "mil_news_37",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9582,7 +9571,7 @@
       "date": "2025-07-11"
     },
     {
-      "id": "mil_news_39",
+      "id": "mil_news_38",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
