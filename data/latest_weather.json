@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-18T03:42:52Z",
+  "updatedAt": "2026-08-18T05:54:25Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9363,17 +9363,6 @@
     },
     {
       "id": "mil_news_19",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "장마 대신 '대형 폭우'...이상기후에 전국 피해 속출",
-      "source": "기상/재난 보도",
-      "snippet": "다만 단시간에 호우가 집중되며 전국 곳곳에서 사고 위험 사례가 잇따랐다. 지난 18일 강원 영월에서... 18일 호우경보 발령에 맞춰 위기경보를 '경계'로 높이고 중대본 2단계를 가동했다. 피해 복구 및 추가 산사태...",
-      "url": "http://www.fnnews.com/news/202607191403017394",
-      "date": "2026-07-19"
-    },
-    {
-      "id": "mil_news_20",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9384,7 +9373,7 @@
       "date": "2026-07-22"
     },
     {
-      "id": "mil_news_21",
+      "id": "mil_news_20",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9395,7 +9384,7 @@
       "date": "2026-07-08"
     },
     {
-      "id": "mil_news_22",
+      "id": "mil_news_21",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9406,7 +9395,7 @@
       "date": "2024-07-16"
     },
     {
-      "id": "mil_news_23",
+      "id": "mil_news_22",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9417,7 +9406,7 @@
       "date": "2024-07-07"
     },
     {
-      "id": "mil_news_24",
+      "id": "mil_news_23",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9428,7 +9417,7 @@
       "date": "2024-06-20"
     },
     {
-      "id": "mil_news_25",
+      "id": "mil_news_24",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9439,7 +9428,7 @@
       "date": "2023-07-24"
     },
     {
-      "id": "mil_news_26",
+      "id": "mil_news_25",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9450,7 +9439,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_27",
+      "id": "mil_news_26",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9461,7 +9450,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_28",
+      "id": "mil_news_27",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9472,7 +9461,7 @@
       "date": "2026-06-01"
     },
     {
-      "id": "mil_news_29",
+      "id": "mil_news_28",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9483,7 +9472,7 @@
       "date": "2026-05-31"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_29",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9483,7 @@
       "date": "2025-06-19"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_30",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9494,7 @@
       "date": "2024-07-04"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_31",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9505,7 @@
       "date": "2023-08-10"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_32",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9527,7 +9516,29 @@
       "date": "2023-05-04"
     },
     {
+      "id": "mil_news_33",
+      "category": "foodpoison",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "강남구, '무역 전문 인력, 글로벌 마케터에 도전해 보세요!'",
+      "source": "기상/재난 보도",
+      "snippet": "위생 분야에서는 폭염으로 식중독 위험이 커지는 여름철을 맞아 집단급식소 관리 강화에 나섰다. 구는 8월... 최근 5년 내 식중독 사고가 발생한 시설은 전 과정 점검을 통해 위험 요인을 세밀하게 살피고 있다. 세원...",
+      "url": "http://www.queen.co.kr/news/articleView.html?idxno=461881",
+      "date": "2026-08-18"
+    },
+    {
       "id": "mil_news_34",
+      "category": "foodpoison",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "강남구, 8월 집단급식소 식중독 예방교육 실시…100명 대상",
+      "source": "기상/재난 보도",
+      "snippet": "식중독이 발생한 3곳은 식재료 검수와 보관, 전처리, 조리, 배식 등 급식 전 과정을 점검해 사고 위험 요인을... 김현기 강남구청장은 폭염 시 식재료 관리의 작은 실수도 집단 식중독으로 이어질 수 있다며, 실제 사례...",
+      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3667093",
+      "date": "2026-08-18"
+    },
+    {
+      "id": "mil_news_35",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9538,7 +9549,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_35",
+      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9549,7 +9560,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_36",
+      "id": "mil_news_37",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,29 +9571,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_37",
-      "category": "foodpoison",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "[사설] 경기도 식중독 비상…점검 및 예방 홍보 강화를",
-      "source": "기상/재난 보도",
-      "snippet": "특히 식중독은 기온이 1도만 올라도 세균성 식중독 발병 확률이 5.3%씩 증가하기 때문에 지금 같은 폭염이 지속되고 있을 때 각별한 주의가 필요하다. 사고가 가장 자주 발생하는 요식업소를 비롯해 각 가정에서도...",
-      "url": "http://www.kgnews.co.kr/news/article.html?no=906592",
-      "date": "2026-08-06"
-    },
-    {
       "id": "mil_news_38",
-      "category": "foodpoison",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "[SAFE-4-DAY] 한 끼 식사, 집단감염으로 … 여름철 '식중독' 경보",
-      "source": "기상/재난 보도",
-      "snippet": "여름철 식중독은 이같이 \"잠깐 괜찮겠지\"라는 방심의 순간에 시작된다. 폭염과 장마가 반복되는 7~8월은... 발생 건수보다 환자 비중이 높다는 점은 여름철 식중독이 개별 사례에 그치지 않고 집단 피해로 번질 가능성이...",
-      "url": "https://www.safetimes.co.kr/news/articleView.html?idxno=244646",
-      "date": "2026-08-04"
-    },
-    {
-      "id": "mil_news_39",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
