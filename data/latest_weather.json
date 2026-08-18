@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-18T06:40:33Z",
+  "updatedAt": "2026-08-18T09:31:29Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "태풍 뒤끝? 거제 900㎜ 폭우…남해안 극한 호우 또 오나 [이슈크래커]",
+      "source": "기상/재난 보도",
+      "snippet": "산사태와 침수가 발생할 수 있는 상황입니다. 산사태로 1명 사망…피해 신고 2500건 넘어 중앙재난안전대책본부에 따르면 18일 오전 6시 기준 이번 집중호우로 1명이 숨지고 4명이 다쳤습니다. 17일 오전 4시 42분께...",
+      "url": "https://www.etoday.co.kr/news/view/2615587",
+      "date": "2026-08-18"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "거제 아파트서 입주민 사망…경남 곳곳 호우 피해",
       "source": "기상/재난 보도",
       "snippet": "기록적인 폭우가 쏟아진 가운데 아파트 입주민이 숨지는 사고가 발생했다. 산사태와 침수, 단전·단수 피해가... 사흘간 900㎜ 이상 내린 집중호우로 지반이 약해지면서 토사와 나무가 아파트 저층부를 덮친 것이다. 이...",
@@ -9307,7 +9318,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9316,17 +9327,6 @@
       "snippet": "지역으로 집중호우가 내린 겁니다. 그런데 그런 부분에서는 일반적인 기후가 되지만 이런 상황이 특히나 더... 과거에 폭우 사례들을 보면 지하주차장에서 차를 빼려다가 사고난 경우가 있었거든요. 지하주차장에 물이...",
       "url": "https://www.ytn.co.kr/_ln/0108_202608180722416790",
       "date": "2026-08-18"
-    },
-    {
-      "id": "mil_news_15",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "반가운 단비, 몇 시간 새 ‘재난’ 됐다(종합)",
-      "source": "기상/재난 보도",
-      "snippet": "경남에서는 이날 새벽 4시32분 거제 옥포동의 한 야산에서 폭우로 인한 산사태가 발생, 떠밀려온 토사가... 5㎜) 사례만 이를 앞선다. 특히 거제에는 이날 새벽 1시32분부터 1시간 동안 무려 124.5㎜의 호우가 집중됐다....",
-      "url": "http://www.kookje.co.kr/news2011/asp/newsbody.asp?code=0300&key=20260818.22001004648",
-      "date": "2026-08-17"
     },
     {
       "id": "mil_news_16",
@@ -9344,17 +9344,6 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "\"잠자던 아파트 1층 덮친 산사태…거제서 1명 사망, '집 안도 안전하지...",
-      "source": "기상/재난 보도",
-      "snippet": "큰 사고로 이어질 수 있었던 상황이었다. 박은식 산림청장은 지난 5월 공식 브리핑에서 우면산을 대표 사례... 2023년 7월 집중호우 당시 산사태로 인명피해가 발생한 8곳 가운데 사전에 산사태취약지역으로 지정돼 있던...",
-      "url": "http://www.newsworker.co.kr/news/articleView.html?idxno=441400",
-      "date": "2026-08-17"
-    },
-    {
-      "id": "mil_news_18",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
       "title": "내일부터 남부지방부터 폭우…정부, 비상 대응태세 점검",
       "source": "기상/재난 보도",
       "snippet": "지난 8일 산지에 내린 집중호우로 하류 계곡과 하천의 수위가 급격히 상승하면서 관광객이 고립된 사례도... 여러분께서도 집중호우 시 외출을 삼가고, 산사태 우려지역, 하천변, 지하공간 등 위험한 지역의 접근을...",
@@ -9362,18 +9351,18 @@
       "date": "2026-08-14"
     },
     {
-      "id": "mil_news_19",
+      "id": "mil_news_18",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "일본 지바현, 12시간 동안 348㎜ ‘역대 최대급’ 폭우…8명 숨져",
+      "title": "\"잠자던 아파트 1층 덮친 산사태…거제서 1명 사망, '집 안도 안전하지...",
       "source": "기상/재난 보도",
-      "snippet": "못하는 사례들도 많은 것으로 알려졌다. 지바현에 있는 나리타공항의 버스와 철도 운행이 중단돼 7천여명이 공항에 발이 묶이기도 했다. 이번 폭우는 발달한 비구름이 띠 모양으로 이어져 같은 지역에 집중호우를 쏟는...",
-      "url": "https://www.hani.co.kr/arti/international/international_general/1272970.html",
-      "date": "2026-08-14"
+      "snippet": "큰 사고로 이어질 수 있었던 상황이었다. 박은식 산림청장은 지난 5월 공식 브리핑에서 우면산을 대표 사례... 2023년 7월 집중호우 당시 산사태로 인명피해가 발생한 8곳 가운데 사전에 산사태취약지역으로 지정돼 있던...",
+      "url": "http://www.newsworker.co.kr/news/articleView.html?idxno=441400",
+      "date": "2026-08-17"
     },
     {
-      "id": "mil_news_20",
+      "id": "mil_news_19",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9384,7 +9373,7 @@
       "date": "2026-07-22"
     },
     {
-      "id": "mil_news_21",
+      "id": "mil_news_20",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9395,7 +9384,7 @@
       "date": "2026-07-08"
     },
     {
-      "id": "mil_news_22",
+      "id": "mil_news_21",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9406,7 +9395,7 @@
       "date": "2024-07-16"
     },
     {
-      "id": "mil_news_23",
+      "id": "mil_news_22",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9417,7 +9406,7 @@
       "date": "2024-07-07"
     },
     {
-      "id": "mil_news_24",
+      "id": "mil_news_23",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9428,7 +9417,7 @@
       "date": "2024-06-20"
     },
     {
-      "id": "mil_news_25",
+      "id": "mil_news_24",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9439,7 +9428,7 @@
       "date": "2023-07-24"
     },
     {
-      "id": "mil_news_26",
+      "id": "mil_news_25",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9450,7 +9439,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_27",
+      "id": "mil_news_26",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9461,7 +9450,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_28",
+      "id": "mil_news_27",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9472,7 +9461,7 @@
       "date": "2026-06-01"
     },
     {
-      "id": "mil_news_29",
+      "id": "mil_news_28",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9483,7 +9472,7 @@
       "date": "2026-05-31"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_29",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9483,7 @@
       "date": "2025-06-19"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_30",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9494,7 @@
       "date": "2024-07-04"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_31",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9505,7 @@
       "date": "2023-08-10"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_32",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9525,6 +9514,17 @@
       "snippet": "내일 전국에 태풍급 비바람이 몰아치며 시설물 피해와 안전사고가 우려됩니다. 그런데 17년 전인 2006년에도... [기자] 네, 비와 함께 바람도 문제인데요, 제주도와 전남 해안을 중심으로 일찍부터 호우와 강풍특보가...",
       "url": "https://www.ytn.co.kr/_ln/0108_202305041642054709",
       "date": "2023-05-04"
+    },
+    {
+      "id": "mil_news_33",
+      "category": "foodpoison",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "강남구, 급식소 식중독 예방관리 나서",
+      "source": "기상/재난 보도",
+      "snippet": "살펴 사고 위험 요인을 점검한다. 강남구는 9월에도 어린이집과 학교 등을 대상으로 식중독 예방교육을... 폭염 때는 식재료 관리의 작은 실수도 집단 식중독으로 이어질 수 있다\"며 \"현장에서 실제로 발생하는 사례를...",
+      "url": "http://www.fsnews.co.kr/news/articleView.html?idxno=61918",
+      "date": "2026-08-18"
     },
     {
       "id": "mil_news_34",
@@ -9580,17 +9580,6 @@
       "snippet": "발생하는 위생관리 미흡 사례를 구체적으로 짚어보고 실질적인 개선 방법을 공유해 대규모 식중독 사고를... 폭염 때는 식재료 관리의 작은 실수도 집단 식중독으로 이어질 수 있다\"며 \"현장에서 실제로 발생하는 사례를...",
       "url": "http://www.enewstoday.co.kr/news/articleView.html?idxno=2459970",
       "date": "2026-08-18"
-    },
-    {
-      "id": "mil_news_39",
-      "category": "foodpoison",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "폭염에 식중독 비상…기업도 식품안전관리 강화 나선다",
-      "source": "기상/재난 보도",
-      "snippet": "역대급 폭염으로 식중독 환자가 급증하는 가운데 식품안전 관리에도 비상이 걸렸다. 최근 질병관리청에 따르면 올해 24주차(6월 7~13일) 장관감염증(세균·바이러스에 의해 발생하는 식중독 등 소화기 감염병) 환자는...",
-      "url": "https://www.mk.co.kr/article/12108212",
-      "date": "2026-07-27"
     }
   ]
 }
