@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-19T03:44:50Z",
+  "updatedAt": "2026-08-19T06:41:02Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "[생생뉴스] 가뭄·폭우 동시 다발적 발생…기후 변화에 따른 대책은?",
+      "source": "기상/재난 보도",
+      "snippet": "산사태가 일어난다든지 혹은 뭐 더위가 이어지면 그 뒤에 가뭄이 온다든지 하는 일반적으로 생각할 수 있는 이런 복합 재난들도 있고요. 이번에는 사실 좀 특이한 케이스입니다. 가뭄 이후에 폭우가 오는 이런 사례인데...",
+      "url": "https://news.kbs.co.kr/news/pc/view/view.do?ncd=8640427&ref=A",
+      "date": "2026-08-19"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "남해안 기록적 폭우…거제 아파트 산사태로 1명 사망",
       "source": "기상/재난 보도",
       "snippet": "통영에서도 같은 날 오전 5시 3분경 산양읍 곤리도에서 산사태가 발생해 60대 여성이 토사에 매몰됐다가 약 1시간 30분 만에 구조됐다. 지하주차장·승강기 침수 거제 4177세대 단수 이번 집중호우로 아파트 침수...",
@@ -9307,7 +9318,7 @@
       "date": "2026-08-19"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9318,7 +9329,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9326,17 +9337,6 @@
       "source": "기상/재난 보도",
       "snippet": "기록적인 폭우가 쏟아진 가운데 아파트 입주민이 숨지는 사고가 발생했다. 산사태와 침수, 단전·단수 피해가... 사흘간 900㎜ 이상 내린 집중호우로 지반이 약해지면서 토사와 나무가 아파트 저층부를 덮친 것이다. 이...",
       "url": "https://www.hapt.co.kr/news/articleView.html?idxno=169272",
-      "date": "2026-08-18"
-    },
-    {
-      "id": "mil_news_16",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "[날씨] 거제, 200년에 한번 내릴 만한 비 쏟아져...사흘간 예보보다 4배...",
-      "source": "기상/재난 보도",
-      "snippet": "지역으로 집중호우가 내린 겁니다. 그런데 그런 부분에서는 일반적인 기후가 되지만 이런 상황이 특히나 더... 과거에 폭우 사례들을 보면 지하주차장에서 차를 빼려다가 사고난 경우가 있었거든요. 지하주차장에 물이...",
-      "url": "https://www.ytn.co.kr/_ln/0108_202608180722416790",
       "date": "2026-08-18"
     },
     {
