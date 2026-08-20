@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-20T03:44:51Z",
+  "updatedAt": "2026-08-20T06:42:19Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9299,6 +9299,28 @@
       "id": "mil_news_13",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
+      "isAccident": true,
+      "title": "[르포] 진흙더미 피눈물 씻어낸 포천 소학리…1년 만에 되찾은 \"행복\"",
+      "source": "기상/재난 보도",
+      "snippet": "기록적인 집중호우로 거센 토사와 유목이 계곡 하류부를 덮치며 건물과 캠핑장이 순식간에 침수되는 큰... 현장에 집중 투입하며 복구 공사에 속도를 냈다. 현장에서 산사태로 밀려든 유목과 잔해 등 치워낸 폐기물만...",
+      "url": "https://www.incheonilbo.com/news/articleView.html?idxno=1330021",
+      "date": "2026-08-20"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "[정세희의 SNS 속 세상] \"우리 펜션은 멀쩡\"…'물폭탄' 거제 숙박 환불 ...",
+      "source": "기상/재난 보도",
+      "snippet": "아주경제=정세희 기자 ssss308@ajunews.com 경남 거제를 덮친 기록적인 집중호우로 산사태와 침수 피해가 속출한... 작성자들은 기록적인 폭우와 산사태 위험 등을 이유로 숙소에 취소를 요청했지만 일부 펜션에서 전액 환불을...",
+      "url": "https://www.ajunews.com/view/20260820133635760",
+      "date": "2026-08-20"
+    },
+    {
+      "id": "mil_news_15",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
       "isAccident": false,
       "title": "[경남 브리핑 모음(8월20일)] 진주서‘우주산업 활성화를 통한 지역 발전...",
       "source": "기상/재난 보도",
@@ -9307,7 +9329,7 @@
       "date": "2026-08-20"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9318,7 +9340,7 @@
       "date": "2026-08-19"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_17",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9329,7 +9351,7 @@
       "date": "2026-08-19"
     },
     {
-      "id": "mil_news_16",
+      "id": "mil_news_18",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9340,18 +9362,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_17",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "거제 아파트서 입주민 사망…경남 곳곳 호우 피해",
-      "source": "기상/재난 보도",
-      "snippet": "기록적인 폭우가 쏟아진 가운데 아파트 입주민이 숨지는 사고가 발생했다. 산사태와 침수, 단전·단수 피해가... 사흘간 900㎜ 이상 내린 집중호우로 지반이 약해지면서 토사와 나무가 아파트 저층부를 덮친 것이다. 이...",
-      "url": "https://www.hapt.co.kr/news/articleView.html?idxno=169272",
-      "date": "2026-08-18"
-    },
-    {
-      "id": "mil_news_18",
+      "id": "mil_news_19",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9362,7 +9373,7 @@
       "date": "2026-08-14"
     },
     {
-      "id": "mil_news_19",
+      "id": "mil_news_20",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9373,7 +9384,7 @@
       "date": "2026-08-17"
     },
     {
-      "id": "mil_news_20",
+      "id": "mil_news_21",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9384,7 +9395,7 @@
       "date": "2026-07-22"
     },
     {
-      "id": "mil_news_21",
+      "id": "mil_news_22",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9395,7 +9406,7 @@
       "date": "2026-07-08"
     },
     {
-      "id": "mil_news_22",
+      "id": "mil_news_23",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9406,7 +9417,7 @@
       "date": "2024-07-16"
     },
     {
-      "id": "mil_news_23",
+      "id": "mil_news_24",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9417,7 +9428,7 @@
       "date": "2024-07-07"
     },
     {
-      "id": "mil_news_24",
+      "id": "mil_news_25",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9428,7 +9439,7 @@
       "date": "2024-06-20"
     },
     {
-      "id": "mil_news_25",
+      "id": "mil_news_26",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9439,7 +9450,7 @@
       "date": "2023-07-24"
     },
     {
-      "id": "mil_news_26",
+      "id": "mil_news_27",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9450,7 +9461,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_27",
+      "id": "mil_news_28",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9461,7 +9472,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_28",
+      "id": "mil_news_29",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9472,7 +9483,7 @@
       "date": "2026-06-01"
     },
     {
-      "id": "mil_news_29",
+      "id": "mil_news_30",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9483,7 +9494,7 @@
       "date": "2026-05-31"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_31",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9505,7 @@
       "date": "2025-06-19"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_32",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9516,7 @@
       "date": "2024-07-04"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_33",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9527,7 @@
       "date": "2023-08-10"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_34",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9527,7 +9538,18 @@
       "date": "2023-05-04"
     },
     {
-      "id": "mil_news_34",
+      "id": "mil_news_35",
+      "category": "foodpoison",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "[액티브 시니어] 강남구, 어르신 등 식생활 건강위해 집단급식소 식중독...",
+      "source": "기상/재난 보도",
+      "snippet": "강남구가 폭염으로 식중독 위험이 높아지는 여름철을 맞아 집단급식소의 위생관리 강화에 나섰다. 구는... 식중독 예방교육’을 실시했다. 강남구에는 현재 집단급식소 440곳이 운영되고 있다. 대규모 식중독 사고를...",
+      "url": "https://www.viva100.com/article/20260819501459",
+      "date": "2026-08-20"
+    },
+    {
+      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9538,7 +9560,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_35",
+      "id": "mil_news_37",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9549,7 +9571,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_36",
+      "id": "mil_news_38",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,7 +9582,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_37",
+      "id": "mil_news_39",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9571,18 +9593,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_38",
-      "category": "foodpoison",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "강남구, 폭염 속 '집단 식중독' 막는다…급식소 위생관리 강화",
-      "source": "기상/재난 보도",
-      "snippet": "폭염으로 식중독 발생 위험이 커지는 여름철을 맞아 집단급식소 위생관리를 강화한다. 현장에서 실제 확인된 위생관리 미흡 사례를 교육에 활용하고, 급식소별 맞춤형 진단과 재점검까지 연계해 대규모 식중독 사고...",
-      "url": "https://www.job-post.co.kr/news/articleView.html?idxno=224189",
-      "date": "2026-08-18"
-    },
-    {
-      "id": "mil_news_39",
+      "id": "mil_news_40",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9590,6 +9601,17 @@
       "source": "기상/재난 보도",
       "snippet": "발생하는 위생관리 미흡 사례를 구체적으로 짚어보고 실질적인 개선 방법을 공유해 대규모 식중독 사고를... 폭염 때는 식재료 관리의 작은 실수도 집단 식중독으로 이어질 수 있다\"며 \"현장에서 실제로 발생하는 사례를...",
       "url": "http://www.enewstoday.co.kr/news/articleView.html?idxno=2459970",
+      "date": "2026-08-18"
+    },
+    {
+      "id": "mil_news_41",
+      "category": "foodpoison",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "강남구, 폭염 속 '집단 식중독' 막는다…급식소 위생관리 강화",
+      "source": "기상/재난 보도",
+      "snippet": "폭염으로 식중독 발생 위험이 커지는 여름철을 맞아 집단급식소 위생관리를 강화한다. 현장에서 실제 확인된 위생관리 미흡 사례를 교육에 활용하고, 급식소별 맞춤형 진단과 재점검까지 연계해 대규모 식중독 사고...",
+      "url": "https://www.job-post.co.kr/news/articleView.html?idxno=224189",
       "date": "2026-08-18"
     }
   ]
