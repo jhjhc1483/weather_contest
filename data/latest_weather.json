@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-22T03:40:12Z",
+  "updatedAt": "2026-08-22T06:37:20Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9451,6 +9451,17 @@
     },
     {
       "id": "mil_news_27",
+      "category": "lightning",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "길가다 '콰쾅'…늘어나는 벼락 피하려면 어떻게?",
+      "source": "기상/재난 보도",
+      "snippet": "한반도에서 늘어나는 벼락 대표적인 것이 지난달 양양 해변에서 발생한 낙뢰 사고입니다. 단 한 차례 벼락... 방전'으로 감전돼 1명이 목숨을 잃은 사례도 있고 다행히 방전을 피하더라도 벼락으로 인해 나무가...",
+      "url": "https://news.jtbc.co.kr/article/article.aspx?news_id=NB12135178",
+      "date": "2023-07-15"
+    },
+    {
+      "id": "mil_news_28",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9461,7 +9472,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_28",
+      "id": "mil_news_29",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9472,7 +9483,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_29",
+      "id": "mil_news_30",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9483,7 +9494,7 @@
       "date": "2026-06-01"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_31",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9505,7 @@
       "date": "2026-05-31"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_32",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9516,7 @@
       "date": "2025-06-19"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_33",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9527,7 @@
       "date": "2024-07-04"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_34",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9527,7 +9538,7 @@
       "date": "2023-08-10"
     },
     {
-      "id": "mil_news_34",
+      "id": "mil_news_35",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9538,7 +9549,7 @@
       "date": "2023-05-04"
     },
     {
-      "id": "mil_news_35",
+      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9549,7 +9560,7 @@
       "date": "2026-08-20"
     },
     {
-      "id": "mil_news_36",
+      "id": "mil_news_37",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,7 +9571,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_37",
+      "id": "mil_news_38",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9571,7 +9582,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_38",
+      "id": "mil_news_39",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9582,7 +9593,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_39",
+      "id": "mil_news_40",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9593,7 +9604,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_40",
+      "id": "mil_news_41",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9604,7 +9615,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_41",
+      "id": "mil_news_42",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
