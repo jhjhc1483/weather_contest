@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-22T06:37:20Z",
+  "updatedAt": "2026-08-22T09:25:01Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9355,22 +9355,22 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "내일부터 남부지방부터 폭우…정부, 비상 대응태세 점검",
+      "title": "태풍 뒤끝? 거제 900㎜ 폭우…남해안 극한 호우 또 오나 [이슈크래커]",
       "source": "기상/재난 보도",
-      "snippet": "지난 8일 산지에 내린 집중호우로 하류 계곡과 하천의 수위가 급격히 상승하면서 관광객이 고립된 사례도... 여러분께서도 집중호우 시 외출을 삼가고, 산사태 우려지역, 하천변, 지하공간 등 위험한 지역의 접근을...",
-      "url": "https://www.nocutnews.co.kr/news/6563175?utm_source=naver&utm_medium=article&utm_campaign=20260814043031",
-      "date": "2026-08-14"
+      "snippet": "산사태와 침수가 발생할 수 있는 상황입니다. 산사태로 1명 사망…피해 신고 2500건 넘어 중앙재난안전대책본부에 따르면 18일 오전 6시 기준 이번 집중호우로 1명이 숨지고 4명이 다쳤습니다. 17일 오전 4시 42분께...",
+      "url": "https://www.etoday.co.kr/news/view/2615587",
+      "date": "2026-08-18"
     },
     {
       "id": "mil_news_19",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "태풍 뒤끝? 거제 900㎜ 폭우…남해안 극한 호우 또 오나 [이슈크래커]",
+      "title": "내일부터 남부지방부터 폭우…정부, 비상 대응태세 점검",
       "source": "기상/재난 보도",
-      "snippet": "산사태와 침수가 발생할 수 있는 상황입니다. 산사태로 1명 사망…피해 신고 2500건 넘어 중앙재난안전대책본부에 따르면 18일 오전 6시 기준 이번 집중호우로 1명이 숨지고 4명이 다쳤습니다. 17일 오전 4시 42분께...",
-      "url": "https://www.etoday.co.kr/news/view/2615587",
-      "date": "2026-08-18"
+      "snippet": "지난 8일 산지에 내린 집중호우로 하류 계곡과 하천의 수위가 급격히 상승하면서 관광객이 고립된 사례도... 여러분께서도 집중호우 시 외출을 삼가고, 산사태 우려지역, 하천변, 지하공간 등 위험한 지역의 접근을...",
+      "url": "https://www.nocutnews.co.kr/news/6563175?utm_source=naver&utm_medium=article&utm_campaign=20260814043031",
+      "date": "2026-08-14"
     },
     {
       "id": "mil_news_20",
