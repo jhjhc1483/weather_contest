@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T00:27:54Z",
+  "updatedAt": "2026-08-27T13:48:36Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "네팔 덮친 '빙하 재앙'...한국인 노동자 연락 두절 [뉴스특보 2PM]",
+      "source": "기상/재난 보도",
+      "snippet": "이 석 달 동안 연간 강수량의 80% 이상이 이 기간에 집중됩니다. 사고 당시 며칠 간 비가 멈췄다 이런 이야기가 있는데 이랬다 하더라도 이미 석 달간 폭염과 호우가 반복되면서 산간토양의 경우는 물을 가득 머금은 지반...",
+      "url": "https://www.ytn.co.kr/_ln/0104_202608271420308533",
+      "date": "2026-08-27"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "[르포] 진흙더미 피눈물 씻어낸 포천 소학리…1년 만에 되찾은 \"행복\"",
       "source": "기상/재난 보도",
       "snippet": "기록적인 집중호우로 거센 토사와 유목이 계곡 하류부를 덮치며 건물과 캠핑장이 순식간에 침수되는 큰... 현장에 집중 투입하며 복구 공사에 속도를 냈다. 현장에서 산사태로 밀려든 유목과 잔해 등 치워낸 폐기물만...",
@@ -9307,7 +9318,7 @@
       "date": "2026-08-20"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9318,7 +9329,7 @@
       "date": "2026-08-20"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": false,
@@ -9329,7 +9340,7 @@
       "date": "2026-08-20"
     },
     {
-      "id": "mil_news_16",
+      "id": "mil_news_17",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9337,17 +9348,6 @@
       "source": "기상/재난 보도",
       "snippet": "산사태가 일어난다든지 혹은 뭐 더위가 이어지면 그 뒤에 가뭄이 온다든지 하는 일반적으로 생각할 수 있는 이런 복합 재난들도 있고요. 이번에는 사실 좀 특이한 케이스입니다. 가뭄 이후에 폭우가 오는 이런 사례인데...",
       "url": "https://news.kbs.co.kr/news/pc/view/view.do?ncd=8640427&ref=A",
-      "date": "2026-08-19"
-    },
-    {
-      "id": "mil_news_17",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "남해안 기록적 폭우…거제 아파트 산사태로 1명 사망",
-      "source": "기상/재난 보도",
-      "snippet": "통영에서도 같은 날 오전 5시 3분경 산양읍 곤리도에서 산사태가 발생해 60대 여성이 토사에 매몰됐다가 약 1시간 30분 만에 구조됐다. 지하주차장·승강기 침수 거제 4177세대 단수 이번 집중호우로 아파트 침수...",
-      "url": "http://www.aptn.co.kr/news/articleView.html?idxno=112662",
       "date": "2026-08-19"
     },
     {
@@ -9385,6 +9385,17 @@
     },
     {
       "id": "mil_news_21",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "남해안 기록적 폭우…거제 아파트 산사태로 1명 사망",
+      "source": "기상/재난 보도",
+      "snippet": "통영에서도 같은 날 오전 5시 3분경 산양읍 곤리도에서 산사태가 발생해 60대 여성이 토사에 매몰됐다가 약 1시간 30분 만에 구조됐다. 지하주차장·승강기 침수 거제 4177세대 단수 이번 집중호우로 아파트 침수...",
+      "url": "http://www.aptn.co.kr/news/articleView.html?idxno=112662",
+      "date": "2026-08-19"
+    },
+    {
+      "id": "mil_news_22",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9395,7 +9406,7 @@
       "date": "2026-07-22"
     },
     {
-      "id": "mil_news_22",
+      "id": "mil_news_23",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9406,7 +9417,7 @@
       "date": "2026-07-08"
     },
     {
-      "id": "mil_news_23",
+      "id": "mil_news_24",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9417,7 +9428,7 @@
       "date": "2024-07-16"
     },
     {
-      "id": "mil_news_24",
+      "id": "mil_news_25",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9428,7 +9439,7 @@
       "date": "2024-07-07"
     },
     {
-      "id": "mil_news_25",
+      "id": "mil_news_26",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9439,7 +9450,7 @@
       "date": "2024-06-20"
     },
     {
-      "id": "mil_news_26",
+      "id": "mil_news_27",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9450,7 +9461,7 @@
       "date": "2023-07-24"
     },
     {
-      "id": "mil_news_27",
+      "id": "mil_news_28",
       "category": "lightning",
       "isMilitary": false,
       "isAccident": true,
@@ -9461,7 +9472,7 @@
       "date": "2023-07-15"
     },
     {
-      "id": "mil_news_28",
+      "id": "mil_news_29",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9472,7 +9483,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_29",
+      "id": "mil_news_30",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9483,7 +9494,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_31",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9505,7 @@
       "date": "2026-06-01"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_32",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9516,7 @@
       "date": "2026-05-31"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_33",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9527,7 @@
       "date": "2025-06-19"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_34",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9527,7 +9538,7 @@
       "date": "2024-07-04"
     },
     {
-      "id": "mil_news_34",
+      "id": "mil_news_35",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9538,7 +9549,7 @@
       "date": "2023-08-10"
     },
     {
-      "id": "mil_news_35",
+      "id": "mil_news_36",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9549,7 +9560,7 @@
       "date": "2023-05-04"
     },
     {
-      "id": "mil_news_36",
+      "id": "mil_news_37",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,7 +9571,7 @@
       "date": "2026-08-20"
     },
     {
-      "id": "mil_news_37",
+      "id": "mil_news_38",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9571,7 +9582,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_38",
+      "id": "mil_news_39",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9582,7 +9593,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_39",
+      "id": "mil_news_40",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9593,7 +9604,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_40",
+      "id": "mil_news_41",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9604,7 +9615,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_41",
+      "id": "mil_news_42",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9615,7 +9626,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_42",
+      "id": "mil_news_43",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
