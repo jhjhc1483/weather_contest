@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-28T00:14:27Z",
+  "updatedAt": "2026-08-28T14:54:48Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
