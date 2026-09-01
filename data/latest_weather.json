@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-01T00:23:32Z",
+  "updatedAt": "2026-09-01T08:19:26Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "네팔 대홍수 참사 7일째...발전소 터널 구조 총력전 [뉴스퀘어10]",
+      "source": "기상/재난 보도",
+      "snippet": "그러니까 밤에 갑자기 구름이 생기거나 해서 밤에는 집중호우가 많이 있는 곳이거든요. 그러니까 아마... 침수 피해 없도록 잘 대비를 해야겠습니다. 산사태 계속해서 강조하고 계시는데 우리나라의 산사태 대응하는 체계...",
+      "url": "https://www.ytn.co.kr/_ln/0104_202609011020479840",
+      "date": "2026-09-01"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "고창-익산 등 늦장마에 직격탄",
       "source": "기상/재난 보도",
       "snippet": "이중 주택과 상가 침수 피해는 익산에 집중됐다. 누적 강수량은 상대적으로 적었지만, 국지성 집중호우에 피해가 꼬리 물었다. 실제로 폭우가 쏟아진 지난 30일 새벽의 경우 익산 신흥동 한 공장이 물에 잠기면서 미처...",
@@ -9307,7 +9318,7 @@
       "date": "2026-08-31"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9318,7 +9329,7 @@
       "date": "2026-08-31"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9329,7 +9340,7 @@
       "date": "2026-08-31"
     },
     {
-      "id": "mil_news_16",
+      "id": "mil_news_17",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9338,17 +9349,6 @@
       "snippet": "이 석 달 동안 연간 강수량의 80% 이상이 이 기간에 집중됩니다. 사고 당시 며칠 간 비가 멈췄다 이런 이야기가 있는데 이랬다 하더라도 이미 석 달간 폭염과 호우가 반복되면서 산간토양의 경우는 물을 가득 머금은 지반...",
       "url": "https://www.ytn.co.kr/_ln/0104_202608271420308533",
       "date": "2026-08-27"
-    },
-    {
-      "id": "mil_news_17",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "[르포] 진흙더미 피눈물 씻어낸 포천 소학리…1년 만에 되찾은 \"행복\"",
-      "source": "기상/재난 보도",
-      "snippet": "기록적인 집중호우로 거센 토사와 유목이 계곡 하류부를 덮치며 건물과 캠핑장이 순식간에 침수되는 큰... 현장에 집중 투입하며 복구 공사에 속도를 냈다. 현장에서 산사태로 밀려든 유목과 잔해 등 치워낸 폐기물만...",
-      "url": "https://www.incheonilbo.com/news/articleView.html?idxno=1330021",
-      "date": "2026-08-20"
     },
     {
       "id": "mil_news_18",
@@ -9476,6 +9476,17 @@
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
+      "title": "가을철 안전 위험요소 집중신고…우수 신고자 최대 100만원",
+      "source": "기상/재난 보도",
+      "snippet": "호우·태풍 분야는 막힌 빗물받이와 붕괴·강풍 위험, 하천 제방 유실 등이 대상이다. 소방안전 분야에는... 축제·행사 분야에서는 인파 밀집 우려와 안전요원 부재, 시설물 파손 등 안전관리가 미흡한 사례를 신고하면...",
+      "url": "https://www.factin.co.kr/news/articleView.html?idxno=6944",
+      "date": "2026-09-01"
+    },
+    {
+      "id": "mil_news_30",
+      "category": "strongwind",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "공장 위험물 방치도 '안전신문고'로…우수신고 최대 100만원",
       "source": "뉴스1",
       "snippet": "호우·태풍 분야에서는 막힌 빗물받이와 붕괴·강풍 위험, 하천 제방 유실 등이 대상이다. 소방안전... 축제·행사장에서는 인파밀집 우려가 있거나 안전요원이 배치되지 않은 경우, 시설물이 파손된 경우 등이 신고...",
@@ -9483,7 +9494,7 @@
       "date": "2026-08-31"
     },
     {
-      "id": "mil_news_30",
+      "id": "mil_news_31",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9494,7 +9505,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_32",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9516,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_33",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9514,17 +9525,6 @@
       "snippet": "호우·태풍 분야는 막힌 빗물받이, 시설 파손, 붕괴 우려 시설, 강풍 위험, 전기시설 위험 등이 포함된다.... 정확한 위치 파악을 위해 주변 건물이나 시설물 명칭을 함께 기재하고, 사진은 위험 대상뿐 아니라 주변 환경이...",
       "url": "https://idsn.co.kr/news/view/1065592664833502",
       "date": "2026-06-01"
-    },
-    {
-      "id": "mil_news_33",
-      "category": "strongwind",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "\"여름철 위험요소 안전신문고로 신고하세요\"…최대 100만원 포상",
-      "source": "뉴스1",
-      "snippet": "신고 내용은 관계기관이 신속히 조치해 여름철 안전사고 예방에 활용됐다. 올해 집중신고 대상은 △막힌 빗물받이와 시설물 파손, 강풍 위험, 전기시설 위험 등 호우·태풍 △토사 유출과 낙석, 절개지 위험, 위험구역...",
-      "url": "https://www.news1.kr/local/moi/6182048",
-      "date": "2026-05-31"
     },
     {
       "id": "mil_news_34",
@@ -9539,17 +9539,6 @@
     },
     {
       "id": "mil_news_35",
-      "category": "strongwind",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "제6호 태풍 '카눈' 영향으로 광주·전남 피해 속출",
-      "source": "기상/재난 보도",
-      "snippet": "제6호 태풍 '카눈'이 10일 오전 9시 20분경 경남 거제 부근에 상륙한 후 광주·전남 지역에도 강풍과 폭우가... 올 것으로 예상된다\"며 \"시설물 관리와 안전사고에 유의하시기를 바란다\"고 전했다. 전남,광주,태풍,카눈,피해",
-      "url": "https://www.newscj.com/news/articleView.html?idxno=3053141",
-      "date": "2023-08-10"
-    },
-    {
-      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,7 +9549,7 @@
       "date": "2026-08-20"
     },
     {
-      "id": "mil_news_37",
+      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9571,7 +9560,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_38",
+      "id": "mil_news_37",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9582,7 +9571,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_39",
+      "id": "mil_news_38",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9593,7 +9582,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_40",
+      "id": "mil_news_39",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9604,7 +9593,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_41",
+      "id": "mil_news_40",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9615,7 +9604,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_42",
+      "id": "mil_news_41",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
