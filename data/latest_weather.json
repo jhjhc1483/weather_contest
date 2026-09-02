@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-02T20:32:17Z",
+  "updatedAt": "2026-09-02T22:59:15Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "현실로 다가온 지구온난화 비극...네팔 대홍수는 예고편? [뉴스타트]",
+      "source": "기상/재난 보도",
+      "snippet": "갑자기 산사태와 거대한 홍수가 마을을 덮쳤다는 것인데요. 이번 사고를 보면서 가장 무겁게 다가온 건 비가... 이것이 바로 지난 8월 초 40도 넘는 폭염 이후에 곧바로 집중호우가 이어지는 그런 사태를 반영한 것이라고 할...",
+      "url": "https://www.ytn.co.kr/_ln/0104_202609030710106960",
+      "date": "2026-09-03"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "네팔 대홍수 참사 7일째...발전소 터널 구조 총력전 [뉴스퀘어10]",
       "source": "기상/재난 보도",
       "snippet": "그러니까 밤에 갑자기 구름이 생기거나 해서 밤에는 집중호우가 많이 있는 곳이거든요. 그러니까 아마... 침수 피해 없도록 잘 대비를 해야겠습니다. 산사태 계속해서 강조하고 계시는데 우리나라의 산사태 대응하는 체계...",
@@ -9307,7 +9318,7 @@
       "date": "2026-09-01"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9318,7 +9329,7 @@
       "date": "2026-08-31"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9329,7 +9340,7 @@
       "date": "2026-08-31"
     },
     {
-      "id": "mil_news_16",
+      "id": "mil_news_17",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9338,17 +9349,6 @@
       "snippet": "호우 관련 인명피해나 주민 대피 사례는 접수되지 않았다. 현재 안전사고를 막기... 한편, 최정호 익산시장은 지난 30일 전날 밤부터 내린 폭우로 침수 피해를 겪은...",
       "url": "http://www.breaknews.com/1232668",
       "date": "2026-08-31"
-    },
-    {
-      "id": "mil_news_17",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "네팔 덮친 '빙하 재앙'...한국인 노동자 연락 두절 [뉴스특보 2PM]",
-      "source": "기상/재난 보도",
-      "snippet": "이 석 달 동안 연간 강수량의 80% 이상이 이 기간에 집중됩니다. 사고 당시 며칠 간 비가 멈췄다 이런 이야기가 있는데 이랬다 하더라도 이미 석 달간 폭염과 호우가 반복되면서 산간토양의 경우는 물을 가득 머금은 지반...",
-      "url": "https://www.ytn.co.kr/_ln/0104_202608271420308533",
-      "date": "2026-08-27"
     },
     {
       "id": "mil_news_18",
