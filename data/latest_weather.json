@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-06T20:01:37Z",
+  "updatedAt": "2026-09-06T22:42:18Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9487,6 +9487,17 @@
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
+      "title": "[안전상황실·7일] 인천 왕산마리나 해상서 모터보트 침수 … 2명 사망",
+      "source": "기상/재난 보도",
+      "snippet": "특히 강풍으로 인한 시설물 낙하와 전도 피해가 많아 태풍 때 외부 활동과 노후 시설물 관리의 위험성을 보여준 사례로 남았다. ◇ 세계 ▲ 2017년, 멕시코 치아파스 규모 8.2 강진 = 멕시코 남부 치아파스 앞바다에서 9월...",
+      "url": "https://www.safetimes.co.kr/news/articleView.html?idxno=245254",
+      "date": "2026-09-07"
+    },
+    {
+      "id": "mil_news_31",
+      "category": "strongwind",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "가을철 안전 위험요소 집중신고…우수 신고자 최대 100만원",
       "source": "기상/재난 보도",
       "snippet": "호우·태풍 분야는 막힌 빗물받이와 붕괴·강풍 위험, 하천 제방 유실 등이 대상이다. 소방안전 분야에는... 축제·행사 분야에서는 인파 밀집 우려와 안전요원 부재, 시설물 파손 등 안전관리가 미흡한 사례를 신고하면...",
@@ -9494,7 +9505,7 @@
       "date": "2026-09-01"
     },
     {
-      "id": "mil_news_31",
+      "id": "mil_news_32",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9505,7 +9516,7 @@
       "date": "2026-08-31"
     },
     {
-      "id": "mil_news_32",
+      "id": "mil_news_33",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9516,7 +9527,7 @@
       "date": "2026-07-30"
     },
     {
-      "id": "mil_news_33",
+      "id": "mil_news_34",
       "category": "strongwind",
       "isMilitary": false,
       "isAccident": true,
@@ -9527,29 +9538,7 @@
       "date": "2026-06-02"
     },
     {
-      "id": "mil_news_34",
-      "category": "strongwind",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "행안부, 6~8월 여름철 위험요소 집중신고기간 운영",
-      "source": "기상/재난 보도",
-      "snippet": "호우·태풍 분야는 막힌 빗물받이, 시설 파손, 붕괴 우려 시설, 강풍 위험, 전기시설 위험 등이 포함된다.... 정확한 위치 파악을 위해 주변 건물이나 시설물 명칭을 함께 기재하고, 사진은 위험 대상뿐 아니라 주변 환경이...",
-      "url": "https://idsn.co.kr/news/view/1065592664833502",
-      "date": "2026-06-01"
-    },
-    {
       "id": "mil_news_35",
-      "category": "strongwind",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "“2년 전 악몽 생각하면 밤잠 설쳐”…포스코, 이 악물었다 “태풍 완벽...",
-      "source": "기상/재난 보도",
-      "snippet": "축대 붕괴 위험이 있을 수 있으며 높은 습도로 전기전도도가 상승해 감전 사고 위험이 증가한다. 강풍으로... 포항제철소는 이번 설비점검 결과에 따라 미흡한 사항은 즉시 개선할 수 있도록 지원하고 시설물의 안전과 사고...",
-      "url": "https://www.mk.co.kr/article/11058926",
-      "date": "2024-07-04"
-    },
-    {
-      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9560,7 +9549,7 @@
       "date": "2026-08-20"
     },
     {
-      "id": "mil_news_37",
+      "id": "mil_news_36",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9571,7 +9560,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_38",
+      "id": "mil_news_37",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9582,7 +9571,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_39",
+      "id": "mil_news_38",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9593,7 +9582,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_40",
+      "id": "mil_news_39",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9604,7 +9593,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_41",
+      "id": "mil_news_40",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
@@ -9615,7 +9604,7 @@
       "date": "2026-08-18"
     },
     {
-      "id": "mil_news_42",
+      "id": "mil_news_41",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
