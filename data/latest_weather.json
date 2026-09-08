@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-08T10:38:33Z",
+  "updatedAt": "2026-09-08T16:02:18Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9399,11 +9399,11 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "경남 거제 사흘간 여름비 90% 쏟아졌다…강수량 577㎜ '역대급 폭우' 기...",
+      "title": "일본 지바현, 12시간 동안 348㎜ ‘역대 최대급’ 폭우…8명 숨져",
       "source": "기상/재난 보도",
-      "snippet": "기록적인 폭우가 쏟아지면서 곳곳에서 침수와 산사태 피해가 잇따랐다. 거제에서는 하루 동안 570㎜가... 1991~2020년 평균 여름 강수량은 거제 935.1㎜, 통영 728.8㎜로, 이번 집중호우로 두 지역 모두 평년 여름 강수량의 90...",
-      "url": "https://www.lecturernews.com/news/articleView.html?idxno=208783",
-      "date": "2026-08-17"
+      "snippet": "못하는 사례들도 많은 것으로 알려졌다. 지바현에 있는 나리타공항의 버스와 철도 운행이 중단돼 7천여명이 공항에 발이 묶이기도 했다. 이번 폭우는 발달한 비구름이 띠 모양으로 이어져 같은 지역에 집중호우를 쏟는...",
+      "url": "https://www.hani.co.kr/arti/international/international_general/1272970.html",
+      "date": "2026-08-14"
     },
     {
       "id": "mil_news_23",
