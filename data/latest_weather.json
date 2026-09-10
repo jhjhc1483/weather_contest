@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-10T10:41:17Z",
+  "updatedAt": "2026-09-10T15:52:42Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9366,22 +9366,22 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "[생생뉴스] 가뭄·폭우 동시 다발적 발생…기후 변화에 따른 대책은?",
+      "title": "내일부터 남부지방부터 폭우…정부, 비상 대응태세 점검",
       "source": "기상/재난 보도",
-      "snippet": "산사태가 일어난다든지 혹은 뭐 더위가 이어지면 그 뒤에 가뭄이 온다든지 하는 일반적으로 생각할 수 있는 이런 복합 재난들도 있고요. 이번에는 사실 좀 특이한 케이스입니다. 가뭄 이후에 폭우가 오는 이런 사례인데...",
-      "url": "https://news.kbs.co.kr/news/pc/view/view.do?ncd=8640427&ref=A",
-      "date": "2026-08-19"
+      "snippet": "지난 8일 산지에 내린 집중호우로 하류 계곡과 하천의 수위가 급격히 상승하면서 관광객이 고립된 사례도... 여러분께서도 집중호우 시 외출을 삼가고, 산사태 우려지역, 하천변, 지하공간 등 위험한 지역의 접근을...",
+      "url": "https://www.nocutnews.co.kr/news/6563175?utm_source=naver&utm_medium=article&utm_campaign=20260814043031",
+      "date": "2026-08-14"
     },
     {
       "id": "mil_news_20",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "내일부터 남부지방부터 폭우…정부, 비상 대응태세 점검",
+      "title": "[생생뉴스] 가뭄·폭우 동시 다발적 발생…기후 변화에 따른 대책은?",
       "source": "기상/재난 보도",
-      "snippet": "지난 8일 산지에 내린 집중호우로 하류 계곡과 하천의 수위가 급격히 상승하면서 관광객이 고립된 사례도... 여러분께서도 집중호우 시 외출을 삼가고, 산사태 우려지역, 하천변, 지하공간 등 위험한 지역의 접근을...",
-      "url": "https://www.nocutnews.co.kr/news/6563175?utm_source=naver&utm_medium=article&utm_campaign=20260814043031",
-      "date": "2026-08-14"
+      "snippet": "산사태가 일어난다든지 혹은 뭐 더위가 이어지면 그 뒤에 가뭄이 온다든지 하는 일반적으로 생각할 수 있는 이런 복합 재난들도 있고요. 이번에는 사실 좀 특이한 케이스입니다. 가뭄 이후에 폭우가 오는 이런 사례인데...",
+      "url": "https://news.kbs.co.kr/news/pc/view/view.do?ncd=8640427&ref=A",
+      "date": "2026-08-19"
     },
     {
       "id": "mil_news_21",
