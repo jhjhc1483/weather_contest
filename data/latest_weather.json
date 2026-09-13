@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-13T03:20:45Z",
+  "updatedAt": "2026-09-13T11:08:28Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9300,6 +9300,17 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
+      "title": "거제시의회 제265회 임시회, 시의원 10명 '5분 자유발언' 바람은?",
+      "source": "뉴시스",
+      "snippet": "이를 위해 ▲침수·산사태·급경사지 등 지역별 위험요인 재점검 ▲재난문자와 대피 안내체계 개선 ▲취약계층 보호체계 강화 ▲재난 대응 과정의 체계적인 기록과 분석 등을 제안했다. 특히 \"이번 집중호우의 발생부터...",
+      "url": "https://www.newsis.com/view/NISX20260913_0003787005",
+      "date": "2026-09-13"
+    },
+    {
+      "id": "mil_news_14",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
       "title": "가을장마·24호태풍 겹쳐 日관동 물폭탄…수도권 곳곳 대피령",
       "source": "뉴스1",
       "snippet": "지난달 침수로 사망 사고가 났던 지바시 중앙구 무라타초 국도 16호선 지하차도를 7일 0시 30분부로 사전 전면 차단했다. 호우 경보 발령 시 선제 통제하도록 안전 규정을 개편한 이후 첫 통제 사례다. 기상청은 7일 낮까지...",
@@ -9307,7 +9318,7 @@
       "date": "2026-09-07"
     },
     {
-      "id": "mil_news_14",
+      "id": "mil_news_15",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": false,
@@ -9318,7 +9329,7 @@
       "date": "2026-09-03"
     },
     {
-      "id": "mil_news_15",
+      "id": "mil_news_16",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9329,7 +9340,7 @@
       "date": "2026-09-03"
     },
     {
-      "id": "mil_news_16",
+      "id": "mil_news_17",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9338,17 +9349,6 @@
       "snippet": "그러니까 밤에 갑자기 구름이 생기거나 해서 밤에는 집중호우가 많이 있는 곳이거든요. 그러니까 아마... 침수 피해 없도록 잘 대비를 해야겠습니다. 산사태 계속해서 강조하고 계시는데 우리나라의 산사태 대응하는 체계...",
       "url": "https://www.ytn.co.kr/_ln/0104_202609011020479840",
       "date": "2026-09-01"
-    },
-    {
-      "id": "mil_news_17",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "고창-익산 등 늦장마에 직격탄",
-      "source": "기상/재난 보도",
-      "snippet": "이중 주택과 상가 침수 피해는 익산에 집중됐다. 누적 강수량은 상대적으로 적었지만, 국지성 집중호우에 피해가 꼬리 물었다. 실제로 폭우가 쏟아진 지난 30일 새벽의 경우 익산 신흥동 한 공장이 물에 잠기면서 미처...",
-      "url": "https://sjbnews.com/news/news.php?number=886505",
-      "date": "2026-08-31"
     },
     {
       "id": "mil_news_18",
