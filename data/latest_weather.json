@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T03:32:07Z",
+  "updatedAt": "2026-09-14T11:53:47Z",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9366,17 +9366,6 @@
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "내일부터 남부지방부터 폭우…정부, 비상 대응태세 점검",
-      "source": "기상/재난 보도",
-      "snippet": "지난 8일 산지에 내린 집중호우로 하류 계곡과 하천의 수위가 급격히 상승하면서 관광객이 고립된 사례도... 여러분께서도 집중호우 시 외출을 삼가고, 산사태 우려지역, 하천변, 지하공간 등 위험한 지역의 접근을...",
-      "url": "https://www.nocutnews.co.kr/news/6563175?utm_source=naver&utm_medium=article&utm_campaign=20260814043031",
-      "date": "2026-08-14"
-    },
-    {
-      "id": "mil_news_20",
-      "category": "typhoon_heavyrain",
-      "isMilitary": false,
-      "isAccident": true,
       "title": "[생생뉴스] 가뭄·폭우 동시 다발적 발생…기후 변화에 따른 대책은?",
       "source": "기상/재난 보도",
       "snippet": "산사태가 일어난다든지 혹은 뭐 더위가 이어지면 그 뒤에 가뭄이 온다든지 하는 일반적으로 생각할 수 있는 이런 복합 재난들도 있고요. 이번에는 사실 좀 특이한 케이스입니다. 가뭄 이후에 폭우가 오는 이런 사례인데...",
@@ -9384,7 +9373,7 @@
       "date": "2026-08-19"
     },
     {
-      "id": "mil_news_21",
+      "id": "mil_news_20",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
@@ -9395,15 +9384,26 @@
       "date": "2026-08-18"
     },
     {
+      "id": "mil_news_21",
+      "category": "typhoon_heavyrain",
+      "isMilitary": false,
+      "isAccident": true,
+      "title": "경남 거제 사흘간 여름비 90% 쏟아졌다…강수량 577㎜ '역대급 폭우' 기...",
+      "source": "기상/재난 보도",
+      "snippet": "기록적인 폭우가 쏟아지면서 곳곳에서 침수와 산사태 피해가 잇따랐다. 거제에서는 하루 동안 570㎜가... 1991~2020년 평균 여름 강수량은 거제 935.1㎜, 통영 728.8㎜로, 이번 집중호우로 두 지역 모두 평년 여름 강수량의 90...",
+      "url": "https://www.lecturernews.com/news/articleView.html?idxno=208783",
+      "date": "2026-08-17"
+    },
+    {
       "id": "mil_news_22",
       "category": "typhoon_heavyrain",
       "isMilitary": false,
       "isAccident": true,
-      "title": "일본 지바현, 12시간 동안 348㎜ ‘역대 최대급’ 폭우…8명 숨져",
+      "title": "남해안 기록적 폭우…거제 아파트 산사태로 1명 사망",
       "source": "기상/재난 보도",
-      "snippet": "못하는 사례들도 많은 것으로 알려졌다. 지바현에 있는 나리타공항의 버스와 철도 운행이 중단돼 7천여명이 공항에 발이 묶이기도 했다. 이번 폭우는 발달한 비구름이 띠 모양으로 이어져 같은 지역에 집중호우를 쏟는...",
-      "url": "https://www.hani.co.kr/arti/international/international_general/1272970.html",
-      "date": "2026-08-14"
+      "snippet": "통영에서도 같은 날 오전 5시 3분경 산양읍 곤리도에서 산사태가 발생해 60대 여성이 토사에 매몰됐다가 약 1시간 30분 만에 구조됐다. 지하주차장·승강기 침수 거제 4177세대 단수 이번 집중호우로 아파트 침수...",
+      "url": "http://www.aptn.co.kr/news/articleView.html?idxno=112662",
+      "date": "2026-08-19"
     },
     {
       "id": "mil_news_23",
