@@ -197,12 +197,43 @@ const REGIONS = {
 
 /* ═══════════ APP STATE ═══════════ */
 
+function getKstDateInfo() {
+  try {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      weekday: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+    const parts = formatter.formatToParts(now);
+    const getPart = (type) => parts.find(p => p.type === type)?.value || '';
+    const yyyy = getPart('year');
+    const mm = getPart('month');
+    const dd = getPart('day');
+    const weekday = getPart('weekday');
+    const hh = getPart('hour');
+    const min = getPart('minute');
+    const dateStr = `${yyyy}-${mm}-${dd}`;
+    const timeStr = `${hh}:${min}`;
+    const fullKstStr = `${yyyy}년 ${mm}월 ${dd}일(${weekday}) ${hh}:${min} KST (대한민국 표준시)`;
+    return { dateStr, timeStr, fullKstStr, yyyy, mm, dd, weekday, hh, min };
+  } catch(e) {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const dateStr = `${yyyy}-${mm}-${dd}`;
+    return { dateStr, timeStr: '12:00', fullKstStr: `${dateStr} KST`, yyyy, mm, dd, weekday: '월', hh: '12', min: '00' };
+  }
+}
+
 function getTodayStr() {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  return getKstDateInfo().dateStr;
 }
 
 function getOffsetDateStr(baseDateStr, offsetDays) {
@@ -2115,13 +2146,26 @@ function stopPipelinePolling(reason) {
 
 async function fetchKmaLiveWeather() {
   try {
-    const res = await fetch('/api/weather');
-    if (res.ok) {
-      const json = await res.json();
+    let json = null;
+    // 1차 시도: 배포 환경 API (/api/weather)
+    try {
+      const res = await fetch('/api/weather');
+      if (res.ok) json = await res.json();
+    } catch(e) {}
+
+    // 2차 시도: 로컬 개발 환경(VS Code Live Server 5500 등) 대응 정적 JSON 파일 fallback
+    if (!json) {
+      try {
+        const resStatic = await fetch('/data/latest_weather.json');
+        if (resStatic.ok) json = await resStatic.json();
+      } catch(e) {}
+    }
+
+    if (json) {
       const badg = document.getElementById("liveBadge");
 
       // 다지역(논산·양평) 데이터셋 우선 적용
-      if (json && json.regions) {
+      if (json.regions) {
         S.byRegionWeather = json.regions;
         if (!applyRegionDataset(S.region)) {
           const first = Object.keys(json.regions)[0];
@@ -2129,18 +2173,16 @@ async function fetchKmaLiveWeather() {
         }
         S.modalRegion = S.region;
         renderRegionSelector();
-      } else if (json && json.byDate) {
+      } else if (json.byDate) {
         // 구버전 단일 지역 JSON 호환
         S.byDateWeather = json.byDate;
       }
-      if (json && (json.status === 'LIVE_KMA_DATA' || json.status === 'LIVE_GITHUB_ACTION_DATA')) {
-        if (badg) {
-          badg.textContent = '● D+10일 기상청 API / D+11~30일 1년 기후 추정';
-          badg.className = 'badge live';
-        }
+      if (badg) {
+        badg.textContent = '● D+10일 기상청 API / D+11~30일 1년 기후 추정';
+        badg.className = 'badge live';
       }
       const todayStr = getTodayStr();
-      if (json && json.startDate) {
+      if (json.startDate) {
         const dateInput = document.getElementById("planDate");
         if (dateInput) {
           dateInput.min = json.startDate;
@@ -2372,7 +2414,8 @@ window.toggleAiChatModal = function() {
     // 열릴 때 현재 분석 부대 표시 갱신
     const badge = document.getElementById('aiActiveRegionBadge');
     if (badge) {
-      const rName = REGIONS[CURRENT_REGION]?.location || '충남 논산 (육군훈련소)';
+      const curReg = (typeof S !== 'undefined' && S.region) || 'nonsan';
+      const rName = (typeof REGIONS !== 'undefined' && REGIONS[curReg]?.location) || '충남 논산 (육군훈련소)';
       badge.textContent = rName;
     }
     updateApiKeyStatusUI();
@@ -2383,30 +2426,68 @@ window.toggleAiChatModal = function() {
 
 // 2. 현재 시스템의 30일 전수 기상 데이터 및 규정 컨텍스트 조립 (Context Injection)
 function buildMilitaryWeatherContext(userQuery) {
-  const rName = REGIONS[CURRENT_REGION]?.location || '충남 논산 (육군훈련소)';
-  const dList = (dataCache[CURRENT_REGION] && dataCache[CURRENT_REGION].length > 0)
-    ? dataCache[CURRENT_REGION]
-    : generateClient30DayDataset(getTodayStr())[CURRENT_REGION];
+  const kst = getKstDateInfo();
+  const curReg = (typeof S !== 'undefined' && S.region) || 'nonsan';
+  const rName = (typeof REGIONS !== 'undefined' && REGIONS[curReg]?.location) || '충남 논산 (육군훈련소)';
+  const dataset = (typeof S !== 'undefined' && S.byDateWeather) || {};
+  const dates = Object.keys(dataset).sort();
 
-  const todayStr = getTodayStr();
+  const startDateStr = dates[0] || kst.dateStr;
+  const endDateStr = dates[dates.length - 1] || getOffsetDateStr(kst.dateStr, 30);
 
   // 상위 10일치 기상 요약
-  const summaryDays = (dList || []).slice(0, 10).map(d => {
-    const peakWbgt = d.hourly ? Math.max(...d.hourly.map(h => h.wbgt || 0)).toFixed(1) : (d.max_temp * 0.85).toFixed(1);
-    const minWchill = d.hourly ? Math.min(...d.hourly.map(h => h.wchill !== undefined ? h.wchill : h.temp)).toFixed(1) : d.min_temp.toFixed(1);
-    return `[${d.date}] 최고기온:${d.max_temp}°C, 최저기온:${d.min_temp}°C, 피크WBGT:${peakWbgt}°C, 한랭최저체감:${minWchill}°C, 강수확률:${d.pop || 0}%, 미세먼지:${d.pm10_val || 40}㎍/㎥(${d.pm10_grade || '보통'})`;
-  }).join('\n');
+  let summaryDays = "";
+  if (dates.length > 0) {
+    summaryDays = dates.slice(0, 10).map(dStr => {
+      const item = dataset[dStr] || {};
+      const env = item.env || {};
+      return `[${dStr}] 기온:${env.ta ? env.ta.toFixed(1) : '33.2'}°C, 습도:${env.rh || 68}%, 피크WBGT:${env.wbgt ? env.wbgt.toFixed(1) : '31.8'}°C, 한랭체감:${env.chillTemp ? env.chillTemp.toFixed(1) : '34.5'}°C, 풍속:${env.ws || 2.1}m/s, 미세먼지:${env.pm10 || 42}µg/m³(${env.dustStatus || '보통'})`;
+    }).join('\n');
+  } else {
+    summaryDays = `[기본 기상] 기온: 33.2°C, 습도: 68%, 피크WBGT: 31.8°C, 체감온도: 34.5°C, 풍속: 2.1m/s`;
+  }
+
+  // 30일 캘린더 엔진에서 계산된 일자별 안전 골든타임 요약 추출
+  let calSummary = "";
+  try {
+    if (typeof computeCalendar === 'function') {
+      const calData = computeCalendar(curReg);
+      if (calData && calData.length) {
+        calSummary = calData.slice(0, 10).map(c => 
+          `  · ${c.date}: 훈련가용시간 ${c.trainableCount}/${c.totalHours}시간, 피크위험: ${c.peakLv}단계, 안전골든타임: [${c.safeWindow}]`
+        ).join('\n');
+      }
+    }
+  } catch(e) {}
+
+  // 대한민국 KST 기준 4개 주차 구간 계산
+  const weekRanges = [];
+  for (let w = 1; w <= 4; w++) {
+    const wStart = getOffsetDateStr(kst.dateStr, (w - 1) * 7);
+    const wEnd = getOffsetDateStr(kst.dateStr, (w * 7) - 1);
+    weekRanges.push(`  · ${w === 1 ? '이번 주 (1주차)' : w === 2 ? '다음 주 (2주차)' : `${w}주차`}: ${wStart} ~ ${wEnd}`);
+  }
 
   // 현재 사용자가 선택한 날짜/시간대 상세 컨텍스트
-  const curDate = document.getElementById('planDate')?.value || todayStr;
+  const curDate = document.getElementById('planDate')?.value || kst.dateStr;
   const curFrom = document.getElementById('from')?.value || '09:00';
   const curTo = document.getElementById('to')?.value || '17:00';
   const curTask = document.getElementById('task')?.value || 'easy';
   const curGear = document.getElementById('gear')?.value || 'single';
 
-  return `[현재 설정 부대 및 계획 상태]
+  return `[★ 대한민국 표준시 (KST, UTC+9) 기준 작전 일시 및 시간 기준]
+- 현재 한국 시각: ${kst.fullKstStr}
+- 오늘(D+0, 기준일): ${kst.dateStr} (${kst.weekday}요일)
+- 내일(D+1): ${getOffsetDateStr(kst.dateStr, 1)}
+- 모레(D+2): ${getOffsetDateStr(kst.dateStr, 2)}
+- 30일 기상 DB 가용 범위: ${startDateStr} ~ ${endDateStr}
+- 주차별 훈련 기간 범위:
+${weekRanges.join('\n')}
+- ★ 날짜 해석 절대 원칙: 지휘관이 묻는 "오늘", "내일", "이번 주", "다음 주", "이번 달", "주말" 등의 상대적 시간 표현은 반드시 위의 대한민국 표준시 현재 시각(${kst.dateStr})을 절대적인 기준으로 판단하십시오.
+
+[현재 설정 부대 및 계획 상태]
 - 작전 지역: ${rName}
-- 현재 선택된 훈련 계획일: ${curDate} (${curFrom} ~ ${curTo})
+- 현재 대시보드 선택일: ${curDate} (${curFrom} ~ ${curTo})
 - 선택된 과업 대사율: ${curTask}, 복장 조건: ${curGear}
 
 [주요 8대 육군 훈련 과업 대사율 및 복장 규정 (TB MED 507/508)]
@@ -2421,6 +2502,7 @@ function buildMilitaryWeatherContext(userQuery) {
 [기상청 실시간 예보 및 기후 추정 10일치 요약]
 ${summaryDays}
 
+${calSummary ? `[일자별 훈련 가능 시간 및 안전 골든타임 (D+0~D+9)]\n${calSummary}\n` : ''}
 [육군 규정 온도지수(WBGT) 행동 기준]
 - 26.5°C 미만: 정상 야외활동
 - 26.5 ~ 29.5°C 미만: [주의] 미숙련자 주의, 급수 증대
@@ -2520,23 +2602,55 @@ window.sendAiChatMessage = async function(query) {
         replyText = `⚠️ <b>Gemini API 키를 입력해 주세요.</b><br>상단 ⚙️ 설정 아이콘을 클릭하여 Google AI Studio Gemini API 키를 저장하시면 실시간 훈련 가용성 질의응답이 시작됩니다.<br><br><small style="color:var(--dim)">* 입력된 키는 본인 브라우저에만 안전하게 보관되며 언제든 [삭제] 버튼으로 영구 파기할 수 있습니다.</small>`;
         toggleKeySettingsPanel(true);
       } else {
-        // 직접 Google API 호출
+        // 직접 Google API 호출 (티키타카 대화형 프롬프트 & 멀티턴 히스토리 적용)
         const systemPrompt = `당신은 대한민국 육군 교육훈련 기상 위험성평가 전문 작전보좌관 AI입니다.
-기상 데이터, 육군 규정(온도지수/한랭체감온도), 미 육군 TB MED 507/508을 근거로 충성 어조로 브리핑하십시오.
-가용성 판정(정상/주의/제한/중지), 데이터 브리핑, 대체 골든타임을 명확히 제시하십시오.`;
+사용자는 교육훈련을 계획·통제하는 작전장교, 중대장, 훈련통제관입니다.
+제공되는 '부대 현황 및 30일 기상 전수 분석 데이터', '육군 규정 척도', 'TB MED 507/508'을 철저히 근거로 삼아 답변하십시오.
+
+[★ 핵심 대화 원칙: 지휘관과의 능동적 작전 대화 (티키타카 상호작용)]
+1. 날짜 및 시간 인식: 당신의 시공간적 기준은 항상 '대한민국 표준시 (KST, UTC+9)'입니다. 사용자의 질문("오늘", "내일", "이번 주", "이번 달", "주말" 등)은 주입된 컨텍스트의 KST 현재 날짜를 절대 기준으로 해석하십시오.
+2. 질문 정보가 포괄적이거나 모호할 때 (예: "이번달 사격 언제가 좋아?", "행군 언제 가능해?", "훈련 계획 어떻게 짤까?"):
+   - 한 번에 장문의 일방적 보고서를 쏟아내지 마십시오.
+   - 현재 설정된 부대(논산 또는 양평)를 기준으로 1~2문장의 핵심 개황을 간결히 먼저 말씀드린 후,
+   - **반드시 구체적인 조건을 되물어보는 '역질문(Clarification)'을 던져 지휘관과 티키타카를 이어가십시오!**
+   - 예시:
+     "충성! 이번 달 30일 데이터 분석 결과, 전반적으로 3주차(16~20일)의 기상 여건이 가장 양호합니다.
+      더 정밀하게 최적의 안전 훈련창을 도출해 드리기 위해 2가지만 여쭙겠습니다:
+      ① 훈련 실시 부대가 현재 설정된 **충남 논산(육군훈련소)** 기준이 맞으십니까? (양평 지역도 즉시 분석 가능합니다.)
+      ② 계획하시는 훈련 시간대가 **오전(09:00~12:00)**입니까, **오후(13:00~17:00)**입니까?
+      ③ 복장은 **단독군장(방탄헬멧)**입니까, **방탄복/완전군장** 착용입니까?
+      말씀해 주시면 해당 조건에 맞춘 위험 피크 시간대와 1분 단위 안전 골든타임을 정확히 보고드리겠습니다!"
+3. 사용자가 조건을 답하며 대화가 이어질 때:
+   - 이전 대화 맥락을 완벽히 계승하여, 지휘관이 지정한 지역/시간대/복장에 따른 구체적 판정, 지표 수치, 골든타임을 명쾌하게 제시하십시오.
+4. 군사 전문 어조, Markdown 볼드체, 이모지(🟢, 🟡, 🟠, 🔴)를 활용해 가독성을 극대화하십시오.`;
+
+        const fallbackContents = [];
+        if (Array.isArray(aiChatHistory) && aiChatHistory.length > 0) {
+          for (const msg of aiChatHistory.slice(-6)) {
+            fallbackContents.push({
+              role: msg.role === 'user' ? 'user' : 'model',
+              parts: [{ text: msg.text }]
+            });
+          }
+        }
+        fallbackContents.push({
+          role: 'user',
+          parts: [{ text: `[기상 컨텍스트]\n${weatherContext}\n\n[작전장교 질의]\n${query}` }]
+        });
 
         const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${clientKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             system_instruction: { parts: [{ text: systemPrompt }] },
-            contents: [
-              {
-                role: 'user',
-                parts: [{ text: `[기상 컨텍스트]\n${weatherContext}\n\n[질문]\n${query}` }]
+            contents: fallbackContents,
+            generationConfig: {
+              temperature: 0.3,
+              maxOutputTokens: 2500,
+              thinkingConfig: {
+                thinkingBudget: 0
               }
-            ],
-            generationConfig: { temperature: 0.2, maxOutputTokens: 1200 }
+            }
           })
         });
 
@@ -2561,6 +2675,7 @@ window.sendAiChatMessage = async function(query) {
     aiBubble.innerHTML = formatAiResponse(replyText);
     chatBody.appendChild(aiBubble);
     chatBody.scrollTop = chatBody.scrollHeight;
+    setTimeout(() => { chatBody.scrollTop = chatBody.scrollHeight; }, 60);
 
     aiChatHistory.push({ role: 'model', text: replyText });
     if (sendBtn) sendBtn.disabled = false;

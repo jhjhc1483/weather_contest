@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=50">
+  <link rel="stylesheet" href="styles.css?v=54">
 
   <!-- PWA (Progressive Web App) Manifest & Mobile App Meta -->
   <link rel="manifest" href="manifest.json">
@@ -524,18 +524,18 @@
         <p>계획 중이신 훈련 일시와 훈련 과업을 말씀해 주시면, <b>30일 기상 전수 예측치</b>와 <b>육군 규정 척도(온도지수/한랭체감)</b> 및 <b>TB MED 507/508 보정치</b>를 종합 분석하여 즉시 시행 판단을 보고드립니다.</p>
         
         <div class="ai-presets-wrap">
-          <div style="font-size:11.5px;color:var(--dim);margin:6px 0 2px">💡 <b>빠른 질문 예시 (클릭 시 즉시 분석):</b></div>
+          <div style="font-size:11.5px;color:var(--dim);margin:6px 0 2px">💡 <b>빠른 질문 예시 (클릭 시 작전보좌관과 티키타카 시작):</b></div>
+          <button type="button" class="ai-preset-chip" onclick="askPresetQuestion('이번 달 사격 가능한 주는 언제야?')">
+            <span>🎯</span> 이번 달 사격 가능한 주는 언제야?
+          </button>
+          <button type="button" class="ai-preset-chip" onclick="askPresetQuestion('행군 훈련 언제가 제일 안전해?')">
+            <span>🎒</span> 행군 훈련 언제가 제일 안전해?
+          </button>
           <button type="button" class="ai-preset-chip" onclick="askPresetQuestion('내일 14시에 영점사격 훈련 계획 중인데 가능해?')">
-            <span>🎯</span> 내일 14시 영점사격 훈련 가능해?
+            <span>⏱️</span> 내일 14시 영점사격 가능해?
           </button>
-          <button type="button" class="ai-preset-chip" onclick="askPresetQuestion('이번 주말 10km 급속행군 계획 중인데 가장 안전한 골든타임 추천해줘')">
-            <span>🎒</span> 이번 주말 10km 행군 안전 골든타임은?
-          </button>
-          <button type="button" class="ai-preset-chip" onclick="askPresetQuestion('9월 20일 화생방 제독 훈련 위험도와 MOPP4 열부하 안전대책 분석해줘')">
-            <span>☣️</span> 9월 20일 화생방 제독훈련 위험도 분석
-          </button>
-          <button type="button" class="ai-preset-chip" onclick="askPresetQuestion('앞으로 30일 중 훈련 가용률이 가장 높은 3일 연속 구간은 언제야?')">
-            <span>📅</span> 향후 30일 중 최적의 연속 훈련 기간 추천
+          <button type="button" class="ai-preset-chip" onclick="askPresetQuestion('이번 달 훈련 가용률이 가장 높은 주는 언제야?')">
+            <span>📅</span> 이번 달 훈련 가용률 최고 주차는?
           </button>
         </div>
       </div>
@@ -554,13 +554,13 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=50"></script>
+  <script src="app.js?v=54"></script>
 
   <!-- PWA Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=50')
+        navigator.serviceWorker.register('/sw.js?v=54')
           .then(reg => {
             console.log('[PWA] Service Worker registered on scope:', reg.scope);
             reg.update();
