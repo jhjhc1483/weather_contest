@@ -2298,3 +2298,283 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetchKmaLiveWeather();
 });
+
+/* ══════════════════════════════════════════════════════════════════
+   AI MILITARY WEATHER CHAT ASSISTANT (GEMINI 2.5 FLASH) ENGINE
+   ══════════════════════════════════════════════════════════════════ */
+let aiChatHistory = [];
+
+// 1. API 키 로컬스토리지 관리 (사용자 요청: 안전한 삭제/초기화 기능 탑재)
+function getGeminiApiKey() {
+  return localStorage.getItem('gemini_api_key') || '';
+}
+
+function updateApiKeyStatusUI() {
+  const statusBadge = document.getElementById('aiKeyStatusBadge');
+  const inputEl = document.getElementById('aiApiKeyInput');
+  const storedKey = getGeminiApiKey();
+
+  if (inputEl && !inputEl.value && storedKey) {
+    inputEl.value = storedKey;
+  }
+
+  if (statusBadge) {
+    if (storedKey) {
+      statusBadge.textContent = '● API 키 활성화됨';
+      statusBadge.className = 'ai-key-status active';
+    } else {
+      statusBadge.textContent = '○ API 키 미설정';
+      statusBadge.className = 'ai-key-status';
+    }
+  }
+}
+
+window.saveClientApiKey = function() {
+  const inputEl = document.getElementById('aiApiKeyInput');
+  const key = (inputEl ? inputEl.value : '').trim();
+  if (!key) {
+    alert('Google AI Studio API 키를 입력해 주세요.');
+    return;
+  }
+  localStorage.setItem('gemini_api_key', key);
+  updateApiKeyStatusUI();
+  toggleKeySettingsPanel(false);
+  alert('Gemini API 키가 브라우저에 안전하게 저장되었습니다.');
+};
+
+// 🗑️ 사용자 요청: 로컬스토리지 API 키 삭제/초기화 버튼 기능
+window.deleteClientApiKey = function() {
+  if (!confirm('저장된 Gemini API 키를 브라우저에서 영구 삭제하시겠습니까?')) return;
+  localStorage.removeItem('gemini_api_key');
+  const inputEl = document.getElementById('aiApiKeyInput');
+  if (inputEl) inputEl.value = '';
+  updateApiKeyStatusUI();
+  alert('API 키가 로컬스토리지에서 완전히 삭제되었습니다.');
+};
+
+window.toggleKeySettingsPanel = function(forceState) {
+  const panel = document.getElementById('aiKeySettingsPanel');
+  if (!panel) return;
+  if (typeof forceState === 'boolean') {
+    panel.classList.toggle('hidden', !forceState);
+  } else {
+    panel.classList.toggle('hidden');
+  }
+  updateApiKeyStatusUI();
+};
+
+window.toggleAiChatModal = function() {
+  const modal = document.getElementById('aiChatModal');
+  if (!modal) return;
+  const isHidden = modal.classList.toggle('hidden');
+  
+  if (!isHidden) {
+    // 열릴 때 현재 분석 부대 표시 갱신
+    const badge = document.getElementById('aiActiveRegionBadge');
+    if (badge) {
+      const rName = REGIONS[CURRENT_REGION]?.location || '충남 논산 (육군훈련소)';
+      badge.textContent = rName;
+    }
+    updateApiKeyStatusUI();
+    const inputEl = document.getElementById('aiChatInput');
+    if (inputEl) inputEl.focus();
+  }
+};
+
+// 2. 현재 시스템의 30일 전수 기상 데이터 및 규정 컨텍스트 조립 (Context Injection)
+function buildMilitaryWeatherContext(userQuery) {
+  const rName = REGIONS[CURRENT_REGION]?.location || '충남 논산 (육군훈련소)';
+  const dList = (dataCache[CURRENT_REGION] && dataCache[CURRENT_REGION].length > 0)
+    ? dataCache[CURRENT_REGION]
+    : generateClient30DayDataset(getTodayStr())[CURRENT_REGION];
+
+  const todayStr = getTodayStr();
+
+  // 상위 10일치 기상 요약
+  const summaryDays = (dList || []).slice(0, 10).map(d => {
+    const peakWbgt = d.hourly ? Math.max(...d.hourly.map(h => h.wbgt || 0)).toFixed(1) : (d.max_temp * 0.85).toFixed(1);
+    const minWchill = d.hourly ? Math.min(...d.hourly.map(h => h.wchill !== undefined ? h.wchill : h.temp)).toFixed(1) : d.min_temp.toFixed(1);
+    return `[${d.date}] 최고기온:${d.max_temp}°C, 최저기온:${d.min_temp}°C, 피크WBGT:${peakWbgt}°C, 한랭최저체감:${minWchill}°C, 강수확률:${d.pop || 0}%, 미세먼지:${d.pm10_val || 40}㎍/㎥(${d.pm10_grade || '보통'})`;
+  }).join('\n');
+
+  // 현재 사용자가 선택한 날짜/시간대 상세 컨텍스트
+  const curDate = document.getElementById('planDate')?.value || todayStr;
+  const curFrom = document.getElementById('from')?.value || '09:00';
+  const curTo = document.getElementById('to')?.value || '17:00';
+  const curTask = document.getElementById('task')?.value || 'easy';
+  const curGear = document.getElementById('gear')?.value || 'single';
+
+  return `[현재 설정 부대 및 계획 상태]
+- 작전 지역: ${rName}
+- 현재 선택된 훈련 계획일: ${curDate} (${curFrom} ~ ${curTo})
+- 선택된 과업 대사율: ${curTask}, 복장 조건: ${curGear}
+
+[주요 8대 육군 훈련 과업 대사율 및 복장 규정 (TB MED 507/508)]
+- 영점/사격술: 단독군장(방탄헬멧/전투복), 경작업 250W, WBGT +1.5°C
+- 3km 뜀걸음/체력측정: 체육복, 고강도 800W, 통풍 우수 -1.0°C
+- 10km 급속행군: 단독군장 전술부하, 중작업 600W, +1.5°C
+- 40km 전술행군: 완전군장(45lb), 고부하 600W+, 완전군장/방탄복 +2.8°C 가산
+- 각개전투/포복: 단독군장 장애물극복, 중등작업 425W, +1.5°C
+- 화생방 제독훈련: MOPP 4단계 전신보호의 착용, 극심한 열부하 +11.1°C 가산
+- 혹한기 경계/매복: 정적 과업(1 MET, 100W), 방한복 3.4 clo, 풍속 노출 시 동상 고위험
+
+[기상청 실시간 예보 및 기후 추정 10일치 요약]
+${summaryDays}
+
+[육군 규정 온도지수(WBGT) 행동 기준]
+- 26.5°C 미만: 정상 야외활동
+- 26.5 ~ 29.5°C 미만: [주의] 미숙련자 주의, 급수 증대
+- 29.5 ~ 31.0°C 미만: [부분제한] 뜀걸음/과중한 훈련 지양, 그늘 휴식 10~15분 보장
+- 31.0 ~ 32.0°C 미만: [제한] 옥외훈련 제한/단축 (1일 6시간 이내)
+- 32.0°C 이상: [중지] 옥외활동 중지, 주둔지 실내교육 대체`;
+}
+
+// 마크다운 줄바꿈 및 볼드체 변환 헬퍼
+function formatAiResponse(text) {
+  if (!text) return '';
+  let html = text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+    .replace(/\*(.*?)\*/g, '<i>$1</i>')
+    .replace(/^### (.*$)/gim, '<h5 style="margin:8px 0 4px;font-size:13px;color:var(--ink)">$1</h5>')
+    .replace(/^## (.*$)/gim, '<h4 style="margin:10px 0 4px;font-size:14px;color:var(--ink)">$1</h4>')
+    .replace(/^[•\-\*] (.*$)/gim, '<li style="margin-left:14px;list-style:disc">$1</li>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+  return html;
+}
+
+// 3. 메시지 송수신 및 AI API 호출
+window.sendAiChatMessage = async function(query) {
+  const chatBody = document.getElementById('aiChatBody');
+  const inputEl = document.getElementById('aiChatInput');
+  const sendBtn = document.getElementById('btnAiChatSend');
+  if (!chatBody || !query) return;
+
+  // 1) 사용자 메시지 추가
+  const userBubble = document.createElement('div');
+  userBubble.className = 'chat-bubble user';
+  userBubble.textContent = query;
+  chatBody.appendChild(userBubble);
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  aiChatHistory.push({ role: 'user', text: query });
+
+  if (inputEl) inputEl.value = '';
+  if (sendBtn) sendBtn.disabled = true;
+
+  // 2) 타이핑 인디케이터 표시
+  const typingBubble = document.createElement('div');
+  typingBubble.className = 'chat-bubble ai';
+  typingBubble.id = 'aiTypingBubble';
+  typingBubble.innerHTML = `
+    <div style="font-size:11.5px;color:var(--dim);margin-bottom:4px">📡 30일 기상 데이터 및 육군 규정 분석 중...</div>
+    <div class="ai-typing-indicator">
+      <div class="ai-typing-dot"></div>
+      <div class="ai-typing-dot"></div>
+      <div class="ai-typing-dot"></div>
+    </div>
+  `;
+  chatBody.appendChild(typingBubble);
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  const weatherContext = buildMilitaryWeatherContext(query);
+  const clientKey = getGeminiApiKey();
+
+  let replyText = '';
+
+  try {
+    // 1차 시도: Cloudflare Pages Functions (/api/chat)
+    let apiSuccess = false;
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: query,
+          weatherContext: weatherContext,
+          history: aiChatHistory,
+          clientApiKey: clientKey
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        replyText = data.reply;
+        apiSuccess = true;
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        if (errJson.error === 'API_KEY_REQUIRED') {
+          replyText = `⚠️ <b>Gemini API 키가 필요합니다.</b><br>우측 상단의 톱니바퀴(⚙️) 버튼을 눌러 Google AI Studio에서 발급받은 Gemini API 키를 입력해 주세요.<br><br><small style="color:var(--dim)">* 입력된 키는 브라우저 로컬스토리지에만 보관되며, 언제든 [삭제] 버튼으로 즉시 파기할 수 있습니다.</small>`;
+          toggleKeySettingsPanel(true);
+          apiSuccess = true;
+        }
+      }
+    } catch (e) {
+      console.log('Backend /api/chat not reachable, falling back to direct client API if key present...');
+    }
+
+    // 2차 시도 (로컬 개발 환경 또는 백엔드 부재 시 직접 Gemini API 호출)
+    if (!apiSuccess) {
+      if (!clientKey) {
+        replyText = `⚠️ <b>Gemini API 키를 입력해 주세요.</b><br>상단 ⚙️ 설정 아이콘을 클릭하여 Google AI Studio Gemini API 키를 저장하시면 실시간 훈련 가용성 질의응답이 시작됩니다.<br><br><small style="color:var(--dim)">* 입력된 키는 본인 브라우저에만 안전하게 보관되며 언제든 [삭제] 버튼으로 영구 파기할 수 있습니다.</small>`;
+        toggleKeySettingsPanel(true);
+      } else {
+        // 직접 Google API 호출
+        const systemPrompt = `당신은 대한민국 육군 교육훈련 기상 위험성평가 전문 작전보좌관 AI입니다.
+기상 데이터, 육군 규정(온도지수/한랭체감온도), 미 육군 TB MED 507/508을 근거로 충성 어조로 브리핑하십시오.
+가용성 판정(정상/주의/제한/중지), 데이터 브리핑, 대체 골든타임을 명확히 제시하십시오.`;
+
+        const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${clientKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemPrompt }] },
+            contents: [
+              {
+                role: 'user',
+                parts: [{ text: `[기상 컨텍스트]\n${weatherContext}\n\n[질문]\n${query}` }]
+              }
+            ],
+            generationConfig: { temperature: 0.2, maxOutputTokens: 1200 }
+          })
+        });
+
+        if (geminiRes.ok) {
+          const gData = await geminiRes.json();
+          replyText = gData.candidates?.[0]?.content?.parts?.[0]?.text || '답변을 생성하지 못했습니다.';
+        } else {
+          const gErr = await geminiRes.json().catch(() => ({}));
+          replyText = `❌ <b>Gemini API 호출 오류:</b> ${gErr.error?.message || 'API 키를 확인해 주십시오.'}`;
+        }
+      }
+    }
+  } catch (err) {
+    replyText = `❌ 오류 발생: ${err.message || '네트워크 연결 상태를 확인해 주십시오.'}`;
+  } finally {
+    // 타이핑 인디케이터 제거 및 실제 답변 버블 출력
+    const typingEl = document.getElementById('aiTypingBubble');
+    if (typingEl) typingEl.remove();
+
+    const aiBubble = document.createElement('div');
+    aiBubble.className = 'chat-bubble ai';
+    aiBubble.innerHTML = formatAiResponse(replyText);
+    chatBody.appendChild(aiBubble);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    aiChatHistory.push({ role: 'model', text: replyText });
+    if (sendBtn) sendBtn.disabled = false;
+  }
+};
+
+window.handleAiChatSubmit = function(e) {
+  if (e) e.preventDefault();
+  const inputEl = document.getElementById('aiChatInput');
+  const query = (inputEl ? inputEl.value : '').trim();
+  if (!query) return;
+  sendAiChatMessage(query);
+};
+
+window.askPresetQuestion = function(presetText) {
+  sendAiChatMessage(presetText);
+};
