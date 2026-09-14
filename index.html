@@ -12,16 +12,21 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=57">
+  <link rel="stylesheet" href="styles.css?v=58">
+
+  <!-- Browser Favicon & Touch Icons -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=58">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=58">
+  <link rel="icon" type="image/png" sizes="192x192" href="manifest-icon-192.png?v=58">
+  <link rel="apple-touch-icon" href="manifest-icon-192.png?v=58">
 
   <!-- PWA (Progressive Web App) Manifest & Mobile App Meta -->
-  <link rel="manifest" href="manifest.json?v=57">
+  <link rel="manifest" href="manifest.json?v=58">
   <meta name="theme-color" content="#080C13">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="기상위험평가">
-  <link rel="apple-touch-icon" href="manifest-icon-192.png?v=57">
 </head>
 <body>
 
@@ -554,13 +559,13 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=57"></script>
+  <script src="app.js?v=58"></script>
 
   <!-- PWA Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js?v=57')
+        navigator.serviceWorker.register('/sw.js?v=58')
           .then(reg => {
             console.log('[PWA] Service Worker registered on scope:', reg.scope);
             reg.update();

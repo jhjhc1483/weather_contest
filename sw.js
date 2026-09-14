@@ -1,11 +1,13 @@
 /* PWA Service Worker for Offline Military Weather Hazard Support System */
-const CACHE_NAME = 'mil-weather-cache-v15';
+const CACHE_NAME = 'mil-weather-cache-v16';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/styles.css',
   '/app.js',
   '/manifest.json',
+  '/favicon.ico',
+  '/favicon-32x32.png',
   '/manifest-icon-192.png',
   '/manifest-icon-512.png',
   '/data/latest_weather.json',
