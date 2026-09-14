@@ -304,7 +304,6 @@ def generate_daily_weather(base_date, day_offset, region_id=DEFAULT_REGION):
     peak_idx = 9 # 14:00
     return {
         "date": date_str,
-        "dayOffset": day_offset,
         "regionId": region["id"],
         "regionName": region["name"],
         "dataType": "KMA_API_FORECAST" if is_api_forecast else "CLIMATOLOGY_1YR_ESTIMATE",

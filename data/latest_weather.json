@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-15T00:19:56+09:00",
+  "updatedAt": "2026-09-15T00:32:57+09:00",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -33,7 +33,6 @@
       "byDate": {
         "2026-09-15": {
           "date": "2026-09-15",
-          "dayOffset": 0,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -131,7 +130,6 @@
         },
         "2026-09-16": {
           "date": "2026-09-16",
-          "dayOffset": 1,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -229,7 +227,6 @@
         },
         "2026-09-17": {
           "date": "2026-09-17",
-          "dayOffset": 2,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -327,7 +324,6 @@
         },
         "2026-09-18": {
           "date": "2026-09-18",
-          "dayOffset": 3,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -425,7 +421,6 @@
         },
         "2026-09-19": {
           "date": "2026-09-19",
-          "dayOffset": 4,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -523,7 +518,6 @@
         },
         "2026-09-20": {
           "date": "2026-09-20",
-          "dayOffset": 5,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -621,7 +615,6 @@
         },
         "2026-09-21": {
           "date": "2026-09-21",
-          "dayOffset": 6,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -719,7 +712,6 @@
         },
         "2026-09-22": {
           "date": "2026-09-22",
-          "dayOffset": 7,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -817,7 +809,6 @@
         },
         "2026-09-23": {
           "date": "2026-09-23",
-          "dayOffset": 8,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -915,7 +906,6 @@
         },
         "2026-09-24": {
           "date": "2026-09-24",
-          "dayOffset": 9,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -1013,7 +1003,6 @@
         },
         "2026-09-25": {
           "date": "2026-09-25",
-          "dayOffset": 10,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "KMA_API_FORECAST",
@@ -1111,7 +1100,6 @@
         },
         "2026-09-26": {
           "date": "2026-09-26",
-          "dayOffset": 11,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1209,7 +1197,6 @@
         },
         "2026-09-27": {
           "date": "2026-09-27",
-          "dayOffset": 12,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1307,7 +1294,6 @@
         },
         "2026-09-28": {
           "date": "2026-09-28",
-          "dayOffset": 13,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1405,7 +1391,6 @@
         },
         "2026-09-29": {
           "date": "2026-09-29",
-          "dayOffset": 14,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1503,7 +1488,6 @@
         },
         "2026-09-30": {
           "date": "2026-09-30",
-          "dayOffset": 15,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1601,7 +1585,6 @@
         },
         "2026-10-01": {
           "date": "2026-10-01",
-          "dayOffset": 16,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1699,7 +1682,6 @@
         },
         "2026-10-02": {
           "date": "2026-10-02",
-          "dayOffset": 17,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1797,7 +1779,6 @@
         },
         "2026-10-03": {
           "date": "2026-10-03",
-          "dayOffset": 18,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1895,7 +1876,6 @@
         },
         "2026-10-04": {
           "date": "2026-10-04",
-          "dayOffset": 19,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -1993,7 +1973,6 @@
         },
         "2026-10-05": {
           "date": "2026-10-05",
-          "dayOffset": 20,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2091,7 +2070,6 @@
         },
         "2026-10-06": {
           "date": "2026-10-06",
-          "dayOffset": 21,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2189,7 +2167,6 @@
         },
         "2026-10-07": {
           "date": "2026-10-07",
-          "dayOffset": 22,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2287,7 +2264,6 @@
         },
         "2026-10-08": {
           "date": "2026-10-08",
-          "dayOffset": 23,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2385,7 +2361,6 @@
         },
         "2026-10-09": {
           "date": "2026-10-09",
-          "dayOffset": 24,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2483,7 +2458,6 @@
         },
         "2026-10-10": {
           "date": "2026-10-10",
-          "dayOffset": 25,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2581,7 +2555,6 @@
         },
         "2026-10-11": {
           "date": "2026-10-11",
-          "dayOffset": 26,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2679,7 +2652,6 @@
         },
         "2026-10-12": {
           "date": "2026-10-12",
-          "dayOffset": 27,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2777,7 +2749,6 @@
         },
         "2026-10-13": {
           "date": "2026-10-13",
-          "dayOffset": 28,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2875,7 +2846,6 @@
         },
         "2026-10-14": {
           "date": "2026-10-14",
-          "dayOffset": 29,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -2973,7 +2943,6 @@
         },
         "2026-10-15": {
           "date": "2026-10-15",
-          "dayOffset": 30,
           "regionId": "nonsan",
           "regionName": "논산 육군훈련소",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -3083,7 +3052,6 @@
       "byDate": {
         "2026-09-15": {
           "date": "2026-09-15",
-          "dayOffset": 0,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3181,7 +3149,6 @@
         },
         "2026-09-16": {
           "date": "2026-09-16",
-          "dayOffset": 1,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3279,7 +3246,6 @@
         },
         "2026-09-17": {
           "date": "2026-09-17",
-          "dayOffset": 2,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3377,7 +3343,6 @@
         },
         "2026-09-18": {
           "date": "2026-09-18",
-          "dayOffset": 3,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3475,7 +3440,6 @@
         },
         "2026-09-19": {
           "date": "2026-09-19",
-          "dayOffset": 4,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3573,7 +3537,6 @@
         },
         "2026-09-20": {
           "date": "2026-09-20",
-          "dayOffset": 5,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3671,7 +3634,6 @@
         },
         "2026-09-21": {
           "date": "2026-09-21",
-          "dayOffset": 6,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3769,7 +3731,6 @@
         },
         "2026-09-22": {
           "date": "2026-09-22",
-          "dayOffset": 7,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3867,7 +3828,6 @@
         },
         "2026-09-23": {
           "date": "2026-09-23",
-          "dayOffset": 8,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -3965,7 +3925,6 @@
         },
         "2026-09-24": {
           "date": "2026-09-24",
-          "dayOffset": 9,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -4063,7 +4022,6 @@
         },
         "2026-09-25": {
           "date": "2026-09-25",
-          "dayOffset": 10,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "KMA_API_FORECAST",
@@ -4161,7 +4119,6 @@
         },
         "2026-09-26": {
           "date": "2026-09-26",
-          "dayOffset": 11,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -4259,7 +4216,6 @@
         },
         "2026-09-27": {
           "date": "2026-09-27",
-          "dayOffset": 12,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -4357,7 +4313,6 @@
         },
         "2026-09-28": {
           "date": "2026-09-28",
-          "dayOffset": 13,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -4455,7 +4410,6 @@
         },
         "2026-09-29": {
           "date": "2026-09-29",
-          "dayOffset": 14,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -4553,7 +4507,6 @@
         },
         "2026-09-30": {
           "date": "2026-09-30",
-          "dayOffset": 15,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -4651,7 +4604,6 @@
         },
         "2026-10-01": {
           "date": "2026-10-01",
-          "dayOffset": 16,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -4749,7 +4701,6 @@
         },
         "2026-10-02": {
           "date": "2026-10-02",
-          "dayOffset": 17,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -4847,7 +4798,6 @@
         },
         "2026-10-03": {
           "date": "2026-10-03",
-          "dayOffset": 18,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -4945,7 +4895,6 @@
         },
         "2026-10-04": {
           "date": "2026-10-04",
-          "dayOffset": 19,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5043,7 +4992,6 @@
         },
         "2026-10-05": {
           "date": "2026-10-05",
-          "dayOffset": 20,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5141,7 +5089,6 @@
         },
         "2026-10-06": {
           "date": "2026-10-06",
-          "dayOffset": 21,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5239,7 +5186,6 @@
         },
         "2026-10-07": {
           "date": "2026-10-07",
-          "dayOffset": 22,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5337,7 +5283,6 @@
         },
         "2026-10-08": {
           "date": "2026-10-08",
-          "dayOffset": 23,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5435,7 +5380,6 @@
         },
         "2026-10-09": {
           "date": "2026-10-09",
-          "dayOffset": 24,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5533,7 +5477,6 @@
         },
         "2026-10-10": {
           "date": "2026-10-10",
-          "dayOffset": 25,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5631,7 +5574,6 @@
         },
         "2026-10-11": {
           "date": "2026-10-11",
-          "dayOffset": 26,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5729,7 +5671,6 @@
         },
         "2026-10-12": {
           "date": "2026-10-12",
-          "dayOffset": 27,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5827,7 +5768,6 @@
         },
         "2026-10-13": {
           "date": "2026-10-13",
-          "dayOffset": 28,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -5925,7 +5865,6 @@
         },
         "2026-10-14": {
           "date": "2026-10-14",
-          "dayOffset": 29,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -6023,7 +5962,6 @@
         },
         "2026-10-15": {
           "date": "2026-10-15",
-          "dayOffset": 30,
           "regionId": "yangpyeong",
           "regionName": "양평 지역",
           "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -6125,7 +6063,6 @@
   "byDate": {
     "2026-09-15": {
       "date": "2026-09-15",
-      "dayOffset": 0,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -6223,7 +6160,6 @@
     },
     "2026-09-16": {
       "date": "2026-09-16",
-      "dayOffset": 1,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -6321,7 +6257,6 @@
     },
     "2026-09-17": {
       "date": "2026-09-17",
-      "dayOffset": 2,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -6419,7 +6354,6 @@
     },
     "2026-09-18": {
       "date": "2026-09-18",
-      "dayOffset": 3,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -6517,7 +6451,6 @@
     },
     "2026-09-19": {
       "date": "2026-09-19",
-      "dayOffset": 4,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -6615,7 +6548,6 @@
     },
     "2026-09-20": {
       "date": "2026-09-20",
-      "dayOffset": 5,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -6713,7 +6645,6 @@
     },
     "2026-09-21": {
       "date": "2026-09-21",
-      "dayOffset": 6,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -6811,7 +6742,6 @@
     },
     "2026-09-22": {
       "date": "2026-09-22",
-      "dayOffset": 7,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -6909,7 +6839,6 @@
     },
     "2026-09-23": {
       "date": "2026-09-23",
-      "dayOffset": 8,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -7007,7 +6936,6 @@
     },
     "2026-09-24": {
       "date": "2026-09-24",
-      "dayOffset": 9,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -7105,7 +7033,6 @@
     },
     "2026-09-25": {
       "date": "2026-09-25",
-      "dayOffset": 10,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "KMA_API_FORECAST",
@@ -7203,7 +7130,6 @@
     },
     "2026-09-26": {
       "date": "2026-09-26",
-      "dayOffset": 11,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -7301,7 +7227,6 @@
     },
     "2026-09-27": {
       "date": "2026-09-27",
-      "dayOffset": 12,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -7399,7 +7324,6 @@
     },
     "2026-09-28": {
       "date": "2026-09-28",
-      "dayOffset": 13,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -7497,7 +7421,6 @@
     },
     "2026-09-29": {
       "date": "2026-09-29",
-      "dayOffset": 14,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -7595,7 +7518,6 @@
     },
     "2026-09-30": {
       "date": "2026-09-30",
-      "dayOffset": 15,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -7693,7 +7615,6 @@
     },
     "2026-10-01": {
       "date": "2026-10-01",
-      "dayOffset": 16,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -7791,7 +7712,6 @@
     },
     "2026-10-02": {
       "date": "2026-10-02",
-      "dayOffset": 17,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -7889,7 +7809,6 @@
     },
     "2026-10-03": {
       "date": "2026-10-03",
-      "dayOffset": 18,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -7987,7 +7906,6 @@
     },
     "2026-10-04": {
       "date": "2026-10-04",
-      "dayOffset": 19,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8085,7 +8003,6 @@
     },
     "2026-10-05": {
       "date": "2026-10-05",
-      "dayOffset": 20,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8183,7 +8100,6 @@
     },
     "2026-10-06": {
       "date": "2026-10-06",
-      "dayOffset": 21,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8281,7 +8197,6 @@
     },
     "2026-10-07": {
       "date": "2026-10-07",
-      "dayOffset": 22,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8379,7 +8294,6 @@
     },
     "2026-10-08": {
       "date": "2026-10-08",
-      "dayOffset": 23,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8477,7 +8391,6 @@
     },
     "2026-10-09": {
       "date": "2026-10-09",
-      "dayOffset": 24,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8575,7 +8488,6 @@
     },
     "2026-10-10": {
       "date": "2026-10-10",
-      "dayOffset": 25,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8673,7 +8585,6 @@
     },
     "2026-10-11": {
       "date": "2026-10-11",
-      "dayOffset": 26,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8771,7 +8682,6 @@
     },
     "2026-10-12": {
       "date": "2026-10-12",
-      "dayOffset": 27,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8869,7 +8779,6 @@
     },
     "2026-10-13": {
       "date": "2026-10-13",
-      "dayOffset": 28,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -8967,7 +8876,6 @@
     },
     "2026-10-14": {
       "date": "2026-10-14",
-      "dayOffset": 29,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",
@@ -9065,7 +8973,6 @@
     },
     "2026-10-15": {
       "date": "2026-10-15",
-      "dayOffset": 30,
       "regionId": "nonsan",
       "regionName": "논산 육군훈련소",
       "dataType": "CLIMATOLOGY_1YR_ESTIMATE",

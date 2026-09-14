@@ -739,7 +739,6 @@ function generateClient30DayDataset(baseDateStr) {
 
       byDate[dateStr] = {
         date: dateStr,
-        dayOffset: dayOffset,
         regionId: region.id,
         regionName: region.name,
         dataType: isApiForecast ? "KMA_API_FORECAST" : "CLIMATOLOGY_1YR_ESTIMATE",
