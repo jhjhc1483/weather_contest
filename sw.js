@@ -1,5 +1,5 @@
 /* PWA Service Worker for Offline Military Weather Hazard Support System */
-const CACHE_NAME = 'mil-weather-cache-v12';
+const CACHE_NAME = 'mil-weather-cache-v13';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

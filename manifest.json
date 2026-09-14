@@ -1,7 +1,7 @@
 {
-  "short_name": "ARAS-FSB",
+  "short_name": "기상위험평가",
   "name": "부대활동 기상 위험성평가 지원체계",
-  "description": "육군 ARAS의 실시간 기상 반영 공백을 보완하고 실행 직전 FSB Go/No-Go 판단을 지원하는 체계",
+  "description": "육군 부대활동 및 신병 교육훈련 온열·환경위험 예측 및 지휘통제 지원체계 (AI 작전보좌관 탑재)",
   "icons": [
     {
       "src": "manifest-icon-192.png",
