@@ -45,7 +45,7 @@
   - **D+11 ~ D+30**: 기후 통계(Climatology) 1개년 기상 실측치 기반 예측치 결합
 - **원격 데이터 갱신 트리거**:
   - 대시보드 Header **`[⚡ 날씨 수집 (+10일치)]`** 버튼을 클릭하여 GitHub Actions 또는 Serverless API를 통해 즉시 최신 데이터 재수집 가능.
-  - **3시간 주기 GitHub Actions Cron**을 통한 무인 자동 데이터 업데이트.
+  - **매일 아침 04:40(KST) GitHub Actions Cron**을 통한 무인 자동 데이터 업데이트.
 - **📂 30일 DB 현황 모달**: 수집된 31개 일자의 8대 기상 데이터를 Sticky Table Header 구조의 고대비 모달 팝업으로 한눈에 파악.
 
 ### 4. 🧮 0초 반응형 실시간 정밀 위험도 & 식수 소요 산출 (Zero-click Reactive UX)
@@ -93,7 +93,7 @@
 | **AI Engine** | Google Gemini 2.5 Flash | Thinking Budget 0, 2500 토큰, KST 컨텍스트 주입, 티키타카 프롬프트 |
 | **Data Engine** | Python 3.11 (`scripts/fetch_data.py`) | 기상청 OpenAPI, 네이버 뉴스 OpenAPI, 기후 통계 융합 파이프라인 |
 | **Serverless / API** | Cloudflare Pages Functions / Vercel | `/api/weather`, `/api/chat`, `/api/trigger-action`, `/api/action-status` |
-| **Automation** | GitHub Actions (`.github/workflows/fetch_weather.yml`) | 3시간 주기 자동 기상 수집 및 원격 트리거 파이프라인 |
+| **Automation** | GitHub Actions (`.github/workflows/fetch_weather.yml`) | 매일 아침 04:40(KST) 자동 기상 수집 및 원격 트리거 파이프라인 |
 
 ---
 

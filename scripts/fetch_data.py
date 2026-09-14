@@ -330,9 +330,11 @@ def generate_daily_weather(base_date, day_offset, region_id=DEFAULT_REGION):
     }
 
 def run_pipeline():
-    today = datetime.datetime.now(datetime.timezone.utc)
-    now_str = today.strftime("%Y-%m-%dT%H:%M:%SZ")
-    print(f"[{now_str}] [Python] D+10 KMA API & D+11~30 1-Year Climatology Estimate News Pipeline...")
+    # 대한민국 표준시 (KST, UTC+9) 기준으로 날짜 계산 (자정 이후 날짜 오차 방지)
+    kst_tz = datetime.timezone(datetime.timedelta(hours=9))
+    today = datetime.datetime.now(kst_tz)
+    now_str = today.strftime("%Y-%m-%dT%H:%M:%S+09:00")
+    print(f"[{now_str}] [Python] D+10 KMA API & D+11~30 1-Year Climatology Estimate News Pipeline (KST)...")
 
     # ── Collect a full 31-day dataset for every target region (논산 · 양평) ──
     regions_payload = {}

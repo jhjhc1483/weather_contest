@@ -468,8 +468,16 @@ function calculateWindChill(ta, ws) {
 
 function computeSeasonalRisk(ta, rh, ws, pm10, pm25, wC, month) {
   const chillTemp = calculateWindChill(ta, ws);
-  const isWinterSeason = month === 12 || month === 1 || month === 2 || ta <= 10.0;
-  const isDustSeason = (month >= 3 && month <= 5 || month >= 9 && month <= 11) && (pm10 > 80 || pm25 > 35);
+
+  // 🪖 대한민국 육군 규정 기간 정의 (육군본부 부대관리훈령)
+  // · 혹서기 (하계 폭염 대책 기간): 6월 1일 ~ 9월 30일 (6, 7, 8, 9월)
+  // · 혹한기 (동계 한파 대책 기간): 12월 1일 ~ 2월 말 (12, 1, 2월) 및 기온 10°C 이하 한랭 노출
+  // · 환절기: 가을 환절기 (10~11월), 봄 환절기 (3~5월)
+  const isSummerPeriod = (month >= 6 && month <= 9);
+  const isWinterPeriod = (month === 12 || month === 1 || month === 2 || (ta <= 10.0 && chillTemp <= 0.0));
+  const isFallTransition = (month === 10 || month === 11);
+  const isSpringTransition = (month >= 3 && month <= 5);
+  const isDustSeason = (isSpringTransition || isFallTransition) && (pm10 > 80 || pm25 > 35);
   
   // 1. Winter Coldwave Risk Level (현기준.md 체감온도 지침)
   let winterLv = 0;
@@ -506,7 +514,6 @@ function computeSeasonalRisk(ta, rh, ws, pm10, pm25, wC, month) {
   let dustAction = "일반 야외 훈련 진행";
 
   // ⚠ PM2.5 경보 임계는 150 (환경부 현행). 2018.7.1 강화로 주의보 90→75, 경보 180→150.
-  //    구 기준 180으로 되돌리지 말 것.
   if (pm10 > 300 || pm25 > 150) {
     dustLv = 5;
     dustStatus = "미세먼지 경보";
@@ -549,7 +556,7 @@ function computeSeasonalRisk(ta, rh, ws, pm10, pm25, wC, month) {
     summerAction = "양성교육 및 야외훈련 시 미숙련자 주의 관찰, 그늘 휴식지 개설.";
   }
 
-  // Select Active Season Risk Engine Mode
+  // 4. Select Active Season Risk Engine Mode
   let activeSeason = "SUMMER";
   let seasonIcon = "☀️";
   let seasonLabel = "혹서기 온열 위험 평가 모드";
@@ -558,7 +565,7 @@ function computeSeasonalRisk(ta, rh, ws, pm10, pm25, wC, month) {
   let activeDesc = summerDesc;
   let activeAction = summerAction;
 
-  if (isWinterSeason && winterLv >= summerLv) {
+  if (isWinterPeriod && winterLv >= 1 && winterLv >= summerLv) {
     activeSeason = "WINTER";
     seasonIcon = "❄️";
     seasonLabel = "혹한기 한랭/동상 위험 평가 모드";
@@ -574,6 +581,39 @@ function computeSeasonalRisk(ta, rh, ws, pm10, pm25, wC, month) {
     activeStatus = dustStatus;
     activeDesc = dustDesc;
     activeAction = dustAction;
+  } else if (isSummerPeriod) {
+    // 6월 1일 ~ 9월 30일 (혹서기 정규 기간)
+    activeSeason = "SUMMER";
+    seasonIcon = "☀️";
+    seasonLabel = "혹서기 온열 위험 평가 모드";
+    activeLv = summerLv;
+    activeStatus = summerStatus;
+    activeDesc = summerDesc;
+    activeAction = summerAction;
+  } else {
+    // 10~11월 (가을 환절기) 및 3~5월 (봄 환절기) — 혹서기 아님!
+    activeSeason = "TRANSITION";
+    seasonIcon = isFallTransition ? "🍂" : "🌱";
+    seasonLabel = isFallTransition ? "환절기(가을) 기상위험 평가 모드" : "환절기(봄) 기상위험 평가 모드";
+    activeLv = summerLv;
+    
+    if (wC >= 31.0) {
+      activeStatus = "고온 제한";
+      activeDesc = "환절기 이상고온 옥외훈련 제한 및 단축";
+      activeAction = "일교차 및 고온 대비 수분 섭취 증대, 직사광선 노출 과업 최소화.";
+    } else if (wC >= 29.5) {
+      activeStatus = "고온 부분제한";
+      activeDesc = "환절기 고온 과중한 훈련 지양";
+      activeAction = "뜀걸음, 행군 등 과중한 훈련 지양, 옥외훈련 조정 시행.";
+    } else if (wC >= 26.5) {
+      activeStatus = "환절기 주의";
+      activeDesc = "환절기 일교차 및 고온 주의 관찰";
+      activeAction = "미숙련자 주의 관찰 및 그늘 휴식지 개설, 일교차 체온 관리.";
+    } else {
+      activeStatus = isFallTransition ? "가을 환절기 정상" : "봄 환절기 정상";
+      activeDesc = "정상 야외훈련 실시 가능 (일교차 관리)";
+      activeAction = "아침·저녁 큰 일교차 대비 보온의류 구비 및 탈수 예방 적정 급수.";
+    }
   }
 
   return {
@@ -2172,8 +2212,33 @@ async function fetchKmaLiveWeather() {
 
     if (json) {
       const badg = document.getElementById("liveBadge");
+      const todayStr = getTodayStr();
 
-      // 다지역(논산·양평) 데이터셋 우선 적용
+      // ★ [자동 롤링 보정]: 캐시된 JSON의 시작일이 오늘보다 과거라면,
+      // 오늘(todayStr)을 기준일(D+0)로 삼아 항상 오늘 기준 30일 캘린더를 유지
+      if (json.regions) {
+        for (const regId in json.regions) {
+          const regObj = json.regions[regId];
+          if (regObj && regObj.byDate) {
+            const dateKeys = Object.keys(regObj.byDate).sort();
+            if (dateKeys.length > 0 && dateKeys[0] < todayStr) {
+              const freshSet = generateClient30DayDataset(todayStr);
+              const freshByDate = freshSet.regions[regId] ? freshSet.regions[regId].byDate : {};
+              // 기존 JSON에 수집되어 있던 오늘 이후의 API 실측 데이터는 온전히 보존
+              for (const d in freshByDate) {
+                if (regObj.byDate[d]) {
+                  freshByDate[d] = regObj.byDate[d];
+                }
+              }
+              regObj.byDate = freshByDate;
+            }
+          }
+        }
+        json.startDate = todayStr;
+        json.endDate = getOffsetDateStr(todayStr, 30);
+      }
+
+      // 다지역(논산·양평) 데이터셋 적용
       if (json.regions) {
         S.byRegionWeather = json.regions;
         if (!applyRegionDataset(S.region)) {
@@ -2183,14 +2248,14 @@ async function fetchKmaLiveWeather() {
         S.modalRegion = S.region;
         renderRegionSelector();
       } else if (json.byDate) {
-        // 구버전 단일 지역 JSON 호환
         S.byDateWeather = json.byDate;
       }
+
       if (badg) {
         badg.textContent = '● D+10일 기상청 API / D+11~30일 1년 기후 추정';
         badg.className = 'badge live';
       }
-      const todayStr = getTodayStr();
+
       if (json.startDate) {
         const dateInput = document.getElementById("planDate");
         if (dateInput) {

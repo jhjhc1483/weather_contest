@@ -3,7 +3,10 @@ name: Execute Weather & Military Safety News Data Pipeline (Python Engine)
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */3 * * *'
+    # GitHub Actions cron은 UTC(협정세계시) 기준입니다. (KST = UTC + 9시간)
+    # 한국 시간(KST) 매일 아침 04:40 = UTC 19:40 (전일)
+    # 기상 및 조침 전 당일 기상청 최신 예보치로 1일 1회 무인 자동 갱신
+    - cron: '40 19 * * *'
 
 permissions:
   contents: write
