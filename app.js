@@ -55,7 +55,8 @@ const GEARS = [
   { id: "single", name: "단독군장",           adj: () => 1.5,   clo: 1.25,
     src: "단독군장 (전투복+방탄헬멧+전투조끼 +1.5°C 가산) · 1.25 clo" },
   { id: "iba",    name: "완전군장 / 방탄복",   adj: () => 2.8,   clo: 1.40,
-    src: "TB MED 507 · 방탄복 착용 시 습한 기후에서 WBGT +5°F(+2.8°C) 가산" },
+    /* ⚠ 방탄복 가산의 출처는 DAFI 48-151, MOPP 가산의 출처는 TB MED 507 — 두 출처를 혼동하지 말 것 */
+    src: "DAFI 48-151 · 방탄복·전투조끼 착용 시 WBGT +5°F(+2.8°C) 가산" },
   { id: "cbrn",   name: "화생방 보호의",      adj: t => (t === "easy" || t === "static") ? 5.6 : 11.1, clo: 1.60,
     src: "TB MED 507 · MOPP 4 착용 시 경작업 +10°F(+5.6°C) / 중등·중작업 +20°F(+11.1°C)" },
   { id: "ecwcs",  name: "방한복 (ECWCS)",     adj: () => 3.4,   clo: 3.40,
@@ -802,7 +803,12 @@ function computeDay() {
     const pm10Val = typeof env.pm10 === 'number' && !isNaN(env.pm10) ? env.pm10 : 40;
     const pm25Val = typeof env.pm25 === 'number' && !isNaN(env.pm25) ? env.pm25 : 20;
 
+    /* ⚠ 1차와 2차는 입력 지수가 다르다 — 섞으면 "온도지수 30.9 → 온열 중지"처럼
+       규정 구간(부분제한)과 어긋난 라벨이 규정 판정 칸에 찍힌다.
+         · seasonalReg : 보정 전 원 지수(wRaw) → 1차 규정 판정 표기·조치·등급
+         · seasonal    : 복장 보정 후 지수(wC) → 2차 상세 평가 및 채택 등급(캘린더·가용률) */
     const seasonal = computeSeasonalRisk(taVal, rhVal, wsVal, pm10Val, pm25Val, wC, month);
+    const seasonalReg = computeSeasonalRisk(taVal, rhVal, wsVal, pm10Val, pm25Val, wRaw, month);
     const cat = seasonal.summerCat;
     const appVal = typeof APP[i] === 'number' && !isNaN(APP[i]) ? APP[i] : 28.0;
     const kl = kmaLv(appVal);
@@ -814,7 +820,7 @@ function computeDay() {
     const lvFinal = isCold ? Math.min(5, lv + cold.lvBump) : lv;
 
     return {
-      h, ta: taVal, rh: rhVal, app: appVal, wRaw, wC, cat, kl, lv: lvFinal, seasonal,
+      h, ta: taVal, rh: rhVal, app: appVal, wRaw, wC, cat, kl, lv: lvFinal, seasonal, seasonalReg,
       src: f.src[i] || "기준", cold, isCold
     };
   });
@@ -841,7 +847,8 @@ function computeDay() {
 
 /* 규정 판정 결과를 표준 형태로 정리 (1차) */
 function regulationVerdict(peak) {
-  const s = peak.seasonal || {};
+  /* 1차는 반드시 보정 전 원 지수 기준 산출값을 쓴다 (복장·과업 보정이 규정 판정을 올리지 못하게) */
+  const s = peak.seasonalReg || peak.seasonal || {};
   const isCold = s.activeSeason === "WINTER";
   const isDust = s.activeSeason === "DUST";
   const idx = isCold ? s.chillTemp : peak.wRaw;   // 보정 전 원 지수 = 규정 판정 대상
@@ -1018,7 +1025,8 @@ function getSelectedWindowPeakData(D) {
 }
 
 function getLegacyVerdict(peakData) {
-  const s = peakData.seasonal;
+  /* 좌측 '규정 판정' 카드 — 1차와 동일하게 보정 전 원 지수 기준 */
+  const s = peakData.seasonalReg || peakData.seasonal;
   if (!s) {
     return { status: "정상", class: "p-low", desc: "정상 야외훈련 실시 가능" };
   }
@@ -1359,7 +1367,8 @@ function buildBrief(D, peak, verdict, safeWin) {
   } else if (isDust) {
     hazards.push(`미세먼지 ${s.activeStatus} — PM10 ${S.envData.pm10} · PM2.5 ${S.envData.pm25} ㎍/㎥`);
   } else {
-    hazards.push(`피크 시각 ${pad(peak.h)}:00 규정 판정 지수 <b>${peak.wRaw.toFixed(1)}℃</b> (${s.activeStatus})`);
+    const sReg = peak.seasonalReg || s;   // 규정 판정 지수는 보정 전 기준 상태와 짝지어야 한다
+    hazards.push(`피크 시각 ${pad(peak.h)}:00 규정 판정 지수 <b>${peak.wRaw.toFixed(1)}℃</b> (${sReg.activeStatus})`);
     hazards.push(`${gearObj.name} 보정 적용 시 유효 온도지수 <b>${peak.wC.toFixed(1)}℃</b>`);
   }
 
