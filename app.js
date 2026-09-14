@@ -736,6 +736,10 @@ function generateClient30DayDataset(baseDateStr) {
       const peakIdx = 9; // 14:00
       const pm10Val = Math.max(5, pm10Base + pm10Offset + (dayOffset * 3) % 25);
       const pm25Val = Math.max(3, pm25Base + pm25Offset + (dayOffset * 2) % 15);
+      let dustStatusVal = "보통";
+      if (pm10Val > 150 || pm25Val > 75) dustStatusVal = "매우나쁨";
+      else if (pm10Val > 80 || pm25Val > 35) dustStatusVal = "나쁨";
+      else if (pm10Val <= 30 && pm25Val <= 15) dustStatusVal = "좋음";
 
       byDate[dateStr] = {
         date: dateStr,
@@ -751,7 +755,7 @@ function generateClient30DayDataset(baseDateStr) {
           wbgt: wbgt[peakIdx],
           pm10: pm10Val,
           pm25: pm25Val,
-          dustStatus: pm10Val > 80 ? "나쁨" : "보통",
+          dustStatus: dustStatusVal,
           uvIndex: [6, 7, 8].includes(month) ? 8 : 4,
           pop: (dayOffset % 5 === 0 && [6, 7, 8].includes(month)) ? 60 : 10
         },
@@ -2316,12 +2320,12 @@ function renderEnvCards() {
     <div class="env-chip">
       <div class="tag">미세먼지 (PM10)</div>
       <div class="val" style="color:${(e.pm10 || 42)>80?'var(--c4)':'#3E9B5A'}">${e.pm10 || 42} <small>µg/m³</small></div>
-      <div class="sub">상태: <b>${e.dustStatus || '보통'}</b></div>
+      <div class="sub">상태: <b>${(e.pm10 || 42) > 80 ? '나쁨' : ((e.pm10 || 42) <= 30 ? '좋음' : '보통')}</b></div>
     </div>
     <div class="env-chip">
       <div class="tag">초미세 (PM2.5)</div>
       <div class="val" style="color:${(e.pm25 || 22)>35?'var(--c4)':'#3E9B5A'}">${e.pm25 || 22} <small>µg/m³</small></div>
-      <div class="sub">상태: <b>${e.dustStatus || '보통'}</b></div>
+      <div class="sub">상태: <b>${(e.pm25 || 22) > 35 ? '나쁨' : ((e.pm25 || 22) <= 15 ? '좋음' : '보통')}</b></div>
     </div>
     <div class="env-chip">
       <div class="tag">자외선 / 강수</div>

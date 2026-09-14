@@ -302,6 +302,17 @@ def generate_daily_weather(base_date, day_offset, region_id=DEFAULT_REGION):
     wbgt = [round(t * 0.7 + (r / 100) * 8.5 + 2.0, 1) for t, r in zip(ta, rh)]
 
     peak_idx = 9 # 14:00
+    cur_pm10 = pm10_base + (day_offset * 3) % 25
+    cur_pm25 = pm25_base + (day_offset * 2) % 15
+    if cur_pm10 > 150 or cur_pm25 > 75:
+        dust_status = "매우나쁨"
+    elif cur_pm10 > 80 or cur_pm25 > 35:
+        dust_status = "나쁨"
+    elif cur_pm10 <= 30 and cur_pm25 <= 15:
+        dust_status = "좋음"
+    else:
+        dust_status = "보통"
+
     return {
         "date": date_str,
         "regionId": region["id"],
@@ -314,9 +325,9 @@ def generate_daily_weather(base_date, day_offset, region_id=DEFAULT_REGION):
             "ws": ws,
             "chillTemp": app[peak_idx],
             "wbgt": wbgt[peak_idx],
-            "pm10": pm10_base + (day_offset * 3) % 25,
-            "pm25": pm25_base + (day_offset * 2) % 15,
-            "dustStatus": "나쁨" if (pm10_base + (day_offset * 3) % 25) > 80 else "보통",
+            "pm10": cur_pm10,
+            "pm25": cur_pm25,
+            "dustStatus": dust_status,
             "uvIndex": 8 if month in [6,7,8] else 4,
             "pop": 60 if (day_offset % 5 == 0 and month in [6,7,8]) else 10
         },
