@@ -1,35 +1,60 @@
-/* ═══════════ DESIGN TOKENS & TYPOGRAPHY ═══════════ */
+/* ═══════════ DESIGN TOKENS & TYPOGRAPHY (GREEN SIGNATURE SaaS) ═══════════ */
 :root {
   --mono: 'JetBrains Mono', ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --sans: 'Pretendard', 'Outfit', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   --r: 16px;
-  --r-sm: 9px;
-  --c1: #F2EFE6; --c2: #3E9B5A; --c3: #E0B02E; --c4: #D8453C;
+  --r-sm: 10px;
+  --r-card: 18px;
+  --r-pill: 9999px;
+
+  /* Core Danger & Warning Grades */
+  --c1: #F2EFE6; --c2: #16A34A; --c3: #E0B02E; --c4: #D8453C;
   --k1: #3E8FCB; --k2: #E0B02E; --k3: #E07A33; --k4: #D8453C;
+
+  /* 🌲 Main Signature Military & Forest Green Palette */
+  --green-50: #F0FDF4;
+  --green-100: #DCFCE7;
+  --green-200: #BBF7D0;
+  --green-400: #4ADE80;
+  --green-500: #22C55E;
+  --green-600: #16A34A;
+  --green-700: #15803D;
+  --green-800: #166534;
+  --green-900: #14532D;
+}
+
+[data-theme="light"], :root:not([data-theme="dark"]) {
+  --page: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-sub: #F1F5F9;
+  --surface-hover: #F0FDF4;
+  --ink: #0F172A; --dim: #64748B; --faint: #94A3B8;
+  --glass: rgba(255,255,255,.85); --glass-2: rgba(255,255,255,.95);
+  --edge: #E2E8F0; --edge-hi: #CBD5E1;
+  --shade: 0 1px 3px rgba(0,0,0,.05), 0 10px 25px -5px rgba(0,0,0,.04);
+  --shade-card: 0 1px 3px rgba(0,0,0,.05), 0 4px 12px rgba(15,23,42,.03);
+  --accent: #15803D; --accent-light: #16A34A; --accent-bg: rgba(22,163,74,.08);
+  --hero-bg: linear-gradient(135deg, #0F1713 0%, #15241C 55%, #1D3126 100%);
+  --grid: rgba(15,23,42,.06); --c0: rgba(15,23,42,.05);
+  --black-fill: #1E293B; --black-line: #475569;
+  --b1: #16A34A; --b2: #EAB308; --b3: #10B981; --b4: #059669; --b-op: .08;
 }
 
 [data-theme="dark"] {
-  --page: #080C13;
-  --ink: #E9EFF6; --dim: rgba(233,239,246,.68); --faint: rgba(233,239,246,.45);
-  --glass: rgba(255,255,255,.055); --glass-2: rgba(255,255,255,.085);
-  --edge: rgba(255,255,255,.13); --edge-hi: rgba(255,255,255,.22);
-  --shade: 0 10px 40px rgba(0,0,0,.45);
-  --accent: #4FD6C1; --accent-bg: rgba(79,214,193,.14);
-  --grid: rgba(255,255,255,.09); --c0: rgba(255,255,255,.10);
-  --black-fill: #15151B; --black-line: #5D5D6A;
-  --b1: #FF6B35; --b2: #FFB347; --b3: #2DD4BF; --b4: #5B57E8; --b-op: .30;
-}
-
-[data-theme="light"] {
-  --page: #E9EEF5;
-  --ink: #13202E; --dim: rgba(19,32,46,.70); --faint: rgba(19,32,46,.48);
-  --glass: rgba(255,255,255,.58); --glass-2: rgba(255,255,255,.76);
-  --edge: rgba(255,255,255,.85); --edge-hi: rgba(255,255,255,1);
-  --shade: 0 8px 32px rgba(31,45,80,.12);
-  --accent: #0E9384; --accent-bg: rgba(14,147,132,.12);
-  --grid: rgba(19,32,46,.11); --c0: rgba(19,32,46,.10);
-  --black-fill: #20202A; --black-line: #6E6E7C;
-  --b1: #FF8A5B; --b2: #FFD79A; --b3: #7DD3C8; --b4: #A5B4FC; --b-op: .55;
+  --page: #0A110D;
+  --surface: #111A15;
+  --surface-sub: #15221B;
+  --surface-hover: #1B2B23;
+  --ink: #F1F5F9; --dim: #94A3B8; --faint: #64748B;
+  --glass: rgba(17,26,21,.75); --glass-2: rgba(21,34,27,.85);
+  --edge: #1F3327; --edge-hi: #2B4536;
+  --shade: 0 10px 40px rgba(0,0,0,.6);
+  --shade-card: 0 4px 20px rgba(0,0,0,.4);
+  --accent: #22C55E; --accent-light: #4ADE80; --accent-bg: rgba(34,197,94,.14);
+  --hero-bg: linear-gradient(135deg, #060B08 0%, #0D1611 55%, #122018 100%);
+  --grid: rgba(255,255,255,.07); --c0: rgba(255,255,255,.08);
+  --black-fill: #0F1713; --black-line: #334D3C;
+  --b1: #16A34A; --b2: #EAB308; --b3: #10B981; --b4: #047857; --b-op: .15;
 }
 
 * { box-sizing: border-box; }
@@ -1264,3 +1289,854 @@ details.fold > summary > span:first-of-type { flex: 1 1 auto; }
 details.fold > summary small { font-size: 11.5px; font-weight: 400; color: var(--faint); margin-left: 4px; }
 details.fold > summary:hover { background: var(--glass-2); }
 details.fold[open] > summary { border-bottom-color: var(--edge); }
+
+/* ══════════ 캘린더 실시간 갱신 펄스 피드백 ══════════ */
+@keyframes calPulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(77, 171, 247, 0.7);
+    border-color: rgba(77, 171, 247, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 28px 6px rgba(77, 171, 247, 0.45);
+    border-color: var(--accent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(77, 171, 247, 0);
+  }
+}
+
+.cal-pulse-highlight {
+  animation: calPulseGlow 1.8s ease-out;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   THREADBOOST-INSPIRED MODERN SAAS DASHBOARD ARCHITECTURE
+   (PRIMARY MILITARY/FOREST GREEN SIGNATURE THEME)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Full Application Shell ── */
+.saas-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--ink);
+}
+
+/* ── Left Sticky Sidebar (260px) ── */
+.saas-sidebar {
+  width: 260px;
+  flex: 0 0 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--edge);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 24px 16px;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px 24px;
+  border-bottom: 1px solid var(--edge);
+}
+
+.brand-icon-wrap {
+  min-width: 44px;
+  height: 40px;
+  padding: 0 4px;
+  border-radius: 12px;
+  background: var(--green-50);
+  border: 1px solid var(--green-200);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15);
+}
+
+[data-theme="dark"] .brand-icon-wrap {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.brand-combo-icon {
+  font-size: 18px;
+  letter-spacing: -2px;
+  display: inline-block;
+}
+
+.brand-mil-icon {
+  display: block;
+  color: var(--green-800);
+  transition: transform 0.2s ease;
+}
+
+[data-theme="dark"] .brand-mil-icon {
+  color: #F1F5F9;
+}
+
+.brand-icon-wrap:hover .brand-mil-icon {
+  transform: scale(1.06);
+}
+
+.brand-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-family: 'Outfit', var(--sans);
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1.25;
+  word-break: keep-all;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--dim);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.sidebar-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 20px 10px 8px;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 auto;
+}
+
+.saas-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--dim);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.saas-nav-item:hover {
+  background: var(--surface-sub);
+  color: var(--ink);
+}
+
+.saas-nav-item.active {
+  background: var(--green-50);
+  color: var(--green-700);
+  font-weight: 700;
+}
+
+[data-theme="dark"] .saas-nav-item.active {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ADE80;
+}
+
+.nav-item-icon {
+  font-size: 17px;
+  width: 20px;
+  display: grid;
+  place-items: center;
+}
+
+.nav-item-badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.nav-item-badge.green {
+  background: var(--green-100);
+  color: var(--green-800);
+}
+
+[data-theme="dark"] .nav-item-badge.green {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86EFAC;
+}
+
+.nav-item-badge.gray {
+  background: var(--surface-sub);
+  color: var(--dim);
+  border: 1px solid var(--edge);
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--edge);
+}
+
+.sidebar-card-link {
+  background: var(--surface-sub);
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  display: block;
+}
+
+.sidebar-card-link:hover {
+  border-color: var(--green-500);
+  background: var(--green-50);
+}
+
+[data-theme="dark"] .sidebar-card-link:hover {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.scl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.scl-desc {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: var(--dim);
+}
+
+.sidebar-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--edge);
+}
+
+.user-avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #0F172A;
+  color: #FFFFFF;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .user-avatar-circle {
+  background: var(--green-700);
+}
+
+.user-meta-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.user-meta-role {
+  font-size: 11px;
+  color: var(--dim);
+}
+
+/* ── Main Dashboard Content Shell ── */
+.saas-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Topbar Header ── */
+.saas-topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--edge);
+  padding: 16px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.topbar-title-box h1 {
+  font-family: 'Outfit', var(--sans);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.topbar-subtitle {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Region Switcher Pill Dropdown in Topbar */
+.region-switcher-pill {
+  display: flex;
+  background: var(--surface-sub);
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.region-pill-btn {
+  border: none;
+  background: transparent;
+  color: var(--dim);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.region-pill-btn.active {
+  background: var(--surface);
+  color: var(--green-700);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] .region-pill-btn.active {
+  background: var(--green-700);
+  color: #FFFFFF;
+}
+
+.btn-topbar-secondary {
+  border: 1px solid var(--edge);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-topbar-secondary:hover {
+  background: var(--surface-sub);
+  border-color: var(--edge-hi);
+}
+
+/* Topbar Main Dark/Black CTA Button (ThreadBoost "+ 글쓰기" 버튼 스타일) */
+.btn-topbar-primary {
+  background: #0F172A;
+  color: #FFFFFF;
+  border: 1px solid rgba(255,255,255,0.15);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+  transition: all 0.15s ease;
+}
+
+.btn-topbar-primary:hover {
+  background: var(--green-700);
+  border-color: var(--green-500);
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .btn-topbar-primary {
+  background: var(--green-600);
+  border-color: var(--green-400);
+}
+
+[data-theme="dark"] .btn-topbar-primary:hover {
+  background: var(--green-500);
+}
+
+/* ── Content Viewport Area ── */
+.saas-content {
+  padding: 24px 36px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1400px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+/* ── ① Hero Dark Banner (ThreadBoost 시그니처 다크 카드) ── */
+.saas-hero-card {
+  background: var(--hero-bg);
+  border-radius: 20px;
+  padding: 32px 36px;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.hero-card-left {
+  flex: 1 1 auto;
+  max-width: 780px;
+  z-index: 2;
+}
+
+.hero-chip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(234, 179, 8, 0.15);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  color: #FEF08A;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.hero-headline {
+  font-family: 'Outfit', var(--sans);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  margin: 0 0 10px;
+  color: #FFFFFF;
+}
+
+.hero-headline .accent-highlight {
+  color: #4ADE80;
+  text-decoration: underline;
+  text-decoration-color: rgba(74, 222, 128, 0.4);
+  text-underline-offset: 4px;
+}
+
+.hero-paragraph {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+  margin: 0 0 22px;
+}
+
+.hero-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-hero-white {
+  background: #FFFFFF;
+  color: #0F172A;
+  border: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.15s ease;
+}
+
+.btn-hero-white:hover {
+  background: var(--green-50);
+  color: var(--green-800);
+  transform: translateY(-1px);
+}
+
+.btn-hero-trans {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-hero-trans:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hero-card-right {
+  flex: 0 0 160px;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+
+.hero-emblem-3d {
+  width: 120px;
+  height: 120px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(22, 163, 74, 0.05) 100%);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.emblem-shield-icon {
+  font-size: 48px;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
+}
+
+.emblem-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #86EFAC;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+/* ── ② 4-Column Metric Stat Cards (ThreadBoost 4분할 카드 그리드) ── */
+.saas-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.saas-stat-card {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  box-shadow: var(--shade-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.saas-stat-card:hover {
+  border-color: var(--green-400);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.stat-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.stat-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dim);
+}
+
+.stat-card-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+
+.icon-box-blue { background: #EFF6FF; color: #2563EB; }
+.icon-box-purple { background: #F5F3FF; color: #7C3AED; }
+.icon-box-green { background: #F0FDF4; color: #16A34A; }
+.icon-box-orange { background: #FFF7ED; color: #EA580C; }
+
+[data-theme="dark"] .icon-box-blue { background: rgba(37, 99, 235, 0.2); color: #60A5FA; }
+[data-theme="dark"] .icon-box-purple { background: rgba(124, 58, 237, 0.2); color: #A78BFA; }
+[data-theme="dark"] .icon-box-green { background: rgba(22, 163, 74, 0.2); color: #4ADE80; }
+[data-theme="dark"] .icon-box-orange { background: rgba(234, 88, 12, 0.2); color: #FB923C; }
+
+.stat-card-number {
+  font-family: 'Outfit', var(--sans);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.stat-card-number small {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dim);
+  margin-left: 3px;
+}
+
+.stat-card-sub {
+  font-size: 12px;
+  color: var(--faint);
+  margin-top: 6px;
+}
+
+.stat-card-progress {
+  height: 6px;
+  background: var(--surface-sub);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.stat-card-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+/* ── ③ 2-Column Main Content Grid ── */
+.saas-grid-2col {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Common SaaS Card Shell */
+.saas-card {
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: var(--r-card);
+  box-shadow: var(--shade-card);
+  overflow: hidden;
+}
+
+.saas-card-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--edge);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.sch-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sch-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--green-50);
+  color: var(--green-700);
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+
+[data-theme="dark"] .sch-icon-wrap {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ADE80;
+}
+
+.sch-title {
+  font-family: 'Outfit', var(--sans);
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.sch-desc {
+  font-size: 12px;
+  color: var(--dim);
+  margin: 2px 0 0;
+}
+
+.saas-card-body {
+  padding: 20px 22px;
+}
+
+/* Form Controls in Condition Card */
+.form-field-group {
+  margin-bottom: 16px;
+}
+
+.form-field-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-label-title {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.form-row-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.saas-input-date {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--surface-sub);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  box-sizing: border-box;
+}
+
+.saas-select-time {
+  padding: 9px 10px;
+  border: 1px solid var(--edge);
+  border-radius: var(--r-sm);
+  background: var(--surface-sub);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 13px;
+  flex: 1;
+}
+
+/* 8 Core Military Activity Preset Chips Grid */
+.act-presets-saas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.act-btn-saas {
+  padding: 9px 12px;
+  border: 1px solid var(--edge);
+  background: var(--surface-sub);
+  color: var(--ink);
+  border-radius: var(--r-sm);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.act-btn-saas:hover {
+  border-color: var(--green-500);
+  background: var(--green-50);
+}
+
+.act-btn-saas.active {
+  border-color: var(--green-600);
+  background: var(--green-600);
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+}
+
+[data-theme="dark"] .act-btn-saas.active {
+  background: var(--green-600);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1100px) {
+  .saas-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .saas-grid-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .saas-sidebar {
+    display: none; /* Mobile Drawer fallback */
+  }
+  .saas-topbar {
+    padding: 14px 18px;
+  }
+  .saas-content {
+    padding: 16px 18px 48px;
+  }
+  .saas-hero-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px;
+  }
+  .hero-card-right {
+    display: none;
+  }
+  .saas-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}

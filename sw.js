@@ -1,5 +1,5 @@
 /* PWA Service Worker for Offline Military Weather Hazard Support System */
-const CACHE_NAME = 'aras-fsb-cache-v1';
+const CACHE_NAME = 'mil-weather-cache-v7';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

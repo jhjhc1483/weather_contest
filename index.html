@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   
-  <link rel="stylesheet" href="styles.css?v=43">
+  <link rel="stylesheet" href="styles.css?v=49">
 
   <!-- PWA (Progressive Web App) Manifest & Mobile App Meta -->
   <link rel="manifest" href="manifest.json">
@@ -24,159 +24,249 @@
   <link rel="apple-touch-icon" href="manifest-icon-192.png">
 </head>
 <body>
-  <!-- PRINT ONLY REPORT HEADER & APPROVAL BLOCK -->
-  <div class="print-header-block">
-    <div class="print-header-title">
-      <h1>부대활동 기상 위험성평가 및 30일 훈련 가용성 종합보고서</h1>
-      <p>육군 위험성평가 척도 변환 및 지휘판단 근거 · 기상 민감 활동 한정</p>
-    </div>
-    <table class="print-approval-tbl">
-      <tr>
-        <th rowspan="2" style="width:24px">결<br>재</th>
-        <th>작전장교</th>
-        <th>작전과장</th>
-        <th>대대장</th>
-      </tr>
-      <tr>
-        <td style="height:38px"></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </table>
-  </div>
+
 
   <!-- Ambient Dynamic Glow Field -->
   <div class="field" aria-hidden="true"><b class="b1"></b><b class="b2"></b><b class="b3"></b><b class="b4"></b></div>
 
-  <div class="wrap">
-
-    <!-- HEADER (TOP BAR WITH DATA FETCH BUTTON & JSON DB VIEW BUTTON) -->
-    <header class="glass">
-      <div>
-        <p class="eyebrow">기상 상시 분석 · 위험성평가 척도 변환 · 시행 판단 지원</p>
-        <h1>부대활동 기상 위험성평가 지원체계</h1>
-        <p class="sub">부대 활동(훈련) 사전 위험도 자동 예측 · <span id="currentDateStr">오늘 예보 기준</span></p>
-        <div class="badges">
-          <span class="badge">육군규정 온도지수·체감온도</span>
-          <span class="badge">규정 판정 + 기상 요인 상세 평가</span>
-          <span class="badge">기상청 체감온도 3.0</span>
-          <span class="badge">미 육군 TB MED 507 / 508</span>
-          
-          <span class="badge warn" id="liveBadge" title="D+10일 이내: 기상청 API 연동 | D+11일 이후: 지난 1년 기후 실측 데이터 기반 추정">
-            ● D+10일 기상청 API / D+11~30일 1년 기후 추정
-          </span>
-          <span class="badge gh-badge" id="ghBadge">● 데이터 연동 대기중</span>
+  <div class="saas-layout">
+    <!-- ── LEFT SIDEBAR (ThreadBoost Style) ── -->
+    <aside class="saas-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon-wrap" title="부대활동 기상위험평가">
+          <svg class="brand-mil-icon" viewBox="0 0 42 38" width="38" height="34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="군용 소총 및 날씨 아이콘">
+            <!-- 맑은 태양 (골드/앰버) -->
+            <circle cx="28" cy="11" r="5" fill="#F59E0B" />
+            <path d="M28 3.5V5M28 17V18.5M20.5 11H22M34 11H35.5M22.7 5.7L23.8 6.8M32.2 15.2L33.3 16.3M22.7 16.3L23.8 15.2M32.2 6.8L33.3 5.7" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- 훈련 가용성 구름 (부드러운 스카이블루) -->
+            <path d="M15 19C15 16.8 16.8 15 19 15C19.4 15 19.8 15.06 20.2 15.18C21.1 13.25 23 12 25.2 12C28.1 12 30.5 14.3 30.7 17.2C32 17.6 33 18.8 33 20.2C33 22 31.5 23.5 29.7 23.5H15C12.8 23.5 11 21.7 11 19.5C11 17.4 12.6 15.7 14.7 15.5" fill="rgba(147, 197, 253, 0.55)" stroke="#60A5FA" stroke-width="1.3" stroke-linejoin="round"/>
+            <!-- 군용 돌격소총 (K2 / M4 Assault Rifle) -->
+            <g class="svg-rifle" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.35))">
+              <path d="M3 26 L9.5 26 L11.5 24.5 L15 24.5 L15 23 L23 23 L24 21.2 L25 21.2 L25.5 23 L36 23 L36 24 L37.5 24 L37.5 25 L36 25 L26 25 L25 26.5 L17.5 26.5 L17 30.5 L14 31 L15 26.5 L12.5 26.5 L10.8 30 L8.5 29.5 L10.2 26.5 L3 29 Z" fill="currentColor"/>
+              <!-- 조준경 마운트 디테일 -->
+              <rect x="14" y="21.2" width="6.5" height="1.6" rx="0.4" fill="currentColor" opacity="0.95"/>
+            </g>
+          </svg>
+        </div>
+        <div class="brand-text-block">
+          <span class="brand-title">부대활동 기상위험평가</span>
+          <span class="brand-sub">30일 훈련 가용성 분석 체계</span>
         </div>
       </div>
-      
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <button type="button" class="btn-sub-sm" onclick="window.print()" aria-label="30일 훈련 위험도 종합보고서 인쇄 및 PDF 저장">
-            <span class="icon">📄</span> 보고서 인쇄/PDF
-          </button>
-          <button type="button" class="btn-sub-sm" onclick="openJsonModal()" aria-label="latest_weather.json 30일 수집 DB 현황 보기">
-            <span class="icon">🔍</span> +30일 날씨 DB
-          </button>
-          <button class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
-        </div>
-        <!-- ⚡ HEADER TOP BUTTON: WEATHER DATA FETCH (+10 DAYS) -->
-        <button type="button" class="btn-step-1" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
-          <span class="icon">⚡</span> 날씨 수집 (+10일치)
-        </button>
-      </div>
-    </header>
 
-    <!-- ⚡ DATA PIPELINE ALERT TOAST -->
-    <div class="gh-toast glass" id="ghToast" hidden>
-      <div class="spinner"></div>
-      <div>
-        <b style="color:var(--accent)" id="ghToastTitle">🚀 기상 데이터 수집 파이프라인 실행 중...</b>
-        <p style="margin:2px 0 0;font-size:12px;color:var(--dim)" id="ghToastText">오늘 기준 +한달간의 날씨 예보 데이터를 수집 및 저장하고 있습니다.</p>
-      </div>
-    </div>
+      <div class="sidebar-section-label">메인 메뉴</div>
+      <nav class="sidebar-menu">
+        <a href="#dashboardTop" class="saas-nav-item active" onclick="activateNavItem(this)">
+          <span class="nav-item-icon">📊</span>
+          <span>대시보드</span>
+        </a>
+        <a href="#calendarSection" class="saas-nav-item" onclick="activateNavItem(this)">
+          <span class="nav-item-icon">📅</span>
+          <span>30일 훈련 캘린더</span>
+          <span class="nav-item-badge green">전수</span>
+        </a>
+        <a href="#conditionSection" class="saas-nav-item" onclick="activateNavItem(this)">
+          <span class="nav-item-icon">🪖</span>
+          <span>과업 & 복장 제어</span>
+        </a>
+        <a href="#compBoxSection" class="saas-nav-item" onclick="activateNavItem(this)">
+          <span class="nav-item-icon">⚖️</span>
+          <span>규정 vs 보정 판정</span>
+        </a>
+        <a href="#timelineSection" class="saas-nav-item" onclick="activateNavItem(this)">
+          <span class="nav-item-icon">⏱️</span>
+          <span>시간대별 위험 분석</span>
+        </a>
+        <a href="#basisSection" class="saas-nav-item" onclick="activateNavItem(this)">
+          <span class="nav-item-icon">📋</span>
+          <span>근거 및 감소대책</span>
+        </a>
+      </nav>
 
-    <!-- 8-Factor Environmental Weather Chips Bar -->
-    <div class="env-banner-8" id="envBanner"></div>
 
-    <!-- MAIN DASHBOARD SPLIT LAYOUT (LEFT STICKY SIDEBAR + RIGHT CONTENT) -->
-    <div class="dashboard-main-grid">
+    </aside>
 
-      <!-- LEFT STICKY SIDEBAR: Integrated Activity Form (Real-time Reactive) -->
-      <aside class="panel glass command-sidebar">
-        <div class="phd">
-          <h2>통합 부대활동 사전 계획 입력</h2>
-          
-        </div>
-        <div class="pbd">
-          <!-- Region Selector -->
-          <p class="hint" style="margin-bottom:8px;font-size:12.5px;color:var(--dim);font-weight:600">
-            📍 훈련 지역 선택
+    <!-- ── RIGHT MAIN VIEWPORT ── -->
+    <div class="saas-main" id="dashboardTop">
+      <!-- TOPBAR HEADER -->
+      <header class="saas-topbar">
+        <div class="topbar-title-box">
+          <h1>대시보드</h1>
+          <p class="topbar-subtitle">
+            <span class="badge live" id="liveBadge" style="font-size:11px;padding:2px 8px">● 기상청 API 연동</span>
+            <span class="badge gh-badge" id="ghBadge" style="font-size:11px;padding:2px 8px">● 실시간 가용</span>
+            <span id="currentDateStr" style="color:var(--ink);font-weight:600">오늘 예보 기준</span> 30일 훈련 가용성 분석
           </p>
-          <div class="region-selector" id="regionSelector"></div>
+        </div>
 
-          <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0">
+        <div class="topbar-actions">
+          <!-- REGION SWITCHER PILL (논산 / 양평) -->
+          <div class="region-switcher-pill" id="regionSelector"></div>
 
-          <!-- Preset Unit Activity Buttons (8 Core Activities) -->
-          <p class="hint" style="margin-bottom:10px;font-size:12.5px;color:var(--dim);font-weight:600">
-            🎯 8대 핵심 부대활동 빠른 선택
-          </p>
-          <div class="act-presets" id="actPresets"></div>
-          
-          <!-- Detailed Controls -->
-          <div class="ctl-sidebar" style="margin-top:14px">
-            <div class="f">
-              <label for="planDate">훈련 예정 일자 (30일 예보/추정 선택)</label>
-              <input type="date" id="planDate">
-              <p class="hint" style="margin-top:4px;font-size:11px;color:var(--accent)" id="dateSourceHint">
-                * D+10일 이내: 기상청 API 실시간 예보 연동중
-              </p>
-            </div>
-            <div class="f" style="margin-top:10px">
-              <label for="from">계획 훈련 시간대</label>
-              <div class="row"><select id="from"></select><span style="color:var(--faint)">–</span><select id="to"></select></div>
-            </div>
-            <div class="f" style="margin-top:10px">
-              <label>훈련 과업 대사율</label>
-              <div class="seg" id="task"></div>
-              <p class="hint" id="taskHint"></p>
-            </div>
-            <div class="f" style="margin-top:10px">
-              <label>착의 · 복장 보정</label>
-              <div class="seg" id="gear"></div>
-              <p class="hint" id="gearHint"></p>
-            </div>
+          <!-- +30일 DB 보기 버튼 -->
+          <button type="button" class="btn-topbar-secondary" onclick="openJsonModal()" aria-label="30일 DB 현황 보기">
+            <span>🔍</span> +30일 DB
+          </button>
+
+          <!-- 테마 토글 버튼 -->
+          <button type="button" class="themeBtn" id="themeBtn" aria-label="화면 밝기 전환">◐</button>
+
+          <!-- ⚡ 메인 날씨 수집 버튼 (ThreadBoost "+ 글쓰기" 버튼 스타일) -->
+          <button type="button" class="btn-topbar-primary" id="btnFetchWeather" onclick="triggerGitHubActionPipeline()">
+            <span>⚡</span> 날씨 수집 (+10일치)
+          </button>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <div class="saas-content">
+        <!-- ⚡ DATA PIPELINE ALERT TOAST -->
+        <div class="gh-toast glass" id="ghToast" hidden>
+          <div class="spinner"></div>
+          <div>
+            <b style="color:var(--accent)" id="ghToastTitle">🚀 기상 데이터 수집 파이프라인 실행 중...</b>
+            <p style="margin:2px 0 0;font-size:12px;color:var(--dim)" id="ghToastText">오늘 기준 +한달간의 날씨 예보 데이터를 수집 및 저장하고 있습니다.</p>
           </div>
         </div>
-      </aside>
 
-      <!-- RIGHT CONTENT AREA: Results & Detailed Modules -->
-      <main class="dashboard-content">
 
-        <!-- SECTION: 📅 30일 훈련 가능 캘린더 (전 시점 전수 분석) -->
-        <section class="panel glass" id="calendarSection">
-          <div class="phd" style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <h2>① 30일 훈련 가능 캘린더 · <span id="calScopeLabel">전 시점</span> 전수 분석</h2>
-              <span class="note">현재 과업·복장 조건으로 30일 × 17시간대 전수 위험도 판정 · 날짜 클릭 시 상세 분석 전환</span>
+
+        <!-- ② 4-COLUMN METRIC STAT CARDS (ThreadBoost 4개 지표 카드) -->
+        <section class="saas-metrics-grid" id="topMetricsGrid">
+          <div class="saas-stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-title">30일 훈련 가용률</span>
+              <div class="stat-card-icon-box icon-box-green">📈</div>
             </div>
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-              <div class="cal-region-tabs" id="calRegionTabs"></div>
-              <button type="button" class="btn-sub-sm no-print" onclick="window.print()">📄 리포트 인쇄</button>
+            <div class="stat-card-number" id="mCardRate">--<small>%</small></div>
+            <div class="stat-card-sub" id="mCardRateSub">전체 510시간 분석 중</div>
+            <div class="stat-card-progress">
+              <div class="stat-card-progress-fill" id="mCardRateBar" style="width:0%;background:var(--green-600)"></div>
             </div>
           </div>
-          <div class="pbd" style="padding-top:14px">
-            <div class="cal-stats" id="calStats"></div>
-            <div id="calGrid"></div>
+
+          <div class="saas-stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-title">최장 연속 가능일 (Streak)</span>
+              <div class="stat-card-icon-box icon-box-purple">🔥</div>
+            </div>
+            <div class="stat-card-number" id="mCardStreak">--<small>일 연속</small></div>
+            <div class="stat-card-sub" id="mCardStreakSub">피크 3단계 이하 유지 구간</div>
+          </div>
+
+          <div class="saas-stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-title">10일 순기별 최고 여건</span>
+              <div class="stat-card-icon-box icon-box-blue">📊</div>
+            </div>
+            <div class="stat-card-number" id="mCardDecade">--<small></small></div>
+            <div class="stat-card-sub" id="mCardDecadeSub">순기별 가용률 비교</div>
+          </div>
+
+          <div class="saas-stat-card">
+            <div class="stat-card-top">
+              <span class="stat-card-title">선택일 피크 위험도</span>
+              <div class="stat-card-icon-box icon-box-orange">⚠️</div>
+            </div>
+            <div class="stat-card-number" id="mCardPeak">--</div>
+            <div class="stat-card-sub" id="mCardPeakSub">계획 시간대 피크 기준</div>
           </div>
         </section>
 
+        <!-- 8-Factor Environmental Weather Chips Bar -->
+        <div class="env-banner-8" id="envBanner"></div>
+
+        <!-- ③ 2-COLUMN MAIN CONTENT GRID (30일 캘린더 vs 훈련 조건 제어) -->
+        <div class="saas-grid-2col">
+          <!-- LEFT COL: 30일 훈련 가능 캘린더 -->
+          <section class="saas-card" id="calendarSection">
+            <div class="saas-card-header">
+              <div class="sch-title-group">
+                <div class="sch-icon-wrap">📅</div>
+                <div>
+                  <h3 class="sch-title">30일 훈련 가능 캘린더 · <span id="calScopeLabel">전 시점</span> 전수 분석</h3>
+                  <p class="sch-desc">과업·복장 조건별 30일 × 17시간대 전수 위험도 판정 · 날짜 클릭 시 상세 분석 전환</p>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="cal-region-tabs" id="calRegionTabs"></div>
+              </div>
+            </div>
+            <div class="saas-card-body">
+              <div class="cal-stats" id="calStats"></div>
+              <div id="calGrid"></div>
+            </div>
+          </section>
+
+          <!-- RIGHT COL: 훈련 조건 및 환경 제어 (ThreadBoost 프로필/계정 카드 스타일) -->
+          <aside class="saas-card" id="conditionSection">
+            <div class="saas-card-header">
+              <div class="sch-title-group">
+                <div class="sch-icon-wrap">🪖</div>
+                <div>
+                  <h3 class="sch-title">훈련 조건 및 환경 제어</h3>
+                  <p class="sch-desc">계획 일자, 시간대, 과업 대사율, 복장 가산 조정</p>
+                </div>
+              </div>
+            </div>
+            <div class="saas-card-body">
+              <!-- 8대 핵심 활동 프리셋 칩 그리드 -->
+              <div class="form-field-group">
+                <label class="form-label-title">8대 핵심 부대활동 프리셋</label>
+                <div class="act-presets-saas-grid" id="actPresets"></div>
+              </div>
+
+              <hr style="border:none;border-top:1px solid var(--edge);margin:16px 0">
+
+              <!-- 계획 일자 및 시간대 (2분할) -->
+              <div class="form-row-split">
+                <div class="form-field-group">
+                  <label for="planDate" class="form-label-title">훈련 예정 일자</label>
+                  <input type="date" id="planDate" class="saas-input-date">
+                  <p class="hint" style="margin-top:4px;font-size:11px;color:var(--accent)" id="dateSourceHint">
+                    * D+10일 이내: 기상청 API 연동
+                  </p>
+                </div>
+                <div class="form-field-group">
+                  <label for="from" class="form-label-title">계획 훈련 시간대</label>
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <select id="from" class="saas-select-time"></select>
+                    <span style="color:var(--faint)">–</span>
+                    <select id="to" class="saas-select-time"></select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 과업 대사율 -->
+              <div class="form-field-group">
+                <label class="form-label-title">훈련 과업 대사율</label>
+                <div class="seg" id="task"></div>
+                <p class="hint" id="taskHint" style="margin-top:6px"></p>
+              </div>
+
+              <!-- 착의 복장 보정 -->
+              <div class="form-field-group">
+                <label class="form-label-title">착의 · 복장 보정</label>
+                <div class="seg" id="gear"></div>
+                <p class="hint" id="gearHint" style="margin-top:6px"></p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- ④ 하단 상세 분석 모듈들 -->
         <!-- SECTION 2: SIDE-BY-SIDE COMPARISON & DECISION CARD -->
-        <section class="panel glass">
-          <div class="phd">
-            <h2>② 규정 기준 vs 과업·복장 보정 결과</h2>
-            <span class="note">현 육군규정 기준과 4계절·복장·과업 대사량 보정 결과를 직관적으로 1:1 비교</span>
+        <section class="saas-card" id="compBoxSection">
+          <div class="saas-card-header">
+            <div class="sch-title-group">
+              <div class="sch-icon-wrap">⚖️</div>
+              <div>
+                <h3 class="sch-title">규정 기준 vs 과업·복장 보정 결과 1:1 비교</h3>
+                <p class="sch-desc">현 육군규정 기준과 4계절·복장·과업 대사량 보정 결과를 직관적으로 1:1 대조</p>
+              </div>
+            </div>
           </div>
-          <div class="pbd" style="padding-top:14px">
+          <div class="saas-card-body">
             <!-- SIDE-BY-SIDE COMPARISON BOX -->
             <div class="comp-box" id="compBox" style="margin-top:0"></div>
 
@@ -205,12 +295,17 @@
         </section>
 
         <!-- ③ 시간대별 판정 — 하루를 쪼개서 가능한 시간을 찾는다 -->
-        <section class="panel glass">
-          <div class="phd">
-            <h2>③ 시간대별 위험도 — 오늘 언제 가능한가</h2>
-            <span class="note">시간대 클릭 시 해당 시각 세부 데이터 하이라이트</span>
+        <section class="saas-card" id="timelineSection">
+          <div class="saas-card-header">
+            <div class="sch-title-group">
+              <div class="sch-icon-wrap">⏱️</div>
+              <div>
+                <h3 class="sch-title">시간대별 위험도 분석 — 오늘 언제 가능한가</h3>
+                <p class="sch-desc">시간대 클릭 시 해당 시각 세부 기상 지수 하이라이트</p>
+              </div>
+            </div>
           </div>
-          <div class="pbd">
+          <div class="saas-card-body">
             <div class="timeline-grid" id="timelineGrid"></div>
             <svg id="chart" viewBox="0 0 900 424" role="img" aria-label="시간대별 체감온도 및 WBGT 곡선과 위험 등급 스트립" style="margin-top:16px"></svg>
             <div class="legend">
@@ -223,32 +318,37 @@
         </section>
 
         <!-- 산출 근거 & 감소대책 -->
-        <section class="panel glass">
-          <div class="phd">
-            <h2>산출 근거 및 위험 감소대책</h2>
-            <span class="note">미 육군 TB MED 507 / 508 기반 산출 수치 근거 및 4M 분류 감소대책</span>
+        <section class="saas-card" id="basisSection">
+          <div class="saas-card-header">
+            <div class="sch-title-group">
+              <div class="sch-icon-wrap">📋</div>
+              <div>
+                <h3 class="sch-title">산출 근거 및 4M 위험 감소대책</h3>
+                <p class="sch-desc">미 육군 TB MED 507 / 508 기반 산출 수치 근거 및 Man, Machine, Media, Management 대책</p>
+              </div>
+            </div>
           </div>
-          <div class="pbd" style="padding-top:14px">
+          <div class="saas-card-body">
             <div id="verdictPanel"></div>
           </div>
         </section>
 
-        <!-- ▼ 접이식 보조 기능 -->
-        <details class="panel glass fold">
+        <!-- 접이식 보조 기능 3종 -->
+        <details class="saas-card fold" style="border-radius:var(--r-card)">
           <summary>
             <span>🎙️ 활동 개시 전 안전브리핑 <small>— 실행 직전 5단계 절차 · 최종 결정은 지휘관 권한</small></span>
             <button type="button" class="btn-sub-sm" onclick="event.preventDefault();copyBrief()" aria-label="브리핑 전문 복사">
               <span class="icon">📋</span> 브리핑 복사
             </button>
           </summary>
-          <div class="pbd" style="padding-top:14px">
+          <div class="saas-card-body">
             <div id="briefPanel"></div>
           </div>
         </details>
 
-        <details class="panel glass fold">
+        <details class="saas-card fold" style="border-radius:var(--r-card)">
           <summary><span>🌡️ 현장 실측 WBGT 입력 <small id="measEcho">— 부대 보유 측정기 값을 입력하면 미입력 시각을 보간</small></span></summary>
-          <div class="pbd">
+          <div class="saas-card-body">
             <div class="tools">
               <button type="button" id="mLoad">표본 기준값 불러오기</button>
               <button type="button" id="mInterp">실측값 사이 직선 보간</button>
@@ -259,71 +359,62 @@
           </div>
         </details>
 
-        <details class="panel glass fold">
+        <details class="saas-card fold" style="border-radius:var(--r-card)">
           <summary><span>📊 시간별 상세 데이터 <small>— 산출 과정 검증용 원자료</small></span></summary>
-          <div class="scroll"><table id="tbl">
-            <thead><tr>
-              <th>시각</th><th class="num">기온(°C)</th><th class="num">습도(%)</th><th class="num">체감온도</th>
-              <th>기상청 단계</th><th class="num">WBGT(보정 °C)</th><th>미군 CAT</th><th>채택 등급</th><th>데이터 출처</th>
-            </tr></thead>
-            <tbody></tbody>
-          </table></div>
+          <div class="saas-card-body">
+            <div class="scroll"><table id="tbl">
+              <thead><tr>
+                <th>시각</th><th class="num">기온(°C)</th><th class="num">습도(%)</th><th class="num">체감온도</th>
+                <th>기상청 단계</th><th class="num">WBGT(보정 °C)</th><th>미군 CAT</th><th>채택 등급</th><th>데이터 출처</th>
+              </tr></thead>
+              <tbody></tbody>
+            </table></div>
+          </div>
         </details>
 
-      </main>
+        <!-- Footer & Regulations Reference -->
+        <footer class="saas-card" style="padding:24px 28px;margin-top:10px">
+          <h4 style="margin:0 0 12px;font-size:15px;color:var(--ink)">📋 본 시스템 데이터 연동 및 기후 추정 출처 안내</h4>
+          <div style="background:var(--surface-sub);padding:12px 16px;border-radius:var(--r-sm);border:1px solid var(--edge);margin-bottom:16px;font-size:12px;color:var(--dim)">
+            📌 <b>데이터 수집 정책 안내</b>: 오늘 기준 <b>D+10일 이내 날짜</b>는 <b>기상청 단기·중기예보 Open API</b> 데이터를 실시간 연동하며, <b>D+11일 이후 날짜</b>는 <b>지난 1년간의 한국 기후 실측 통계 데이터(Climatology Base)</b>를 기반으로 24시간 기온 및 기상 지수를 추정 연동합니다.
+          </div>
+
+          <h4 style="margin:16px 0 12px;font-size:15px;color:var(--ink)">📋 현 규정 온열 / 한랭 / 미세먼지 훈련 행동기준 참조</h4>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:16px">
+            <div style="background:var(--surface-sub);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
+              <b style="color:var(--k3)">1. 온도지수(WBGT)별 현 기준</b>
+              <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
+                <li><b>26.5 ~ 29.5°C 미만 [주의]</b>: 양성교육 및 야외훈련 시 미숙련자 주의</li>
+                <li><b>29.5 ~ 31.0°C 미만 [부분제한]</b>: 뜀걸음, 행군 등 과중한 훈련 지양</li>
+                <li><b>31.0 ~ 32.0°C 미만 [제한]</b>: 옥외훈련 제한/중지, 1일 6시간 이내</li>
+                <li><b>32.0°C 이상 [중지]</b>: 경계작전 등 필수 활동만 실시</li>
+              </ul>
+            </div>
+            <div style="background:var(--surface-sub);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
+              <b style="color:var(--k1)">2. 한랭 체감온도별 현 기준</b>
+              <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
+                <li><b>-10.0 ~ 0°C</b>: 정상 야외훈련 가능</li>
+                <li><b>-18.0 ~ -10.1°C</b>: 정상 가능하나 훈련 내용/시간 조정</li>
+                <li><b>-24.0 ~ -18.1°C</b>: 주둔지 훈련으로 전환 가능</li>
+                <li><b>-24.1°C 이하 [대체]</b>: 야외훈련 중지 및 주둔지 대체</li>
+              </ul>
+            </div>
+            <div style="background:var(--surface-sub);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
+              <b style="color:var(--accent)">3. 미세먼지/황사 수준 지침</b>
+              <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
+                <li><b>나쁨 (PM2.5: 36~75)</b>: 마스크 불출/착용, 장소/시간 조정</li>
+                <li><b>매우나쁨/주의보 (PM2.5: 76+)</b>: 실내교육 전환 가능, 뜀걸음 최소화</li>
+                <li><b>경보 (PM2.5: 181+)</b>: 실내 훈련 전환 (장성급 판단 제한 시행)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="font-size:11px;color:var(--faint);line-height:1.6">
+            © 2026 Maj.cjh — 육군 교육훈련 위험성평가 척도 및 TB MED 507/508 규정 근거. All Rights Reserved.
+          </div>
+        </footer>
+      </div>
     </div>
-
-    <!-- Footer & Regulations Reference -->
-    <footer class="glass">
-      <h4>📋 본 시스템 데이터 연동 및 기후 추정 출처 안내</h4>
-      <div style="background:var(--glass-2);padding:12px 16px;border-radius:var(--r-sm);border:1px solid var(--edge);margin-bottom:16px;font-size:12px;color:var(--dim)">
-        📌 <b>데이터 수집 정책 안내</b>: 오늘 기준 <b>D+10일 이내 날짜</b>는 <b>기상청 단기·중기예보 Open API</b> 데이터를 실시간 연동하며, <b>D+11일 이후 날짜</b>는 <b>지난 1년간의 한국 기후 실측 통계 데이터(Climatology Base)</b>를 기반으로 24시간 기온 및 기상 지수를 추정 연동합니다.
-      </div>
-
-      <h4>📋 현 규정 온열 / 한랭 / 미세먼지 훈련 행동기준 참조</h4>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:16px">
-        <div style="background:var(--glass-2);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
-          <b style="color:var(--k3)">1. 온도지수(WBGT)별 현 기준</b>
-          <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
-            <li><b>26.5 ~ 29.5°C 미만 [주의]</b>: 양성교육 및 야외훈련 시 미숙련자 주의</li>
-            <li><b>29.5 ~ 31.0°C 미만 [부분제한]</b>: 뜀걸음, 행군 등 과중한 훈련 지양</li>
-            <li><b>31.0 ~ 32.0°C 미만 [제한]</b>: 옥외훈련 제한/중지, 1일 6시간 이내</li>
-            <li><b>32.0°C 이상 [중지]</b>: 경계작전 등 필수 활동만 실시</li>
-          </ul>
-        </div>
-        <div style="background:var(--glass-2);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
-          <b style="color:var(--k1)">2. 한랭 체감온도별 현 기준</b>
-          <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
-            <li><b>-10.0 ~ 0°C</b>: 정상 야외훈련 가능</li>
-            <li><b>-18.0 ~ -10.1°C</b>: 정상 가능하나 훈련 내용/시간 조정</li>
-            <li><b>-24.0 ~ -18.1°C</b>: 주둔지 훈련으로 전환 가능</li>
-            <li><b>-24.1°C 이하 [대체]</b>: 야외훈련 중지 및 주둔지 대체</li>
-          </ul>
-        </div>
-        <div style="background:var(--glass-2);padding:12px;border-radius:var(--r-sm);border:1px solid var(--edge)">
-          <b style="color:var(--accent)">3. 미세먼지/황사 수준 지침</b>
-          <ul style="margin:6px 0 0;padding-left:16px;font-size:11.5px">
-            <li><b>나쁨 (PM2.5: 36~75)</b>: 마스크 불출/착용, 장소/시간 조정</li>
-            <li><b>매우나쁨/주의보 (PM2.5: 76+)</b>: 실내교육 전환 가능, 뜀걸음 최소화</li>
-            <li><b>경보 (PM2.5: 181+)</b>: 실내 훈련 전환 (장성급 판단 제한 시행)</li>
-          </ul>
-        </div>
-      </div>
-
-      <h4>근거 문헌 및 지침 인용 표기</h4>
-      <ol>
-        <li><b>열지수 등급 구분</b> — 미 육군성 <i>TB MED 507: Heat Stress Control and Heat Casualty Management</i> (CAT 1~5 임계 78·82·85·88·90 °F를 섭씨 환산).</li>
-        <li><b>방탄복 착의 보정</b> — <i>TB MED 507</i> Work/Rest and Water Consumption Table 주기 (방탄복 착용 시 습한 기후에서 WBGT +5 °F = +2.8 °C 가산).</li>
-        <li><b>화생방 보호의 착의 보정</b> — <i>TB MED 507</i> 동 주기 (MOPP 4 착용 시 경작업 +10 °F = +5.6 °C, 중등·중작업 +20 °F = +11.1 °C).</li>
-        <li><b>과업별 대사율 · 복장 단열값 · 동상 발생시간 · 동료점검 주기</b> — 미 육군성 <i>TB MED 508: Prevention and Management of Cold Weather Injuries</i> (표 3-1 · 표 3-2 · 그림 3-2 · 그림 3-5 · 표 3-4).</li>
-      </ol>
-      <div class="caution">
-        <b>본 도구는 부대활동 사전 계획 수립용입니다.</b><br>
-        예보 기반 산출값은 훈련 시기·시간대 배치와 예비일 산정에 활용하고, <b>당일 현장의 실제 통제 판단은 실측값을 우선</b>해야 합니다.<br><br>
-        작업/휴식 주기와 급수량은 우리 훈련 편성 단위와 맞지 않고 근거가 확보되지 않은 구간이 있어 산출 항목에서 제외하였습니다.
-      </div>
-    </footer>
-
   </div>
 
   <!-- 📂 MODAL POPUP FOR LATEST_WEATHER.JSON DATA VIEWER (HIGH CONTRAST) -->
@@ -384,14 +475,17 @@
     © 2026 Maj.cjh — All Rights Reserved.
   </footer>
 
-  <script src="app.js?v=43"></script>
+  <script src="app.js?v=49"></script>
 
   <!-- PWA Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => console.log('[PWA] Service Worker registered on scope:', reg.scope))
+        navigator.serviceWorker.register('/sw.js?v=49')
+          .then(reg => {
+            console.log('[PWA] Service Worker registered on scope:', reg.scope);
+            reg.update();
+          })
           .catch(err => console.log('[PWA] Service Worker registration failed:', err));
       });
     }
