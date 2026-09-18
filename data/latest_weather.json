@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T07:24:28+09:00",
+  "updatedAt": "2026-09-18T12:43:28+09:00",
   "status": "LIVE_GITHUB_ACTION_DATA",
   "dataNote": "D+0~10: 기상청 단기·중기 예보 API / D+11~30: 지난 1년 기후 실측 데이터 기반 추정",
   "defaultRegion": "nonsan",
@@ -9490,17 +9490,6 @@
     },
     {
       "id": "mil_news_39",
-      "category": "foodpoison",
-      "isMilitary": false,
-      "isAccident": true,
-      "title": "\"우리 급식소 안심하세요\", 강남구, 여름철 식중독 예방 총력",
-      "source": "기상/재난 보도",
-      "snippet": "발생하는 위생관리 미흡 사례를 구체적으로 짚어보고 실질적인 개선 방법을 공유해 대규모 식중독 사고를... 폭염 때는 식재료 관리의 작은 실수도 집단 식중독으로 이어질 수 있다\"며 \"현장에서 실제로 발생하는 사례를...",
-      "url": "http://www.enewstoday.co.kr/news/articleView.html?idxno=2459970",
-      "date": "2026-08-18"
-    },
-    {
-      "id": "mil_news_40",
       "category": "foodpoison",
       "isMilitary": false,
       "isAccident": true,
